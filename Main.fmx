@@ -1,0 +1,200 @@
+object Form2: TForm2
+  Left = 0
+  Top = 0
+  ClientHeight = 473
+  ClientWidth = 552
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object GroupBox1: TGroupBox
+    Align = Top
+    Margins.Left = 8.000000000000000000
+    Margins.Top = 8.000000000000000000
+    Margins.Right = 8.000000000000000000
+    Margins.Bottom = 8.000000000000000000
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 536.000000000000000000
+    Size.Height = 73.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Gogs'
+    TabOrder = 5
+    object Label1: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Text = 'Sever URL:'
+    end
+    object Label2: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 40.000000000000000000
+      Text = 'Authorization Token:'
+    end
+    object txtGogsUrl: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 2
+      Position.X = 144.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 377.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object txtGogsToken: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 3
+      Position.X = 144.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 377.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+  object GroupBox2: TGroupBox
+    Align = Top
+    Margins.Left = 8.000000000000000000
+    Margins.Right = 8.000000000000000000
+    Margins.Bottom = 8.000000000000000000
+    Position.X = 8.000000000000000000
+    Position.Y = 89.000000000000000000
+    Size.Width = 536.000000000000000000
+    Size.Height = 72.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'GitBucket'
+    TabOrder = 4
+    object Label3: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Text = 'Sever URL:'
+    end
+    object Label4: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 40.000000000000000000
+      Text = 'Authorization Token:'
+    end
+    object txtGitBucketUrl: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 2
+      Position.X = 144.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 377.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object txtGitBucketToken: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 3
+      Position.X = 144.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 377.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+  object GroupBox3: TGroupBox
+    Align = Top
+    Margins.Left = 8.000000000000000000
+    Margins.Right = 8.000000000000000000
+    Margins.Bottom = 8.000000000000000000
+    Position.X = 8.000000000000000000
+    Position.Y = 169.000000000000000000
+    Size.Width = 536.000000000000000000
+    Size.Height = 72.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Configuration'
+    TabOrder = 3
+    object Label5: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Text = 'Type:'
+    end
+    object txtName: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 2
+      Position.X = 264.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 233.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object chkTypeUser: TRadioButton
+      Position.X = 144.000000000000000000
+      Position.Y = 16.000000000000000000
+      TabOrder = 4
+      Text = 'User (me)'
+    end
+    object chkTypeOrg: TRadioButton
+      Position.X = 144.000000000000000000
+      Position.Y = 40.000000000000000000
+      TabOrder = 3
+      Text = 'Organization'
+    end
+  end
+  object GroupBox4: TGroupBox
+    Align = Client
+    Margins.Left = 8.000000000000000000
+    Margins.Right = 8.000000000000000000
+    Margins.Bottom = 8.000000000000000000
+    Size.Width = 536.000000000000000000
+    Size.Height = 166.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Log'
+    TabOrder = 2
+    object memoLog: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      Align = Client
+      Margins.Left = 8.000000000000000000
+      Margins.Top = 16.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Size.Width = 520.000000000000000000
+      Size.Height = 142.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Viewport.Width = 516.000000000000000000
+      Viewport.Height = 138.000000000000000000
+    end
+  end
+  object Layout1: TLayout
+    Align = Top
+    Position.Y = 249.000000000000000000
+    Size.Width = 552.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    object Button1: TButton
+      Position.X = 224.000000000000000000
+      Position.Y = 12.000000000000000000
+      TabOrder = 0
+      Text = 'Go'
+      OnClick = Button1Click
+    end
+  end
+  object IdHTTP1: TIdHTTP
+    AllowCookies = True
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
+    Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
+    Request.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    Request.BasicAuthentication = False
+    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
+    HTTPOptions = [hoForceEncodeParams]
+    Left = 304
+    Top = 72
+  end
+  object IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 432
+    Top = 72
+  end
+end

@@ -1,0 +1,61 @@
+//---------------------------------------------------------------------------
+#ifndef MainH
+#define MainH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <FMX.Controls.hpp>
+#include <FMX.Forms.hpp>
+#include <FMX.Controls.Presentation.hpp>
+#include <FMX.StdCtrls.hpp>
+#include <FMX.Types.hpp>
+#include <IdBaseComponent.hpp>
+#include <IdComponent.hpp>
+#include <IdHTTP.hpp>
+#include <IdIOHandler.hpp>
+#include <IdIOHandlerSocket.hpp>
+#include <IdIOHandlerStack.hpp>
+#include <IdSSL.hpp>
+#include <IdSSLOpenSSL.hpp>
+#include <IdTCPClient.hpp>
+#include <IdTCPConnection.hpp>
+#include <FMX.Edit.hpp>
+#include <FMX.Memo.hpp>
+#include <FMX.ScrollBox.hpp>
+#include <FMX.Layouts.hpp>
+//---------------------------------------------------------------------------
+class TForm2 : public TForm
+{
+__published:	// IDE-managed Components
+    TIdHTTP *IdHTTP1;
+    TIdSSLIOHandlerSocketOpenSSL *IdSSLIOHandlerSocketOpenSSL1;
+    TButton *Button1;
+    TGroupBox *GroupBox1;
+    TLabel *Label1;
+    TLabel *Label2;
+    TEdit *txtGogsUrl;
+    TEdit *txtGogsToken;
+    TGroupBox *GroupBox2;
+    TLabel *Label3;
+    TLabel *Label4;
+    TEdit *txtGitBucketUrl;
+    TEdit *txtGitBucketToken;
+    TGroupBox *GroupBox3;
+    TLabel *Label5;
+    TEdit *txtName;
+    TRadioButton *chkTypeUser;
+    TRadioButton *chkTypeOrg;
+    TMemo *memoLog;
+    TGroupBox *GroupBox4;
+    TLayout *Layout1;
+    void __fastcall Button1Click(TObject *Sender);
+private:	// User declarations
+protected:
+    bool __fastcall CreateRepo(const String AJson);
+    String __fastcall GetAuthenticatedUser();
+public:		// User declarations
+    __fastcall TForm2(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TForm2 *Form2;
+//---------------------------------------------------------------------------
+#endif
