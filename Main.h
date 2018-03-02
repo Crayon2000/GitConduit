@@ -23,6 +23,27 @@
 #include <FMX.ScrollBox.hpp>
 #include <FMX.Layouts.hpp>
 //---------------------------------------------------------------------------
+class TGitApplication : public System::TObject
+{
+    typedef System::TObject inherited;
+
+private:
+    String FApplicationName;
+    String FApiVersion;
+    String FUrl;
+    String FToken;
+protected:
+
+public:
+    inline __fastcall TGitApplication() : System::TObject() { }
+    inline __fastcall virtual ~TGitApplication(void) { }
+
+    __property String ApplicationName = {read=FApplicationName, write=FApplicationName};
+    __property String ApiVersion = {read=FApiVersion, write=FApiVersion};
+    __property String Url = {read=FUrl, write=FUrl};
+    __property String Token = {read=FToken, write=FToken};
+};
+
 class TForm2 : public TForm
 {
 __published:	// IDE-managed Components
@@ -32,13 +53,13 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox1;
     TLabel *Label1;
     TLabel *Label2;
-    TEdit *txtGogsUrl;
-    TEdit *txtGogsToken;
+    TEdit *txtSourceUrl;
+    TEdit *txtSourceToken;
     TGroupBox *GroupBox2;
     TLabel *Label3;
     TLabel *Label4;
-    TEdit *txtGitBucketUrl;
-    TEdit *txtGitBucketToken;
+    TEdit *txtDestinationUrl;
+    TEdit *txtDestinationToken;
     TGroupBox *GroupBox3;
     TLabel *Label5;
     TEdit *txtName;
@@ -49,11 +70,14 @@ __published:	// IDE-managed Components
     TLayout *Layout1;
     void __fastcall Button1Click(TObject *Sender);
 private:	// User declarations
+    TGitApplication* SourceApplication;
+    TGitApplication* DestinationApplication;
 protected:
     bool __fastcall CreateRepo(const String AJson);
-    String __fastcall GetAuthenticatedUser();
+    String __fastcall GetAuthenticatedUser(TGitApplication* AGitApplication);
 public:		// User declarations
     __fastcall TForm2(TComponent* Owner);
+    __fastcall virtual ~TForm2(void);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm2 *Form2;

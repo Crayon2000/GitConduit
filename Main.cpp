@@ -11,22 +11,45 @@ TForm2 *Form2;
 //---------------------------------------------------------------------------
 __fastcall TForm2::TForm2(TComponent* Owner)
     : TForm(Owner)
+    , SourceApplication(NULL)
+    , DestinationApplication(NULL)
 {
     Caption = "Gogs To GitBucket";
+
+    SourceApplication = new TGitApplication();
+    DestinationApplication = new TGitApplication();
 
     IdHTTP1->HandleRedirects = true;
     IdHTTP1->IOHandler = IdSSLIOHandlerSocketOpenSSL1;
 }
 //---------------------------------------------------------------------------
 
+__fastcall TForm2::~TForm2()
+{
+    delete SourceApplication;
+    delete DestinationApplication;
+}
+//---------------------------------------------------------------------------
+
+
 void __fastcall TForm2::Button1Click(TObject *Sender)
 {
+    SourceApplication->ApplicationName = "Gogs";
+    SourceApplication->ApiVersion = "v1";
+    SourceApplication->Url = txtSourceUrl->Text;
+    SourceApplication->Token = txtSourceToken->Text;
+
+    DestinationApplication->ApplicationName = "GitBucket";
+    DestinationApplication->ApiVersion = "v3";
+    DestinationApplication->Url = txtDestinationUrl->Text;
+    DestinationApplication->Token = txtDestinationToken->Text;
+
     // Set authorization token
     IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
-        "token " + txtGogsToken->Text;
+        "token " + txtSourceToken->Text;
 
     String LUser;
-    String LUrl = txtGogsUrl->Text + "/api/v1/";
+    String LUrl = SourceApplication->Url + "/api/" + SourceApplication->ApiVersion + "/";
     if(chkTypeOrg->IsChecked == true)
     {
         LUrl += "orgs/" + txtName->Text + "/repos";
@@ -34,7 +57,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
     else
     {
         LUrl += "user/repos";
-        LUser = GetAuthenticatedUser();
+        LUser = GetAuthenticatedUser(SourceApplication);
     }
 
     try
@@ -47,18 +70,18 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
             TJSONArrayEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
             while(LRepoEnumerator->MoveNext() == true)
             {
+                TJSONPair* Pair;
                 TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
 
                 if(chkTypeOrg->IsChecked == false)
                 {
-                    TJSONPair* Pair;
                     if((Pair = LRepo->Get("owner")) != NULL)
                     {
                         TJSONObject* LOwner = static_cast<TJSONObject*>(Pair->JsonValue);
                         if((Pair = LOwner->Get("username")) != NULL)
                         {
-                            TJSONString* Answer = static_cast<TJSONString*>(Pair->JsonValue);
-                            String LUserName = Answer->Value();
+                            String LUserName =
+                                static_cast<TJSONString*>(Pair->JsonValue)->Value();
                             if(LUserName != LUser)
                             {
                                 continue;
@@ -67,12 +90,39 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                     }
                 }
 
+                String LFullName;
+                if((Pair = LRepo->Get("full_name")) != NULL)
+                {
+                    LFullName =
+                        static_cast<TJSONString*>(Pair->JsonValue)->Value();
+                }
+
+                const String LLog = String().sprintf(L"====== %s ======", LFullName.c_str());
+                memoLog->Lines->Add(LLog);
+
                 LRepo->RemovePair("owner");
                 LRepo->RemovePair("permissions");
                 const String LJson = LRepo->ToJSON();
-                CreateRepo(LJson);
+                bool LIsCreated = CreateRepo(LJson);
+
+                if(LIsCreated == false)
+                {   // Don't do rest if issue was not created
+                    continue;
+                }
+
+                if((Pair = LRepo->Get("open_issues_count")) != NULL)
+                {
+                    TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
+                    const LIssueCount = LIssueNumber->AsInt;
+                    if(LIssueCount > 0)
+                    {
+                        const String LLog = String().sprintf(L"%d issue(s) not created!", LIssueCount);
+                        memoLog->Lines->Add(LLog);
+                    }
+                }
 
                 //break; // TEST ONE
+                Application->ProcessMessages();
             }
         }
     }
@@ -90,9 +140,9 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
 
     // Set authorization token
     IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
-        "token " + txtGitBucketToken->Text;
+        "token " + txtDestinationToken->Text;
 
-    String LUrl = txtGitBucketUrl->Text + "/api/v3/";
+    String LUrl = txtDestinationUrl->Text + "/api/" + "v3" + "/";
     if(chkTypeOrg->IsChecked == true)
     {
         LUrl += "orgs/" + txtName->Text + "/repos";
@@ -139,16 +189,17 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
 }
 //---------------------------------------------------------------------------
 
-String __fastcall TForm2::GetAuthenticatedUser()
+String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
 {
     String Result;
 
     // Set authorization token
     IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
-        "token " + txtGogsToken->Text;
+        "token " + AGitApplication->Token;
 
     String LJson;
-    String LUrl = txtGogsUrl->Text + "/api/v1/user";
+    const String LUrl = AGitApplication->Url + "/api/" +
+        AGitApplication->ApiVersion + "/user";
     try
     {
         LJson = IdHTTP1->Get(LUrl);

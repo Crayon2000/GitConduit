@@ -30,7 +30,7 @@ object Form2: TForm2
       Position.Y = 40.000000000000000000
       Text = 'Authorization Token:'
     end
-    object txtGogsUrl: TEdit
+    object txtSourceUrl: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       TabOrder = 2
       Position.X = 144.000000000000000000
@@ -39,7 +39,7 @@ object Form2: TForm2
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
     end
-    object txtGogsToken: TEdit
+    object txtSourceToken: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       TabOrder = 3
       Position.X = 144.000000000000000000
@@ -71,7 +71,7 @@ object Form2: TForm2
       Position.Y = 40.000000000000000000
       Text = 'Authorization Token:'
     end
-    object txtGitBucketUrl: TEdit
+    object txtDestinationUrl: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       TabOrder = 2
       Position.X = 144.000000000000000000
@@ -80,7 +80,7 @@ object Form2: TForm2
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
     end
-    object txtGitBucketToken: TEdit
+    object txtDestinationToken: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       TabOrder = 3
       Position.X = 144.000000000000000000
