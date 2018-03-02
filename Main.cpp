@@ -46,7 +46,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
 
     // Set authorization token
     IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
-        "token " + txtSourceToken->Text;
+        "token " + SourceApplication->Token;
 
     String LUser;
     String LUrl = SourceApplication->Url + "/api/" + SourceApplication->ApiVersion + "/";
@@ -140,9 +140,10 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
 
     // Set authorization token
     IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
-        "token " + txtDestinationToken->Text;
+        "token " + DestinationApplication->Token;
 
-    String LUrl = txtDestinationUrl->Text + "/api/" + "v3" + "/";
+    String LUrl = DestinationApplication->Url + "/api/" +
+        DestinationApplication->ApiVersion + "/";
     if(chkTypeOrg->IsChecked == true)
     {
         LUrl += "orgs/" + txtName->Text + "/repos";
