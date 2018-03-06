@@ -44,10 +44,6 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
     DestinationApplication->Url = txtDestinationUrl->Text;
     DestinationApplication->Token = txtDestinationToken->Text;
 
-    // Set authorization token
-    IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
-        "token " + SourceApplication->Token;
-
     String LUser;
     String LUrl = SourceApplication->Url + "/api/" + SourceApplication->ApiVersion + "/";
     if(chkTypeOrg->IsChecked == true)
@@ -62,6 +58,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
 
     try
     {
+        PrepareRequest(SourceApplication);
         const String LContent = IdHTTP1->Get(LUrl);
 
         TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
@@ -121,6 +118,8 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                     }
                 }
 
+                Clone(LFullName);
+
                 //break; // TEST ONE
                 Application->ProcessMessages();
             }
@@ -138,10 +137,6 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
 {
     bool Result = false;
 
-    // Set authorization token
-    IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
-        "token " + DestinationApplication->Token;
-
     String LUrl = DestinationApplication->Url + "/api/" +
         DestinationApplication->ApiVersion + "/";
     if(chkTypeOrg->IsChecked == true)
@@ -157,6 +152,7 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
     System::Classes::TStringStream* SourceFile = NULL;
     try
     {
+        PrepareRequest(DestinationApplication);
         SourceFile = new System::Classes::TStringStream(AJson);
         LAnswer = IdHTTP1->Post(LUrl, SourceFile);
     }
@@ -194,18 +190,20 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
 {
     String Result;
 
-    // Set authorization token
-    IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
-        "token " + AGitApplication->Token;
-
     String LJson;
     const String LUrl = AGitApplication->Url + "/api/" +
         AGitApplication->ApiVersion + "/user";
     try
     {
+        PrepareRequest(AGitApplication);
         LJson = IdHTTP1->Get(LUrl);
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
+    {
+        const String LLog = "Get authenticated user exception: " + e.Message;
+        memoLog->Lines->Add(LLog);
+    }
+    catch(const Exception& e)
     {
         const String LLog = "Get authenticated user exception: " + e.Message;
         memoLog->Lines->Add(LLog);
@@ -237,6 +235,102 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
     }
 
     return Result;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::PrepareRequest(TGitApplication* AGitApplication)
+{
+    // Set authorization token
+    IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
+        "token " + AGitApplication->Token;
+}
+//---------------------------------------------------------------------------
+
+String __fastcall TForm2::GitUrl(TGitApplication* AGitApplication, const String AFullName)
+{
+    return AGitApplication->Url + AFullName + ".git";
+}
+//---------------------------------------------------------------------------
+
+String __fastcall TForm2::GitWikiUrl(TGitApplication* AGitApplication, const String AFullName)
+{
+    return AGitApplication->Url + AFullName + ".wiki.git";
+}
+//---------------------------------------------------------------------------
+
+HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd)
+{
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    SECURITY_ATTRIBUTES sa;
+
+    si.cb = sizeof(si);
+    si.lpReserved = NULL;
+    si.lpDesktop = NULL;
+    si.lpTitle = L"Git";
+    si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+    si.cbReserved2 = 0;
+    si.lpReserved2 = NULL;
+    si.wShowWindow = SW_HIDE;
+    si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+
+    sa.nLength = sizeof(sa);
+    sa.lpSecurityDescriptor = NULL;
+    sa.bInheritHandle = true;
+
+    bool ProcResult = CreateProcess(NULL, ACmd.c_str(), NULL, NULL, true, 0, NULL, NULL, &si, &pi);
+    if(ProcResult == true)
+    {
+        return pi.hProcess;
+    }
+
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+    CloseHandle(si.hStdOutput);
+    return NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::Wait(HANDLE AHandle)
+{
+    DWORD ExitCode;
+
+    if(AHandle == NULL || AHandle == INVALID_HANDLE_VALUE)
+    {
+        return;
+    }
+
+    bool Done = false;
+    while(Done == false)
+    {
+        GetExitCodeProcess(
+            AHandle,        // handle to the process
+            &ExitCode       // address to receive termination status
+        );
+
+        if(ExitCode == STILL_ACTIVE)
+        {
+            Application->ProcessMessages();
+        }
+        else
+        {
+            Done = true;
+        }
+    }
+    CloseHandle(AHandle);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::Clone(const String AGitRepo)
+{
+    const String LCmd = String().sprintf(L"git clone %s --bare", AGitRepo.c_str());
+    HANDLE LHandle = ExecuteProgramEx(LCmd);
+    if(LHandle == NULL)
+    {
+        return;
+    }
+    Wait(LHandle);
 }
 //---------------------------------------------------------------------------
 

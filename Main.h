@@ -75,6 +75,12 @@ private:	// User declarations
 protected:
     bool __fastcall CreateRepo(const String AJson);
     String __fastcall GetAuthenticatedUser(TGitApplication* AGitApplication);
+    void __fastcall PrepareRequest(TGitApplication* AGitApplication);
+    String __fastcall GitUrl(TGitApplication* AGitApplication, const String AFullName);
+    String __fastcall GitWikiUrl(TGitApplication* AGitApplication, const String AFullName);
+    HANDLE __fastcall ExecuteProgramEx(const String ACmd);
+    void __fastcall Wait(HANDLE AHandle);
+    void __fastcall Clone(const String AGitRepo);
 public:		// User declarations
     __fastcall TForm2(TComponent* Owner);
     __fastcall virtual ~TForm2(void);
