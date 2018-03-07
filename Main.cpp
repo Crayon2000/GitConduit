@@ -54,6 +54,10 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
     {
         LUrl += "user/repos";
         LUser = GetAuthenticatedUser(SourceApplication);
+        if(LUser.IsEmpty() == true)
+        {
+            return;
+        }
     }
 
     try
@@ -118,7 +122,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                     }
                 }
 
-                Clone(LFullName);
+                Clone(GitUrl(SourceApplication, LFullName));
 
                 //break; // TEST ONE
                 Application->ProcessMessages();
@@ -203,7 +207,7 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
         const String LLog = "Get authenticated user exception: " + e.Message;
         memoLog->Lines->Add(LLog);
     }
-    catch(const Exception& e)
+    catch(const Sysutils::Exception& e)
     {
         const String LLog = "Get authenticated user exception: " + e.Message;
         memoLog->Lines->Add(LLog);
@@ -248,13 +252,13 @@ void __fastcall TForm2::PrepareRequest(TGitApplication* AGitApplication)
 
 String __fastcall TForm2::GitUrl(TGitApplication* AGitApplication, const String AFullName)
 {
-    return AGitApplication->Url + AFullName + ".git";
+    return AGitApplication->Url + "/" + AFullName + ".git";
 }
 //---------------------------------------------------------------------------
 
 String __fastcall TForm2::GitWikiUrl(TGitApplication* AGitApplication, const String AFullName)
 {
-    return AGitApplication->Url + AFullName + ".wiki.git";
+    return AGitApplication->Url + "/" + AFullName + ".wiki.git";
 }
 //---------------------------------------------------------------------------
 
@@ -269,10 +273,11 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd)
     si.lpDesktop = NULL;
     si.lpTitle = L"Git";
     si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+    si.wShowWindow = SW_HIDE;
     si.cbReserved2 = 0;
     si.lpReserved2 = NULL;
-    si.wShowWindow = SW_HIDE;
     si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    si.hStdOutput = NULL;
     si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
 
     sa.nLength = sizeof(sa);
