@@ -4,6 +4,7 @@
 
 #include "Main.h"
 #include <System.JSON.hpp>
+#include <System.IOUtils.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.fmx"
@@ -21,6 +22,8 @@ __fastcall TForm2::TForm2(TComponent* Owner)
 
     IdHTTP1->HandleRedirects = true;
     IdHTTP1->IOHandler = IdSSLIOHandlerSocketOpenSSL1;
+    IdHTTP1->Request->UserAgent =
+        "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36";
 }
 //---------------------------------------------------------------------------
 
@@ -122,7 +125,34 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                     }
                 }
 
-                Clone(GitUrl(SourceApplication, LFullName));
+                try
+                {
+                    Clone(GitUrl(SourceApplication, LFullName));
+                    AddRemote(GitUrl(DestinationApplication, LFullName), "temp.git");
+                    Push("temp.git");
+                    try
+                    {
+                        Ioutils::TDirectory::Delete("temp.git", true);
+
+                        Clone(GitWikiUrl(SourceApplication, LFullName));
+                        AddRemote(GitUrl(DestinationApplication, LFullName), "temp.git");
+                        Push("temp.git");
+                    }
+                    catch(...)
+                    {
+                        memoLog->Lines->Add("Wiki could not be exported");
+                    }
+                }
+                __finally
+                {
+                    try
+                    {
+                        Ioutils::TDirectory::Delete("temp.git", true);
+                    }
+                    catch(...)
+                    {
+                    }
+                }
 
                 //break; // TEST ONE
                 Application->ProcessMessages();
@@ -262,7 +292,7 @@ String __fastcall TForm2::GitWikiUrl(TGitApplication* AGitApplication, const Str
 }
 //---------------------------------------------------------------------------
 
-HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd)
+HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADirectory)
 {
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
@@ -284,7 +314,8 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd)
     sa.lpSecurityDescriptor = NULL;
     sa.bInheritHandle = true;
 
-    bool ProcResult = CreateProcess(NULL, ACmd.c_str(), NULL, NULL, true, 0, NULL, NULL, &si, &pi);
+    bool ProcResult = CreateProcess(NULL, ACmd.c_str(), NULL, NULL, true, 0,
+        NULL, ADirectory.c_str(), &si, &pi);
     if(ProcResult == true)
     {
         return pi.hProcess;
@@ -297,13 +328,13 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::Wait(HANDLE AHandle)
+DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 {
-    DWORD ExitCode;
+    DWORD Result;
 
     if(AHandle == NULL || AHandle == INVALID_HANDLE_VALUE)
     {
-        return;
+        return 1;
     }
 
     bool Done = false;
@@ -311,10 +342,10 @@ void __fastcall TForm2::Wait(HANDLE AHandle)
     {
         GetExitCodeProcess(
             AHandle,        // handle to the process
-            &ExitCode       // address to receive termination status
+            &Result       // address to receive termination status
         );
 
-        if(ExitCode == STILL_ACTIVE)
+        if(Result == STILL_ACTIVE)
         {
             Application->ProcessMessages();
         }
@@ -324,18 +355,44 @@ void __fastcall TForm2::Wait(HANDLE AHandle)
         }
     }
     CloseHandle(AHandle);
+
+    return Result;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TForm2::Clone(const String AGitRepo)
 {
-    const String LCmd = String().sprintf(L"git clone %s --bare", AGitRepo.c_str());
+    const String LCmd = String().sprintf(L"git clone %s temp.git --bare", AGitRepo.c_str());
     HANDLE LHandle = ExecuteProgramEx(LCmd);
-    if(LHandle == NULL)
+    DWORD LExitCode = Wait(LHandle);
+    if(LExitCode != 0)
     {
-        return;
+        throw Exception("Clone command failed");
     }
-    Wait(LHandle);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory)
+{
+    const String LCmd = String().sprintf(L"git remote add origin2 %s", AGitRepo.c_str());
+    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
+    DWORD LExitCode = Wait(LHandle);
+    if(LExitCode != 0)
+    {
+        throw Exception("Add remote command failed");
+    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::Push(const String ADirectory)
+{
+    const String LCmd = "git push origin2 --mirror";
+    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
+    DWORD LExitCode = Wait(LHandle);
+    if(LExitCode != 0)
+    {
+        throw Exception("Push command failed");
+    }
 }
 //---------------------------------------------------------------------------
 
