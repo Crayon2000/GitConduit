@@ -34,7 +34,6 @@ __fastcall TForm2::~TForm2()
 }
 //---------------------------------------------------------------------------
 
-
 void __fastcall TForm2::Button1Click(TObject *Sender)
 {
     SourceApplication->ApplicationName = "Gogs";
@@ -130,13 +129,15 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                     Clone(GitUrl(SourceApplication, LFullName));
                     AddRemote(GitUrl(DestinationApplication, LFullName), "temp.git");
                     Push("temp.git");
+                    memoLog->Lines->Add("Pushed repository");
                     try
                     {
                         Ioutils::TDirectory::Delete("temp.git", true);
 
                         Clone(GitWikiUrl(SourceApplication, LFullName));
-                        AddRemote(GitUrl(DestinationApplication, LFullName), "temp.git");
+                        AddRemote(GitWikiUrl(DestinationApplication, LFullName), "temp.git");
                         Push("temp.git");
+                        memoLog->Lines->Add("Pushed Wiki repository");
                     }
                     catch(...)
                     {
@@ -204,7 +205,8 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
         if((Pair = LObject->Get("full_name")) != NULL)
         {
             TJSONString* Answer = static_cast<TJSONString*>(Pair->JsonValue);
-            const String LLog = "Created repository: " + Answer->Value();
+            const String LLog = "Created repository " + Answer->Value() + " on " +
+                DestinationApplication->ApplicationName;
             memoLog->Lines->Add(LLog);
             Result = true;
         }
