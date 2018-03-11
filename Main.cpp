@@ -46,17 +46,25 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
     DestinationApplication->Url = txtDestinationUrl->Text;
     DestinationApplication->Token = txtDestinationToken->Text;
 
-    String LUser;
     String LUrl = SourceApplication->Url + "/api/" + SourceApplication->ApiVersion + "/";
     if(chkTypeOrg->IsChecked == true)
     {
-        LUrl += "orgs/" + txtName->Text + "/repos";
+        SourceApplication->User = txtName->Text;
+        DestinationApplication->User = txtName->Text;
+
+        LUrl += "orgs/" + SourceApplication->User + "/repos";
     }
     else
     {
         LUrl += "user/repos";
-        LUser = GetAuthenticatedUser(SourceApplication);
-        if(LUser.IsEmpty() == true)
+
+        SourceApplication->User = GetAuthenticatedUser(SourceApplication);
+        if(SourceApplication->User.IsEmpty() == true)
+        {
+            return;
+        }
+        DestinationApplication->User = GetAuthenticatedUser(DestinationApplication);
+        if(DestinationApplication->User.IsEmpty() == true)
         {
             return;
         }
@@ -85,7 +93,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                         {
                             String LUserName =
                                 static_cast<TJSONString*>(Pair->JsonValue)->Value();
-                            if(LUserName != LUser)
+                            if(LUserName != SourceApplication->User)
                             {
                                 continue;
                             }
@@ -93,14 +101,16 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                     }
                 }
 
-                String LFullName;
-                if((Pair = LRepo->Get("full_name")) != NULL)
+                String LName;
+                if((Pair = LRepo->Get("name")) != NULL)
                 {
-                    LFullName =
+                    LName =
                         static_cast<TJSONString*>(Pair->JsonValue)->Value();
                 }
+                String LFullNameSource = SourceApplication->User + "/" + LName;
+                String LFullNameDestination = DestinationApplication->User + "/" + LName;
 
-                const String LLog = String().sprintf(L"====== %s ======", LFullName.c_str());
+                const String LLog = String().sprintf(L"====== %s ======", LFullNameSource.c_str());
                 memoLog->Lines->Add(LLog);
 
                 LRepo->RemovePair("owner");
@@ -126,16 +136,16 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
 
                 try
                 {
-                    Clone(GitUrl(SourceApplication, LFullName));
-                    AddRemote(GitUrl(DestinationApplication, LFullName), "temp.git");
+                    Clone(GitUrl(SourceApplication, LFullNameSource));
+                    AddRemote(GitUrl(DestinationApplication, LFullNameDestination), "temp.git");
                     Push("temp.git");
                     memoLog->Lines->Add("Pushed repository");
                     try
                     {
                         Ioutils::TDirectory::Delete("temp.git", true);
 
-                        Clone(GitWikiUrl(SourceApplication, LFullName));
-                        AddRemote(GitWikiUrl(DestinationApplication, LFullName), "temp.git");
+                        Clone(GitWikiUrl(SourceApplication, LFullNameSource));
+                        AddRemote(GitWikiUrl(DestinationApplication, LFullNameDestination), "temp.git");
                         Push("temp.git");
                         memoLog->Lines->Add("Pushed Wiki repository");
                     }

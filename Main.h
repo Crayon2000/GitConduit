@@ -32,6 +32,7 @@ private:
     String FApiVersion;
     String FUrl;
     String FToken;
+    String FUser;
 protected:
 
 public:
@@ -42,6 +43,7 @@ public:
     __property String ApiVersion = {read=FApiVersion, write=FApiVersion};
     __property String Url = {read=FUrl, write=FUrl};
     __property String Token = {read=FToken, write=FToken};
+    __property String User = {read=FUser, write=FUser};
 };
 
 class TForm2 : public TForm
