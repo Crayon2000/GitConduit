@@ -70,15 +70,19 @@ __published:	// IDE-managed Components
     TLabel *Label4;
     TEdit *txtDestinationUrl;
     TEdit *txtDestinationToken;
-    TGroupBox *GroupBox3;
-    TLabel *Label5;
-    TEdit *txtName;
-    TRadioButton *chkTypeUser;
-    TRadioButton *chkTypeOrg;
     TMemo *memoLog;
     TGroupBox *GroupBox4;
     TLayout *Layout1;
+    TLabel *Label5;
+    TRadioButton *chkSourceTypeUser;
+    TRadioButton *chkSourceTypeOrg;
+    TEdit *txtSourceName;
+    TLabel *Label6;
+    TRadioButton *chkDestinationTypeUser;
+    TRadioButton *chkDestinationTypeOrg;
+    TEdit *txtDestinationName;
     void __fastcall Button1Click(TObject *Sender);
+    void __fastcall txtSourceNameTyping(TObject *Sender);
 private:	// User declarations
     TGitApplication* SourceApplication;
     TGitApplication* DestinationApplication;

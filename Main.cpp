@@ -47,27 +47,36 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
     DestinationApplication->Token = txtDestinationToken->Text;
 
     String LUrl = SourceApplication->Url + "/api/" + SourceApplication->ApiVersion + "/";
-    if(chkTypeOrg->IsChecked == true)
+    if(chkSourceTypeOrg->IsChecked == true)
     {
         LUrl += "orgs/" + SourceApplication->User + "/repos";
 
         SourceApplication->Endpoint = TApiEndpoint::Organization;
-        DestinationApplication->Endpoint = TApiEndpoint::Organization;
-
-        SourceApplication->User = txtName->Text;
-        DestinationApplication->User = txtName->Text;
+        SourceApplication->User = txtSourceName->Text;
     }
     else
     {
         LUrl += "user/repos";
 
         SourceApplication->Endpoint = TApiEndpoint::User;
-        DestinationApplication->Endpoint = TApiEndpoint::User;
 
         SourceApplication->User = GetAuthenticatedUser(SourceApplication);
+        if(SourceApplication->User.IsEmpty() == true)
+        {
+            return;
+        }
+    }
+
+    if(chkDestinationTypeOrg->IsChecked == true)
+    {
+        DestinationApplication->Endpoint = TApiEndpoint::Organization;
+        DestinationApplication->User = txtDestinationName->Text;
+    }
+    else
+    {
+        DestinationApplication->Endpoint = TApiEndpoint::User;
         DestinationApplication->User = GetAuthenticatedUser(DestinationApplication);
-        if(DestinationApplication->User.IsEmpty() == true ||
-            SourceApplication->User.IsEmpty() == true)
+        if(DestinationApplication->User.IsEmpty() == true)
         {
             return;
         }
@@ -189,7 +198,7 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
 
     if(DestinationApplication->Endpoint == TApiEndpoint::Organization)
     {
-        LUrl += "orgs/" + txtName->Text + "/repos";
+        LUrl += "orgs/" + DestinationApplication->User + "/repos";
     }
     else
     {
@@ -408,6 +417,12 @@ void __fastcall TForm2::Push(const String ADirectory)
     {
         throw Exception("Push command failed");
     }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::txtSourceNameTyping(TObject *Sender)
+{
+    txtDestinationName->Text = txtSourceName->Text;
 }
 //---------------------------------------------------------------------------
 
