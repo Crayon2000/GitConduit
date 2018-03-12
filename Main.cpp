@@ -49,22 +49,25 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
     String LUrl = SourceApplication->Url + "/api/" + SourceApplication->ApiVersion + "/";
     if(chkTypeOrg->IsChecked == true)
     {
+        LUrl += "orgs/" + SourceApplication->User + "/repos";
+
+        SourceApplication->Endpoint = TApiEndpoint::Organization;
+        DestinationApplication->Endpoint = TApiEndpoint::Organization;
+
         SourceApplication->User = txtName->Text;
         DestinationApplication->User = txtName->Text;
-
-        LUrl += "orgs/" + SourceApplication->User + "/repos";
     }
     else
     {
         LUrl += "user/repos";
 
+        SourceApplication->Endpoint = TApiEndpoint::User;
+        DestinationApplication->Endpoint = TApiEndpoint::User;
+
         SourceApplication->User = GetAuthenticatedUser(SourceApplication);
-        if(SourceApplication->User.IsEmpty() == true)
-        {
-            return;
-        }
         DestinationApplication->User = GetAuthenticatedUser(DestinationApplication);
-        if(DestinationApplication->User.IsEmpty() == true)
+        if(DestinationApplication->User.IsEmpty() == true ||
+            SourceApplication->User.IsEmpty() == true)
         {
             return;
         }
@@ -84,7 +87,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                 TJSONPair* Pair;
                 TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
 
-                if(chkTypeOrg->IsChecked == false)
+                if(SourceApplication->Endpoint == TApiEndpoint::User)
                 {
                     if((Pair = LRepo->Get("owner")) != NULL)
                     {
@@ -104,11 +107,10 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                 String LName;
                 if((Pair = LRepo->Get("name")) != NULL)
                 {
-                    LName =
-                        static_cast<TJSONString*>(Pair->JsonValue)->Value();
+                    LName = static_cast<TJSONString*>(Pair->JsonValue)->Value();
                 }
-                String LFullNameSource = SourceApplication->User + "/" + LName;
-                String LFullNameDestination = DestinationApplication->User + "/" + LName;
+                const String LFullNameSource = SourceApplication->User + "/" + LName;
+                const String LFullNameDestination = DestinationApplication->User + "/" + LName;
 
                 const String LLog = String().sprintf(L"====== %s ======", LFullNameSource.c_str());
                 memoLog->Lines->Add(LLog);
@@ -184,7 +186,8 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
 
     String LUrl = DestinationApplication->Url + "/api/" +
         DestinationApplication->ApiVersion + "/";
-    if(chkTypeOrg->IsChecked == true)
+
+    if(DestinationApplication->Endpoint == TApiEndpoint::Organization)
     {
         LUrl += "orgs/" + txtName->Text + "/repos";
     }
