@@ -4,6 +4,12 @@
 //---------------------------------------------------------------------------
 #include <System.hpp>
 //---------------------------------------------------------------------------
+enum class TGitApplicationType : unsigned char
+{
+    Gogs,
+    GitBucket
+};
+
 enum class TApiEndpoint : unsigned char
 {
     User,
@@ -15,6 +21,7 @@ class TGitApplication : public System::TObject
     typedef System::TObject inherited;
 
 private:
+    TGitApplicationType FApplicationType;
     String FApplicationName;
     String FApiVersion;
     String FUrl;
@@ -22,12 +29,13 @@ private:
     String FUser;
     TApiEndpoint FEndpoint;
 protected:
-
+    void __fastcall SetApplicationType(TGitApplicationType AApplicationType);
 public:
     __fastcall TGitApplication();
     inline __fastcall virtual ~TGitApplication(void) { }
 
-    __property String ApplicationName = {read=FApplicationName, write=FApplicationName};
+    __property TGitApplicationType ApplicationType = {read=FApplicationType, write=SetApplicationType};
+    __property String ApplicationName = {read=FApplicationName};
     __property String ApiVersion = {read=FApiVersion, write=FApiVersion};
     __property String Url = {read=FUrl, write=FUrl};
     __property String Token = {read=FToken, write=FToken};

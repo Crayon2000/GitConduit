@@ -18,9 +18,9 @@ __fastcall TForm2::TForm2(TComponent* Owner)
 {
     Caption = "Gogs To GitBucket";
 
-    cboSourceApp->Items->AddObject("Gogs", NULL);
+    cboSourceApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
     cboSourceApp->ItemIndex = 0;
-    cboDestinationApp->Items->AddObject("GitBucket", NULL);
+    cboDestinationApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
     cboDestinationApp->ItemIndex = 0;
 
     SourceApplication = new TGitApplication();
@@ -42,13 +42,15 @@ __fastcall TForm2::~TForm2()
 
 void __fastcall TForm2::Button1Click(TObject *Sender)
 {
-    SourceApplication->ApplicationName = "Gogs";
-    SourceApplication->ApiVersion = "v1";
+    const TGitApplicationType LSourceType =
+        static_cast<TGitApplicationType>((unsigned char)cboSourceApp->Selected->Data);
+    SourceApplication->ApplicationType = LSourceType;
     SourceApplication->Url = txtSourceUrl->Text;
     SourceApplication->Token = txtSourceToken->Text;
 
-    DestinationApplication->ApplicationName = "GitBucket";
-    DestinationApplication->ApiVersion = "v3";
+    const TGitApplicationType LDestinationype =
+        static_cast<TGitApplicationType>((unsigned char)cboDestinationApp->Selected->Data);
+    DestinationApplication->ApplicationType = LDestinationype;
     DestinationApplication->Url = txtDestinationUrl->Text;
     DestinationApplication->Token = txtDestinationToken->Text;
 
@@ -143,7 +145,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                 if((Pair = LRepo->Get("open_issues_count")) != NULL)
                 {
                     TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
-                    const LIssueCount = LIssueNumber->AsInt;
+                    const int LIssueCount = LIssueNumber->AsInt;
                     if(LIssueCount > 0)
                     {
                         const String LLog = String().sprintf(L"%d issue(s) not created!", LIssueCount);
