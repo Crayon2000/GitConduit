@@ -1,7 +1,7 @@
 object Form2: TForm2
   Left = 0
   Top = 0
-  ClientHeight = 544
+  ClientHeight = 589
   ClientWidth = 552
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -16,30 +16,21 @@ object Form2: TForm2
     Position.X = 8.000000000000000000
     Position.Y = 8.000000000000000000
     Size.Width = 536.000000000000000000
-    Size.Height = 129.000000000000000000
+    Size.Height = 153.000000000000000000
     Size.PlatformDefault = False
-    Text = 'Gogs'
+    Text = 'Source'
     TabOrder = 0
     object Label1: TLabel
       Position.X = 16.000000000000000000
-      Position.Y = 16.000000000000000000
+      Position.Y = 40.000000000000000000
       Text = 'Sever URL:'
     end
     object Label2: TLabel
       Position.X = 16.000000000000000000
-      Position.Y = 40.000000000000000000
+      Position.Y = 64.000000000000000000
       Text = 'Authorization Token:'
     end
     object txtSourceUrl: TEdit
-      Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 0
-      Position.X = 144.000000000000000000
-      Position.Y = 16.000000000000000000
-      Size.Width = 377.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object txtSourceToken: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       TabOrder = 1
       Position.X = 144.000000000000000000
@@ -48,34 +39,56 @@ object Form2: TForm2
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
     end
+    object txtSourceToken: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 2
+      Position.X = 144.000000000000000000
+      Position.Y = 64.000000000000000000
+      Size.Width = 377.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
     object Label5: TLabel
       Position.X = 16.000000000000000000
-      Position.Y = 72.000000000000000000
+      Position.Y = 96.000000000000000000
       Text = 'Type:'
     end
     object chkSourceTypeUser: TRadioButton
       GroupName = 'Source'
       Position.X = 144.000000000000000000
-      Position.Y = 72.000000000000000000
-      TabOrder = 2
+      Position.Y = 96.000000000000000000
+      TabOrder = 3
       Text = 'User (me)'
     end
     object chkSourceTypeOrg: TRadioButton
       GroupName = 'Source'
       Position.X = 144.000000000000000000
-      Position.Y = 96.000000000000000000
-      TabOrder = 3
+      Position.Y = 120.000000000000000000
+      TabOrder = 4
       Text = 'Organization'
     end
     object txtSourceName: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 4
+      TabOrder = 5
       Position.X = 256.000000000000000000
-      Position.Y = 96.000000000000000000
+      Position.Y = 120.000000000000000000
       Size.Width = 233.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
       OnTyping = txtSourceNameTyping
+    end
+    object Label7: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Text = 'Application:'
+    end
+    object cboSourceApp: TComboBox
+      Position.X = 144.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 153.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
     end
   end
   object GroupBox2: TGroupBox
@@ -84,32 +97,23 @@ object Form2: TForm2
     Margins.Right = 8.000000000000000000
     Margins.Bottom = 8.000000000000000000
     Position.X = 8.000000000000000000
-    Position.Y = 145.000000000000000000
+    Position.Y = 169.000000000000000000
     Size.Width = 536.000000000000000000
-    Size.Height = 129.000000000000000000
+    Size.Height = 153.000000000000000000
     Size.PlatformDefault = False
-    Text = 'GitBucket'
+    Text = 'Destination'
     TabOrder = 1
     object Label3: TLabel
       Position.X = 16.000000000000000000
-      Position.Y = 16.000000000000000000
+      Position.Y = 40.000000000000000000
       Text = 'Sever URL:'
     end
     object Label4: TLabel
       Position.X = 16.000000000000000000
-      Position.Y = 40.000000000000000000
+      Position.Y = 64.000000000000000000
       Text = 'Authorization Token:'
     end
     object txtDestinationUrl: TEdit
-      Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 0
-      Position.X = 144.000000000000000000
-      Position.Y = 16.000000000000000000
-      Size.Width = 377.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object txtDestinationToken: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       TabOrder = 1
       Position.X = 144.000000000000000000
@@ -118,34 +122,56 @@ object Form2: TForm2
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
     end
+    object txtDestinationToken: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 2
+      Position.X = 144.000000000000000000
+      Position.Y = 64.000000000000000000
+      Size.Width = 377.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
     object Label6: TLabel
       Position.X = 16.000000000000000000
-      Position.Y = 72.000000000000000000
+      Position.Y = 96.000000000000000000
       Text = 'Type:'
     end
     object chkDestinationTypeUser: TRadioButton
       GroupName = 'Destination'
       Position.X = 144.000000000000000000
-      Position.Y = 72.000000000000000000
-      TabOrder = 2
+      Position.Y = 96.000000000000000000
+      TabOrder = 3
       Text = 'User (me)'
     end
     object chkDestinationTypeOrg: TRadioButton
       GroupName = 'Destination'
       Position.X = 144.000000000000000000
-      Position.Y = 96.000000000000000000
-      TabOrder = 3
+      Position.Y = 120.000000000000000000
+      TabOrder = 4
       Text = 'Organization'
     end
     object txtDestinationName: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 4
+      TabOrder = 5
       Position.X = 256.000000000000000000
-      Position.Y = 96.000000000000000000
+      Position.Y = 120.000000000000000000
       Enabled = False
       Size.Width = 233.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
+    end
+    object Label8: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Text = 'Application:'
+    end
+    object cboDestinationApp: TComboBox
+      Position.X = 144.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 153.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
     end
   end
   object GroupBox4: TGroupBox
@@ -154,7 +180,7 @@ object Form2: TForm2
     Margins.Right = 8.000000000000000000
     Margins.Bottom = 8.000000000000000000
     Size.Width = 536.000000000000000000
-    Size.Height = 204.000000000000000000
+    Size.Height = 201.000000000000000000
     Size.PlatformDefault = False
     Text = 'Log'
     TabOrder = 3
@@ -167,16 +193,16 @@ object Form2: TForm2
       Margins.Right = 8.000000000000000000
       Margins.Bottom = 8.000000000000000000
       Size.Width = 520.000000000000000000
-      Size.Height = 180.000000000000000000
+      Size.Height = 177.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       Viewport.Width = 516.000000000000000000
-      Viewport.Height = 176.000000000000000000
+      Viewport.Height = 173.000000000000000000
     end
   end
   object Layout1: TLayout
     Align = Top
-    Position.Y = 282.000000000000000000
+    Position.Y = 330.000000000000000000
     Size.Width = 552.000000000000000000
     Size.Height = 50.000000000000000000
     Size.PlatformDefault = False

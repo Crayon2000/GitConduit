@@ -3,6 +3,7 @@
 #pragma hdrstop
 
 #include "Main.h"
+#include "GitApplication.h"
 #include <System.JSON.hpp>
 #include <System.IOUtils.hpp>
 //---------------------------------------------------------------------------
@@ -16,6 +17,11 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     , DestinationApplication(NULL)
 {
     Caption = "Gogs To GitBucket";
+
+    cboSourceApp->Items->AddObject("Gogs", NULL);
+    cboSourceApp->ItemIndex = 0;
+    cboDestinationApp->Items->AddObject("GitBucket", NULL);
+    cboDestinationApp->ItemIndex = 0;
 
     SourceApplication = new TGitApplication();
     DestinationApplication = new TGitApplication();
