@@ -19,6 +19,7 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     Caption = "Gogs To GitBucket";
 
     cboSourceApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
+    cboSourceApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
     cboSourceApp->ItemIndex = 0;
     cboDestinationApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
     cboDestinationApp->ItemIndex = 0;
@@ -333,7 +334,7 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     si.cb = sizeof(si);
     si.lpReserved = NULL;
     si.lpDesktop = NULL;
-    si.lpTitle = L"Git";
+    si.lpTitle = const_cast<LPWSTR>(L"Git");
     si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
     si.wShowWindow = SW_HIDE;
     si.cbReserved2 = 0;
