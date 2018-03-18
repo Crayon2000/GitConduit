@@ -54,14 +54,12 @@ object Form2: TForm2
       Text = 'Type:'
     end
     object chkSourceTypeUser: TRadioButton
-      GroupName = 'Source'
       Position.X = 144.000000000000000000
       Position.Y = 96.000000000000000000
       TabOrder = 3
       Text = 'User (me)'
     end
     object chkSourceTypeOrg: TRadioButton
-      GroupName = 'Source'
       Position.X = 144.000000000000000000
       Position.Y = 120.000000000000000000
       TabOrder = 4
@@ -137,14 +135,12 @@ object Form2: TForm2
       Text = 'Type:'
     end
     object chkDestinationTypeUser: TRadioButton
-      GroupName = 'Destination'
       Position.X = 144.000000000000000000
       Position.Y = 96.000000000000000000
       TabOrder = 3
       Text = 'User (me)'
     end
     object chkDestinationTypeOrg: TRadioButton
-      GroupName = 'Destination'
       Position.X = 144.000000000000000000
       Position.Y = 120.000000000000000000
       TabOrder = 4

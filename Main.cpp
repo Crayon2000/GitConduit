@@ -21,8 +21,14 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     cboSourceApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
     cboSourceApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
     cboSourceApp->ItemIndex = 0;
+    cboDestinationApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
     cboDestinationApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
-    cboDestinationApp->ItemIndex = 0;
+    cboDestinationApp->ItemIndex = 1;
+
+    chkSourceTypeUser->GroupName = "Source";
+    chkSourceTypeOrg->GroupName = "Source";
+    chkDestinationTypeUser->GroupName = "Destination";
+    chkDestinationTypeOrg->GroupName = "Destination";
 
     SourceApplication = new TGitApplication();
     DestinationApplication = new TGitApplication();
