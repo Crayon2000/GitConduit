@@ -73,7 +73,6 @@ object Form2: TForm2
       Size.Width = 233.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
-      OnTyping = txtSourceNameTyping
     end
     object Label7: TLabel
       Position.X = 16.000000000000000000
@@ -151,7 +150,6 @@ object Form2: TForm2
       TabOrder = 5
       Position.X = 256.000000000000000000
       Position.Y = 120.000000000000000000
-      Enabled = False
       Size.Width = 233.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False

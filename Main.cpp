@@ -435,9 +435,3 @@ void __fastcall TForm2::Push(const String ADirectory)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::txtSourceNameTyping(TObject *Sender)
-{
-    txtDestinationName->Text = txtSourceName->Text;
-}
-//---------------------------------------------------------------------------
-
