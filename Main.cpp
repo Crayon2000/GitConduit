@@ -20,9 +20,11 @@ __fastcall TForm2::TForm2(TComponent* Owner)
 
     cboSourceApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
     cboSourceApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
+    cboSourceApp->Items->AddObject("GitHub", (TObject*)TGitApplicationType::GitHub);
     cboSourceApp->ItemIndex = 0;
     cboDestinationApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
     cboDestinationApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
+    cboDestinationApp->Items->AddObject("GitHub", (TObject*)TGitApplicationType::GitHub);
     cboDestinationApp->ItemIndex = 1;
 
     chkSourceTypeUser->GroupName = "Source";
@@ -61,17 +63,17 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
     DestinationApplication->Url = txtDestinationUrl->Text;
     DestinationApplication->Token = txtDestinationToken->Text;
 
-    String LUrl = SourceApplication->Url + "/api/" + SourceApplication->ApiVersion + "/";
+    String LUrl = SourceApplication->ApiUrl;
     if(chkSourceTypeOrg->IsChecked == true)
     {
-        LUrl += "orgs/" + SourceApplication->User + "/repos";
+        LUrl += "/orgs/" + SourceApplication->User + "/repos";
 
         SourceApplication->Endpoint = TApiEndpoint::Organization;
         SourceApplication->User = txtSourceName->Text;
     }
     else
     {
-        LUrl += "user/repos";
+        LUrl += "/user/repos";
 
         SourceApplication->Endpoint = TApiEndpoint::User;
 
@@ -116,7 +118,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                     if((Pair = LRepo->Get("owner")) != NULL)
                     {
                         TJSONObject* LOwner = static_cast<TJSONObject*>(Pair->JsonValue);
-                        if((Pair = LOwner->Get("username")) != NULL)
+                        if((Pair = LOwner->Get("login")) != NULL)
                         {
                             String LUserName =
                                 static_cast<TJSONString*>(Pair->JsonValue)->Value();
@@ -125,7 +127,19 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
                                 continue;
                             }
                         }
+#ifdef _DEBUG
+                        else
+                        {
+                            throw Exception("login is not part owner");
+                        }
+#endif
                     }
+#ifdef _DEBUG
+                    else
+                    {
+                        throw Exception("login is not found");
+                    }
+#endif
                 }
 
                 String LName;
@@ -208,16 +222,15 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
 {
     bool Result = false;
 
-    String LUrl = DestinationApplication->Url + "/api/" +
-        DestinationApplication->ApiVersion + "/";
+    String LUrl = DestinationApplication->ApiUrl;
 
     if(DestinationApplication->Endpoint == TApiEndpoint::Organization)
     {
-        LUrl += "orgs/" + DestinationApplication->User + "/repos";
+        LUrl += "/orgs/" + DestinationApplication->User + "/repos";
     }
     else
     {
-        LUrl += "user/repos";
+        LUrl += "/user/repos";
     }
 
     String LAnswer;
@@ -264,8 +277,7 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
     String Result;
 
     String LJson;
-    const String LUrl = AGitApplication->Url + "/api/" +
-        AGitApplication->ApiVersion + "/user";
+    const String LUrl = AGitApplication->ApiUrl + "/user";
     try
     {
         PrepareRequest(AGitApplication);
