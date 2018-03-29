@@ -24,23 +24,20 @@ class TGitApplication : public System::TObject
 private:
     TGitApplicationType FApplicationType;
     String FApplicationName;
-    String FApiVersion;
-    String FUrl;
+    String FApiUrl;
     String FToken;
     String FUser;
     TApiEndpoint FEndpoint;
 protected:
     void __fastcall SetApplicationType(TGitApplicationType AApplicationType);
-    String __fastcall GetApiUrl();
+    void __fastcall SetApiUrl(String AApiUrl);
 public:
     __fastcall TGitApplication();
     inline __fastcall virtual ~TGitApplication(void) { }
 
     __property TGitApplicationType ApplicationType = {read=FApplicationType, write=SetApplicationType};
     __property String ApplicationName = {read=FApplicationName};
-    __property String ApiVersion = {read=FApiVersion, write=FApiVersion};
-    __property String Url = {read=FUrl, write=FUrl};
-    __property String ApiUrl = {read=GetApiUrl};
+    __property String ApiUrl = {read=FApiUrl, write=SetApiUrl};
     __property String Token = {read=FToken, write=FToken};
     __property String User = {read=FUser, write=FUser};
     __property TApiEndpoint Endpoint = {read=FEndpoint, write=FEndpoint};

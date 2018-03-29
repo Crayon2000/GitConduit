@@ -54,13 +54,13 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
     const TGitApplicationType LSourceType =
         static_cast<TGitApplicationType>((unsigned char)cboSourceApp->Selected->Data);
     SourceApplication->ApplicationType = LSourceType;
-    SourceApplication->Url = txtSourceUrl->Text;
+    SourceApplication->ApiUrl = txtSourceUrl->Text;
     SourceApplication->Token = txtSourceToken->Text;
 
     const TGitApplicationType LDestinationype =
         static_cast<TGitApplicationType>((unsigned char)cboDestinationApp->Selected->Data);
     DestinationApplication->ApplicationType = LDestinationype;
-    DestinationApplication->Url = txtDestinationUrl->Text;
+    DestinationApplication->ApiUrl = txtDestinationUrl->Text;
     DestinationApplication->Token = txtDestinationToken->Text;
 
     String LUrl = SourceApplication->ApiUrl;

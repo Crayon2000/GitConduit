@@ -23,7 +23,7 @@ object Form2: TForm2
     object Label1: TLabel
       Position.X = 16.000000000000000000
       Position.Y = 40.000000000000000000
-      Text = 'Sever URL:'
+      Text = 'API URL:'
     end
     object Label2: TLabel
       Position.X = 16.000000000000000000
@@ -103,7 +103,7 @@ object Form2: TForm2
     object Label3: TLabel
       Position.X = 16.000000000000000000
       Position.Y = 40.000000000000000000
-      Text = 'Sever URL:'
+      Text = 'API URL:'
     end
     object Label4: TLabel
       Position.X = 16.000000000000000000

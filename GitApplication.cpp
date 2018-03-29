@@ -3,6 +3,7 @@
 
 #include "GitApplication.h"
 #include <System.SysUtils.hpp>
+#include <IdURI.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
@@ -19,15 +20,12 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
     {
         case TGitApplicationType::Gogs:
             FApplicationName = "Gogs";
-            FApiVersion = "v1";
             break;
         case TGitApplicationType::GitBucket:
             FApplicationName = "GitBucket";
-            FApiVersion = "v3";
             break;
         case TGitApplicationType::GitHub:
             FApplicationName = "GitHub";
-            FApiVersion = ""; // Leave empty to get latest version
             break;
         default:
             throw Exception("Invalid application type!");
@@ -35,23 +33,8 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
     FApplicationType = AApplicationType;
 }
 
-String __fastcall TGitApplication::GetApiUrl()
+void __fastcall TGitApplication::SetApiUrl(String AApiUrl)
 {
-    String Result;
-
-    switch(FApplicationType)
-    {
-        case TGitApplicationType::Gogs:
-        case TGitApplicationType::GitBucket:
-            Result = Url + "/api/" + ApiVersion;
-            break;
-        case TGitApplicationType::GitHub:
-            Result = "https://api.github.com";
-            break;
-        default:
-            throw Exception("Invalid application type!");
-    }
-
-    return Result;
+    FApiUrl = TIdURI::URLEncode(AApiUrl);
 }
 
