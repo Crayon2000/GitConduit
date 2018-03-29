@@ -26,6 +26,22 @@
 //---------------------------------------------------------------------------
 class TGitApplication;
 
+class TOwner
+{
+public:
+    String Login;
+};
+
+class TRepository
+{
+public:
+    TOwner Owner;
+    String Name;
+    String FullName;
+    String CloneUrl;
+    int OpenIssueCount;
+};
+
 class TForm2 : public TForm
 {
 __published:    // IDE-managed Components
@@ -62,16 +78,15 @@ private:    // User declarations
     TGitApplication* SourceApplication;
     TGitApplication* DestinationApplication;
 protected:
-    bool __fastcall CreateRepo(const String AJson);
+    bool __fastcall CreateRepo(const String AJson, TRepository& ARepository);
     String __fastcall GetAuthenticatedUser(TGitApplication* AGitApplication);
     void __fastcall PrepareRequest(TGitApplication* AGitApplication);
-    String __fastcall GitUrl(TGitApplication* AGitApplication, const String AFullName);
-    String __fastcall GitWikiUrl(TGitApplication* AGitApplication, const String AFullName);
     HANDLE __fastcall ExecuteProgramEx(const String ACmd, const String ADirectory = ".");
     DWORD __fastcall Wait(HANDLE AHandle);
     void __fastcall Clone(const String AGitRepo);
     void __fastcall AddRemote(const String AGitRepo, const String ADirectory);
     void __fastcall Push(const String ADirectory);
+    void __fastcall JsonToRepo(const String AJson, TRepository& ARepository);
 public:     // User declarations
     __fastcall TForm2(TComponent* Owner);
     __fastcall virtual ~TForm2(void);

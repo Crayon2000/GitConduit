@@ -110,82 +110,56 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
             TJSONArrayEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
             while(LRepoEnumerator->MoveNext() == true)
             {
-                TJSONPair* Pair;
                 TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
 
-                if(SourceApplication->Endpoint == TApiEndpoint::User)
+                TRepository LDestinationRepository;
+                TRepository LSourceRepository;
+                JsonToRepo(LRepo->ToString(), LSourceRepository);
+
+                if(SourceApplication->Endpoint == TApiEndpoint::User &&
+                    LSourceRepository.Owner.Login != SourceApplication->User)
                 {
-                    if((Pair = LRepo->Get("owner")) != NULL)
-                    {
-                        TJSONObject* LOwner = static_cast<TJSONObject*>(Pair->JsonValue);
-                        if((Pair = LOwner->Get("login")) != NULL)
-                        {
-                            String LUserName =
-                                static_cast<TJSONString*>(Pair->JsonValue)->Value();
-                            if(LUserName != SourceApplication->User)
-                            {
-                                continue;
-                            }
-                        }
-#ifdef _DEBUG
-                        else
-                        {
-                            throw Exception("login is not part owner");
-                        }
-#endif
-                    }
-#ifdef _DEBUG
-                    else
-                    {
-                        throw Exception("login is not found");
-                    }
-#endif
+                    continue;
                 }
 
-                String LName;
-                if((Pair = LRepo->Get("name")) != NULL)
-                {
-                    LName = static_cast<TJSONString*>(Pair->JsonValue)->Value();
-                }
-                const String LFullNameSource = SourceApplication->User + "/" + LName;
-                const String LFullNameDestination = DestinationApplication->User + "/" + LName;
-
-                const String LLog = String().sprintf(L"====== %s ======", LFullNameSource.c_str());
+                const String LLog = String().sprintf(L"====== %s ======", LSourceRepository.FullName.c_str());
                 memoLog->Lines->Add(LLog);
 
                 LRepo->RemovePair("owner");
                 LRepo->RemovePair("permissions");
                 const String LJson = LRepo->ToJSON();
-                bool LIsCreated = CreateRepo(LJson);
+                bool LIsCreated = CreateRepo(LJson, LDestinationRepository);
 
                 if(LIsCreated == false)
                 {   // Don't do rest if issue was not created
                     continue;
                 }
 
-                if((Pair = LRepo->Get("open_issues_count")) != NULL)
+                if(LSourceRepository.OpenIssueCount > 0)
                 {
-                    TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
-                    const int LIssueCount = LIssueNumber->AsInt;
-                    if(LIssueCount > 0)
-                    {
-                        const String LLog = String().sprintf(L"%d issue(s) not created!", LIssueCount);
-                        memoLog->Lines->Add(LLog);
-                    }
+                    const String LLog = String().sprintf(L"%d issue(s) not created!", LSourceRepository.OpenIssueCount);
+                    memoLog->Lines->Add(LLog);
                 }
 
                 try
                 {
-                    Clone(GitUrl(SourceApplication, LFullNameSource));
-                    AddRemote(GitUrl(DestinationApplication, LFullNameDestination), "temp.git");
+                    Clone(LSourceRepository.CloneUrl);
+                    AddRemote(LDestinationRepository.CloneUrl, "temp.git");
                     Push("temp.git");
                     memoLog->Lines->Add("Pushed repository");
                     try
                     {
+                        const String LSourceWikiUrl = StringReplace(
+                            LSourceRepository.CloneUrl,
+                            ".git", ".wiki.git", TReplaceFlags());
+                        const String LCDestinationWikiUrl = StringReplace(
+                            LDestinationRepository.CloneUrl,
+                            ".git", ".wiki.git", TReplaceFlags());
+
                         Ioutils::TDirectory::Delete("temp.git", true);
 
-                        Clone(GitWikiUrl(SourceApplication, LFullNameSource));
-                        AddRemote(GitWikiUrl(DestinationApplication, LFullNameDestination), "temp.git");
+                        Clone(LSourceWikiUrl);
+                        AddRemote(LCDestinationWikiUrl, "temp.git");
                         Push("temp.git");
                         memoLog->Lines->Add("Pushed Wiki repository");
                     }
@@ -218,7 +192,7 @@ void __fastcall TForm2::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-bool __fastcall TForm2::CreateRepo(const String AJson)
+bool __fastcall TForm2::CreateRepo(const String AJson, TRepository& ARepository)
 {
     bool Result = false;
 
@@ -254,9 +228,10 @@ bool __fastcall TForm2::CreateRepo(const String AJson)
         TJSONPair* Pair;
         if((Pair = LObject->Get("full_name")) != NULL)
         {
-            TJSONString* Answer = static_cast<TJSONString*>(Pair->JsonValue);
-            const String LLog = "Created repository " + Answer->Value() + " on " +
-                DestinationApplication->ApplicationName;
+            JsonToRepo(LAnswer, ARepository);
+
+            const String LLog = "Created repository " + ARepository.FullName +
+                " on " + DestinationApplication->ApplicationName;
             memoLog->Lines->Add(LLog);
             Result = true;
         }
@@ -328,18 +303,6 @@ void __fastcall TForm2::PrepareRequest(TGitApplication* AGitApplication)
     // Set authorization token
     IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
         "token " + AGitApplication->Token;
-}
-//---------------------------------------------------------------------------
-
-String __fastcall TForm2::GitUrl(TGitApplication* AGitApplication, const String AFullName)
-{
-    return AGitApplication->Url + "/" + AFullName + ".git";
-}
-//---------------------------------------------------------------------------
-
-String __fastcall TForm2::GitWikiUrl(TGitApplication* AGitApplication, const String AFullName)
-{
-    return AGitApplication->Url + "/" + AFullName + ".wiki.git";
 }
 //---------------------------------------------------------------------------
 
@@ -443,6 +406,78 @@ void __fastcall TForm2::Push(const String ADirectory)
     if(LExitCode != 0)
     {
         throw Exception("Push command failed");
+    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::JsonToRepo(const String AJson, TRepository& ARepository)
+{
+    TJSONPair* Pair;
+    TJSONObject* LRepo = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+
+    if((Pair = LRepo->Get("owner")) != NULL)
+    {
+        TJSONObject* LOwner = static_cast<TJSONObject*>(Pair->JsonValue);
+        if((Pair = LOwner->Get("login")) != NULL)
+        {
+            ARepository.Owner.Login =
+                static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        }
+#ifdef _DEBUG
+        else
+        {
+            throw Exception("login not found");
+        }
+#endif
+    }
+#ifdef _DEBUG
+    else
+    {
+        throw Exception("owner not found");
+    }
+#endif
+
+    if((Pair = LRepo->Get("name")) != NULL)
+    {
+        ARepository.Name = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+    }
+#ifdef _DEBUG
+    else
+    {
+        throw Exception("name not found");
+    }
+#endif
+
+    if((Pair = LRepo->Get("full_name")) != NULL)
+    {
+        ARepository.FullName = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+    }
+#ifdef _DEBUG
+    else
+    {
+        throw Exception("full_name not found");
+    }
+#endif
+
+    if((Pair = LRepo->Get("clone_url")) != NULL)
+    {
+        ARepository.CloneUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+    }
+#ifdef _DEBUG
+    else
+    {
+        throw Exception("clone_url not found");
+    }
+#endif
+
+    if((Pair = LRepo->Get("open_issues_count")) != NULL)
+    {
+        TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
+        ARepository.OpenIssueCount = LIssueNumber->AsInt;
+    }
+    else
+    {
+        ARepository.OpenIssueCount = 0;
     }
 }
 //---------------------------------------------------------------------------
