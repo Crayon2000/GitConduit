@@ -51,6 +51,12 @@ __fastcall TForm2::~TForm2()
 
 void __fastcall TForm2::Button1Click(TObject *Sender)
 {
+    if(CheckGitExe() == false)
+    {
+        memoLog->Lines->Add("git.exe not found in path");
+        return;
+    }
+
     const TGitApplicationType LSourceType =
         static_cast<TGitApplicationType>((unsigned char)cboSourceApp->Selected->Data);
     SourceApplication->ApplicationType = LSourceType;
@@ -407,6 +413,17 @@ void __fastcall TForm2::Push(const String ADirectory)
     {
         throw Exception("Push command failed");
     }
+}
+//---------------------------------------------------------------------------
+
+bool __fastcall TForm2::CheckGitExe()
+{
+    const String LCmd = "git --version";
+    if(ExecuteProgramEx(LCmd) == NULL)
+    {
+        return false;
+    }
+    return true;
 }
 //---------------------------------------------------------------------------
 

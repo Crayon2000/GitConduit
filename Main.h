@@ -86,6 +86,7 @@ protected:
     void __fastcall Clone(const String AGitRepo);
     void __fastcall AddRemote(const String AGitRepo, const String ADirectory);
     void __fastcall Push(const String ADirectory);
+    bool __fastcall CheckGitExe();
     void __fastcall JsonToRepo(const String AJson, TRepository& ARepository);
 public:     // User declarations
     __fastcall TForm2(TComponent* Owner);
