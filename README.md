@@ -1,11 +1,16 @@
 # Gogs to GitBucket
 
-Application to export all git repositories from one Git web platform to another.
+A Windows application to export all git repositories from one Git web platform to another.
 
 It supports the following services:
 * Gogs
 * GitBucket
 * GitHub
+
+## How To Use
+* Make sure *git.exe* is in your path and credentials are saved
+* Fill the **Source** and **Destination** sections and click on the **Go** button
+* Wait and look at the **Log** for more information
 
 ## Settings
 
