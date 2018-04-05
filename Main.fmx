@@ -1,212 +1,471 @@
 object Form2: TForm2
   Left = 0
   Top = 0
-  ClientHeight = 589
-  ClientWidth = 552
+  ClientHeight = 438
+  ClientWidth = 528
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
+  OnShow = FormShow
   DesignerMasterStyle = 0
-  object GroupBox1: TGroupBox
-    Align = Top
-    Margins.Left = 8.000000000000000000
-    Margins.Top = 8.000000000000000000
-    Margins.Right = 8.000000000000000000
-    Margins.Bottom = 8.000000000000000000
-    Position.X = 8.000000000000000000
-    Position.Y = 8.000000000000000000
-    Size.Width = 536.000000000000000000
-    Size.Height = 153.000000000000000000
-    Size.PlatformDefault = False
-    Text = 'Source'
-    TabOrder = 0
-    object Label1: TLabel
-      Position.X = 16.000000000000000000
-      Position.Y = 40.000000000000000000
-      Text = 'API URL:'
-    end
-    object Label2: TLabel
-      Position.X = 16.000000000000000000
-      Position.Y = 64.000000000000000000
-      Text = 'Authorization Token:'
-    end
-    object txtSourceUrl: TEdit
-      Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 1
-      Position.X = 144.000000000000000000
-      Position.Y = 40.000000000000000000
-      Size.Width = 377.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object txtSourceToken: TEdit
-      Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 2
-      Position.X = 144.000000000000000000
-      Position.Y = 64.000000000000000000
-      Size.Width = 377.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object Label5: TLabel
-      Position.X = 16.000000000000000000
-      Position.Y = 96.000000000000000000
-      Text = 'Type:'
-    end
-    object chkSourceTypeUser: TRadioButton
-      Position.X = 144.000000000000000000
-      Position.Y = 96.000000000000000000
-      TabOrder = 3
-      Text = 'User (me)'
-    end
-    object chkSourceTypeOrg: TRadioButton
-      Position.X = 144.000000000000000000
-      Position.Y = 120.000000000000000000
-      TabOrder = 4
-      Text = 'Organization'
-    end
-    object txtSourceName: TEdit
-      Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 5
-      Position.X = 256.000000000000000000
-      Position.Y = 120.000000000000000000
-      Size.Width = 233.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object Label7: TLabel
-      Position.X = 16.000000000000000000
-      Position.Y = 16.000000000000000000
-      Text = 'Application:'
-    end
-    object cboSourceApp: TComboBox
-      Position.X = 144.000000000000000000
-      Position.Y = 16.000000000000000000
-      Size.Width = 153.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 0
-    end
-  end
-  object GroupBox2: TGroupBox
-    Align = Top
-    Margins.Left = 8.000000000000000000
-    Margins.Right = 8.000000000000000000
-    Margins.Bottom = 8.000000000000000000
-    Position.X = 8.000000000000000000
-    Position.Y = 169.000000000000000000
-    Size.Width = 536.000000000000000000
-    Size.Height = 153.000000000000000000
-    Size.PlatformDefault = False
-    Text = 'Destination'
-    TabOrder = 1
-    object Label3: TLabel
-      Position.X = 16.000000000000000000
-      Position.Y = 40.000000000000000000
-      Text = 'API URL:'
-    end
-    object Label4: TLabel
-      Position.X = 16.000000000000000000
-      Position.Y = 64.000000000000000000
-      Text = 'Authorization Token:'
-    end
-    object txtDestinationUrl: TEdit
-      Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 1
-      Position.X = 144.000000000000000000
-      Position.Y = 40.000000000000000000
-      Size.Width = 377.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object txtDestinationToken: TEdit
-      Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 2
-      Position.X = 144.000000000000000000
-      Position.Y = 64.000000000000000000
-      Size.Width = 377.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object Label6: TLabel
-      Position.X = 16.000000000000000000
-      Position.Y = 96.000000000000000000
-      Text = 'Type:'
-    end
-    object chkDestinationTypeUser: TRadioButton
-      Position.X = 144.000000000000000000
-      Position.Y = 96.000000000000000000
-      TabOrder = 3
-      Text = 'User (me)'
-    end
-    object chkDestinationTypeOrg: TRadioButton
-      Position.X = 144.000000000000000000
-      Position.Y = 120.000000000000000000
-      TabOrder = 4
-      Text = 'Organization'
-    end
-    object txtDestinationName: TEdit
-      Touch.InteractiveGestures = [LongTap, DoubleTap]
-      TabOrder = 5
-      Position.X = 256.000000000000000000
-      Position.Y = 120.000000000000000000
-      Size.Width = 233.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-    end
-    object Label8: TLabel
-      Position.X = 16.000000000000000000
-      Position.Y = 16.000000000000000000
-      Text = 'Application:'
-    end
-    object cboDestinationApp: TComboBox
-      Position.X = 144.000000000000000000
-      Position.Y = 16.000000000000000000
-      Size.Width = 153.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 0
-    end
-  end
-  object GroupBox4: TGroupBox
+  object TabControl1: TTabControl
     Align = Client
-    Margins.Left = 8.000000000000000000
-    Margins.Right = 8.000000000000000000
-    Margins.Bottom = 8.000000000000000000
-    Size.Width = 536.000000000000000000
-    Size.Height = 201.000000000000000000
+    Size.Width = 528.000000000000000000
+    Size.Height = 438.000000000000000000
     Size.PlatformDefault = False
-    Text = 'Log'
-    TabOrder = 3
-    object memoLog: TMemo
-      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
-      DataDetectorTypes = []
-      Align = Client
-      Margins.Left = 8.000000000000000000
-      Margins.Top = 16.000000000000000000
-      Margins.Right = 8.000000000000000000
-      Margins.Bottom = 8.000000000000000000
-      Size.Width = 520.000000000000000000
-      Size.Height = 177.000000000000000000
+    TabIndex = 2
+    TabOrder = 2
+    TabPosition = None
+    OnChange = TabControl1Change
+    object TabItemSource: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 2
-      Viewport.Width = 516.000000000000000000
-      Viewport.Height = 173.000000000000000000
+      TabOrder = 0
+      Text = 'TabItemSource'
+      object Layout2: TLayout
+        Align = Bottom
+        Margins.Bottom = 5.000000000000000000
+        Position.Y = 383.000000000000000000
+        Size.Width = 528.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object btnSourceNext: TSpeedButton
+          Align = Right
+          Margins.Right = 5.000000000000000000
+          Position.X = 443.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Next'
+          OnClick = WizardButtonClick
+        end
+      end
+      object Label11: TLabel
+        Align = Top
+        Margins.Top = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 528.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'listboxheaderlabel'
+        TextSettings.HorzAlign = Center
+        Text = 'Source'
+      end
+      object cboSourceApp: TComboBox
+        Position.X = 136.000000000000000000
+        Position.Y = 48.000000000000000000
+        Size.Width = 153.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+      end
+      object chkSourceTypeOrg: TRadioButton
+        Position.X = 136.000000000000000000
+        Position.Y = 152.000000000000000000
+        TabOrder = 6
+        Text = 'Organization'
+      end
+      object chkSourceTypeUser: TRadioButton
+        Position.X = 136.000000000000000000
+        Position.Y = 128.000000000000000000
+        TabOrder = 5
+        Text = 'User (me)'
+      end
+      object Label1: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 72.000000000000000000
+        Text = 'API URL:'
+      end
+      object Label2: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 96.000000000000000000
+        Text = 'Authorization Token:'
+      end
+      object Label5: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 128.000000000000000000
+        Text = 'Type:'
+      end
+      object Label7: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 48.000000000000000000
+        Text = 'Application:'
+      end
+      object txtSourceName: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 7
+        Position.X = 248.000000000000000000
+        Position.Y = 152.000000000000000000
+        Size.Width = 233.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object txtSourceToken: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 3
+        Position.X = 136.000000000000000000
+        Position.Y = 96.000000000000000000
+        Size.Width = 345.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object txtSourceUrl: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 1
+        Position.X = 136.000000000000000000
+        Position.Y = 72.000000000000000000
+        Size.Width = 345.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object TabItemRepo: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Layout4: TLayout
+        Align = Bottom
+        Margins.Bottom = 5.000000000000000000
+        Position.Y = 383.000000000000000000
+        Size.Width = 528.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object btnRepoBack: TSpeedButton
+          Align = Left
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'backtoolbutton'
+          Text = 'Back'
+          OnClick = WizardButtonClick
+        end
+        object btnRepoNext: TSpeedButton
+          Align = Right
+          Margins.Right = 5.000000000000000000
+          Position.X = 443.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Next'
+          OnClick = WizardButtonClick
+        end
+      end
+      object ListBoxRepo: TListBox
+        Align = Client
+        Margins.Left = 8.000000000000000000
+        Margins.Top = 8.000000000000000000
+        Margins.Right = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Size.Width = 512.000000000000000000
+        Size.Height = 301.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        DisableFocusEffect = True
+        DefaultItemStyles.ItemStyle = ''
+        DefaultItemStyles.GroupHeaderStyle = ''
+        DefaultItemStyles.GroupFooterStyle = ''
+        ShowCheckboxes = True
+        Viewport.Width = 508.000000000000000000
+        Viewport.Height = 297.000000000000000000
+      end
+      object Label9: TLabel
+        Align = Top
+        Margins.Top = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 528.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'listboxheaderlabel'
+        TextSettings.HorzAlign = Center
+        Text = 'List of repositories'
+      end
+      object Label12: TLabel
+        Align = Top
+        Margins.Left = 8.000000000000000000
+        Margins.Right = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Position.X = 8.000000000000000000
+        Position.Y = 41.000000000000000000
+        Size.Width = 512.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Select the repositories and click on Next'
+      end
+    end
+    object TabItemDestination: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'TabItemDestination'
+      object Layout3: TLayout
+        Align = Bottom
+        Margins.Bottom = 5.000000000000000000
+        Position.Y = 383.000000000000000000
+        Size.Width = 528.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object btnDestinationBack: TSpeedButton
+          Align = Left
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'backtoolbutton'
+          Text = 'Back'
+          OnClick = WizardButtonClick
+        end
+        object btnDestinationNext: TSpeedButton
+          Align = Right
+          Margins.Right = 5.000000000000000000
+          Position.X = 443.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Next'
+          OnClick = WizardButtonClick
+        end
+      end
+      object Label10: TLabel
+        Align = Top
+        Margins.Top = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 528.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'listboxheaderlabel'
+        TextSettings.HorzAlign = Center
+        Text = 'Destination'
+      end
+      object cboDestinationApp: TComboBox
+        Position.X = 136.000000000000000000
+        Position.Y = 48.000000000000000000
+        Size.Width = 153.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+      end
+      object chkDestinationTypeOrg: TRadioButton
+        Position.X = 136.000000000000000000
+        Position.Y = 152.000000000000000000
+        TabOrder = 6
+        Text = 'Organization'
+      end
+      object chkDestinationTypeUser: TRadioButton
+        Position.X = 136.000000000000000000
+        Position.Y = 128.000000000000000000
+        TabOrder = 5
+        Text = 'User (me)'
+      end
+      object Label3: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 72.000000000000000000
+        Text = 'API URL:'
+      end
+      object Label4: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 96.000000000000000000
+        Text = 'Authorization Token:'
+      end
+      object Label6: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 128.000000000000000000
+        Text = 'Type:'
+      end
+      object Label8: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 48.000000000000000000
+        Text = 'Application:'
+      end
+      object txtDestinationName: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 7
+        Position.X = 248.000000000000000000
+        Position.Y = 152.000000000000000000
+        Size.Width = 233.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object txtDestinationToken: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 3
+        Position.X = 136.000000000000000000
+        Position.Y = 96.000000000000000000
+        Size.Width = 345.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object txtDestinationUrl: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 1
+        Position.X = 136.000000000000000000
+        Position.Y = 72.000000000000000000
+        Size.Width = 345.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object TabItemCreate: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'TabItemCreate'
+      object Label13: TLabel
+        Align = Top
+        Margins.Top = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 528.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'listboxheaderlabel'
+        TextSettings.HorzAlign = Center
+        Text = 'Creating repositories'
+      end
+      object Layout6: TLayout
+        Align = Bottom
+        Margins.Bottom = 5.000000000000000000
+        Position.Y = 383.000000000000000000
+        Size.Width = 528.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object btnCreateRepoBack: TSpeedButton
+          Align = Left
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'backtoolbutton'
+          Text = 'Back'
+          OnClick = WizardButtonClick
+        end
+        object btnCreateRepoClose: TSpeedButton
+          Align = Right
+          Margins.Right = 5.000000000000000000
+          Position.X = 443.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Close'
+          OnClick = btnCreateRepoCloseClick
+        end
+      end
+      object GroupBox4: TGroupBox
+        Align = Client
+        Margins.Left = 8.000000000000000000
+        Margins.Right = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Size.Width = 512.000000000000000000
+        Size.Height = 334.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Log'
+        TabOrder = 2
+        object memoLog: TMemo
+          Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+          DataDetectorTypes = []
+          Align = Client
+          Margins.Left = 8.000000000000000000
+          Margins.Top = 16.000000000000000000
+          Margins.Right = 8.000000000000000000
+          Margins.Bottom = 8.000000000000000000
+          Size.Width = 496.000000000000000000
+          Size.Height = 310.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Viewport.Width = 492.000000000000000000
+          Viewport.Height = 306.000000000000000000
+        end
+      end
     end
   end
-  object Layout1: TLayout
-    Align = Top
-    Position.Y = 330.000000000000000000
-    Size.Width = 552.000000000000000000
-    Size.Height = 50.000000000000000000
+  object Rectangle1: TRectangle
+    Fill.Color = x4F000000
+    Position.X = 88.000000000000000000
+    Position.Y = 216.000000000000000000
+    Size.Width = 313.000000000000000000
+    Size.Height = 161.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 2
-    object Button1: TButton
-      Position.X = 224.000000000000000000
-      Position.Y = 12.000000000000000000
-      TabOrder = 0
-      Text = 'Go'
-      OnClick = Button1Click
+    Stroke.Color = claNull
+    object Rectangle2: TRectangle
+      Align = Client
+      Margins.Left = 50.000000000000000000
+      Margins.Top = 50.000000000000000000
+      Margins.Right = 50.000000000000000000
+      Margins.Bottom = 50.000000000000000000
+      Size.Width = 213.000000000000000000
+      Size.Height = 61.000000000000000000
+      Size.PlatformDefault = False
+      object lblErrorTitle: TLabel
+        Align = Top
+        Margins.Top = 10.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 213.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'listboxheaderlabel'
+        TextSettings.HorzAlign = Center
+        Text = 'Error'
+      end
+      object lblErrorMessage: TLabel
+        Align = Client
+        Margins.Left = 16.000000000000000000
+        Margins.Top = 16.000000000000000000
+        Margins.Right = 16.000000000000000000
+        Size.Width = 181.000000000000000000
+        Size.Height = -27.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.VertAlign = Leading
+        Text = 'Message'
+      end
+      object Layout5: TLayout
+        Align = Bottom
+        Margins.Bottom = 8.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 213.000000000000000000
+        Size.Height = 37.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object btnErrorOk: TButton
+          Align = HorzCenter
+          Position.X = 66.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 37.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'OK'
+          OnClick = btnErrorOkClick
+        end
+      end
     end
   end
   object IdHTTP1: TIdHTTP

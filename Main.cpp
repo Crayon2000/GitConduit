@@ -18,6 +18,26 @@ __fastcall TForm2::TForm2(TComponent* Owner)
 {
     Caption = "Gogs To GitBucket";
 
+    // TabPosition is set to None
+    // We don't want to allow people to change tab with Tab + Arrow keys
+    for(int i = 0; i < TabControl1->TabCount; ++i)
+    {
+        TabControl1->Tabs[i]->HitTest = false;
+    }
+    TabControl1->TabIndex = -1;
+
+    HideMessage();
+
+    FTabAction = -1;
+    Fmx::Forms::Application->OnIdle = OnApplicationIdle;
+
+    btnSourceNext->TagObject = TabItemRepo;
+    btnRepoNext->TagObject = TabItemDestination;
+    btnDestinationNext->TagObject = TabItemCreate;
+    btnRepoBack->TagObject = TabItemSource;
+    btnDestinationBack->TagObject = TabItemRepo;
+    btnCreateRepoBack->TagObject = TabItemDestination;
+
     cboSourceApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
     cboSourceApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
     cboSourceApp->Items->AddObject("GitHub", (TObject*)TGitApplicationType::GitHub);
@@ -46,155 +66,6 @@ __fastcall TForm2::~TForm2()
 {
     delete SourceApplication;
     delete DestinationApplication;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm2::Button1Click(TObject *Sender)
-{
-    if(CheckGitExe() == false)
-    {
-        memoLog->Lines->Add("git.exe not found in path");
-        return;
-    }
-
-    const TGitApplicationType LSourceType =
-        static_cast<TGitApplicationType>((unsigned char)cboSourceApp->Selected->Data);
-    SourceApplication->ApplicationType = LSourceType;
-    SourceApplication->ApiUrl = txtSourceUrl->Text;
-    SourceApplication->Token = txtSourceToken->Text;
-
-    const TGitApplicationType LDestinationype =
-        static_cast<TGitApplicationType>((unsigned char)cboDestinationApp->Selected->Data);
-    DestinationApplication->ApplicationType = LDestinationype;
-    DestinationApplication->ApiUrl = txtDestinationUrl->Text;
-    DestinationApplication->Token = txtDestinationToken->Text;
-
-    String LUrl = SourceApplication->ApiUrl;
-    if(chkSourceTypeOrg->IsChecked == true)
-    {
-        LUrl += "/orgs/" + SourceApplication->User + "/repos";
-
-        SourceApplication->Endpoint = TApiEndpoint::Organization;
-        SourceApplication->User = txtSourceName->Text;
-    }
-    else
-    {
-        LUrl += "/user/repos";
-
-        SourceApplication->Endpoint = TApiEndpoint::User;
-
-        SourceApplication->User = GetAuthenticatedUser(SourceApplication);
-        if(SourceApplication->User.IsEmpty() == true)
-        {
-            return;
-        }
-    }
-
-    if(chkDestinationTypeOrg->IsChecked == true)
-    {
-        DestinationApplication->Endpoint = TApiEndpoint::Organization;
-        DestinationApplication->User = txtDestinationName->Text;
-    }
-    else
-    {
-        DestinationApplication->Endpoint = TApiEndpoint::User;
-        DestinationApplication->User = GetAuthenticatedUser(DestinationApplication);
-        if(DestinationApplication->User.IsEmpty() == true)
-        {
-            return;
-        }
-    }
-
-    try
-    {
-        PrepareRequest(SourceApplication);
-        const String LContent = IdHTTP1->Get(LUrl);
-
-        TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
-        if(LRepos != NULL)
-        {
-            TJSONArrayEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
-            while(LRepoEnumerator->MoveNext() == true)
-            {
-                TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
-
-                TRepository LDestinationRepository;
-                TRepository LSourceRepository;
-                JsonToRepo(LRepo->ToString(), LSourceRepository);
-
-                if(SourceApplication->Endpoint == TApiEndpoint::User &&
-                    LSourceRepository.Owner.Login != SourceApplication->User)
-                {
-                    continue;
-                }
-
-                const String LLog = String().sprintf(L"====== %s ======", LSourceRepository.FullName.c_str());
-                memoLog->Lines->Add(LLog);
-
-                LRepo->RemovePair("owner");
-                LRepo->RemovePair("permissions");
-                const String LJson = LRepo->ToJSON();
-                bool LIsCreated = CreateRepo(LJson, LDestinationRepository);
-
-                if(LIsCreated == false)
-                {   // Don't do rest if issue was not created
-                    continue;
-                }
-
-                if(LSourceRepository.OpenIssueCount > 0)
-                {
-                    const String LLog = String().sprintf(L"%d issue(s) not created!", LSourceRepository.OpenIssueCount);
-                    memoLog->Lines->Add(LLog);
-                }
-
-                try
-                {
-                    Clone(LSourceRepository.CloneUrl);
-                    AddRemote(LDestinationRepository.CloneUrl, "temp.git");
-                    Push("temp.git");
-                    memoLog->Lines->Add("Pushed repository");
-                    try
-                    {
-                        const String LSourceWikiUrl = StringReplace(
-                            LSourceRepository.CloneUrl,
-                            ".git", ".wiki.git", TReplaceFlags());
-                        const String LCDestinationWikiUrl = StringReplace(
-                            LDestinationRepository.CloneUrl,
-                            ".git", ".wiki.git", TReplaceFlags());
-
-                        Ioutils::TDirectory::Delete("temp.git", true);
-
-                        Clone(LSourceWikiUrl);
-                        AddRemote(LCDestinationWikiUrl, "temp.git");
-                        Push("temp.git");
-                        memoLog->Lines->Add("Pushed Wiki repository");
-                    }
-                    catch(...)
-                    {
-                        memoLog->Lines->Add("Wiki could not be exported");
-                    }
-                }
-                __finally
-                {
-                    try
-                    {
-                        Ioutils::TDirectory::Delete("temp.git", true);
-                    }
-                    catch(...)
-                    {
-                    }
-                }
-
-                //break; // TEST ONE
-                Application->ProcessMessages();
-            }
-        }
-    }
-    catch(const Idhttp::EIdHTTPProtocolException& e)
-    {
-        const String LLog = "Get repository exception: " + e.Message;
-        memoLog->Lines->Add(LLog);
-    }
 }
 //---------------------------------------------------------------------------
 
@@ -259,21 +130,9 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
 
     String LJson;
     const String LUrl = AGitApplication->ApiUrl + "/user";
-    try
-    {
-        PrepareRequest(AGitApplication);
-        LJson = IdHTTP1->Get(LUrl);
-    }
-    catch(const Idhttp::EIdHTTPProtocolException& e)
-    {
-        const String LLog = "Get authenticated user exception: " + e.Message;
-        memoLog->Lines->Add(LLog);
-    }
-    catch(const Sysutils::Exception& e)
-    {
-        const String LLog = "Get authenticated user exception: " + e.Message;
-        memoLog->Lines->Add(LLog);
-    }
+
+    PrepareRequest(AGitApplication);
+    LJson = IdHTTP1->Get(LUrl); // May throw exception
 
     if(LJson.IsEmpty() == true)
     {
@@ -289,15 +148,6 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
             TJSONString* Answer = static_cast<TJSONString*>(Pair->JsonValue);
             Result = Answer->Value();
         }
-    }
-
-    if(Result.IsEmpty() == false)
-    {
-        memoLog->Lines->Add("Authenticated user is " + Result);
-    }
-    else
-    {
-        memoLog->Lines->Add("Cannot get authenticated user");
     }
 
     return Result;
@@ -501,6 +351,348 @@ void __fastcall TForm2::JsonToRepo(const String AJson, TRepository& ARepository)
     {
         ARepository.OpenIssueCount = 0;
     }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::TabControl1Change(TObject *Sender)
+{
+    HideMessage();
+
+    const int LIndex = TabControl1->TabIndex;
+    switch(LIndex)
+    {
+        case 0:
+            btnSourceNext->Enabled = false;
+            break;
+        case 1:
+            btnRepoNext->Enabled = false;
+            btnRepoBack->Enabled = false;
+
+            ListBoxRepo->Clear();
+            break;
+        case 2:
+            btnDestinationNext->Enabled = false;
+            btnDestinationBack->Enabled = false;
+            break;
+        case 3:
+            btnCreateRepoBack->Enabled = false;
+            btnCreateRepoClose->Enabled = false;
+
+            memoLog->Lines->Clear();
+            break;
+        default:
+            break;
+    }
+
+    FTabAction = LIndex;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::WizardButtonClick(TObject *Sender)
+{
+    TSpeedButton* LButton = static_cast<TSpeedButton*>(Sender);
+    TabControl1->ActiveTab = dynamic_cast<TTabItem*>(LButton->TagObject);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::FormShow(TObject *Sender)
+{
+    TabControl1->TabIndex = 0;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ShowMessage(const String AMessage)
+{
+    Rectangle1->Visible = true;
+    Rectangle1->Align = TAlignLayout::Contents;
+    lblErrorMessage->Text = AMessage;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::HideMessage()
+{
+    Rectangle1->Visible = false;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::OnApplicationIdle(System::TObject* Sender, bool &Done)
+{
+    int LTabAction = FTabAction;
+    FTabAction = -1;
+
+    switch(LTabAction)
+    {
+        case 0:
+            ActionSource();
+            break;
+        case 1:
+            ActionRepositories();
+            break;
+        case 2:
+            ActionDestination();
+            break;
+        case 3:
+            ActionCreateRepo();
+            break;
+        default:
+            break;
+    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ActionSource()
+{
+    if(CheckGitExe() == false)
+    {
+        ShowMessage("git.exe not found in path!\n\nCorrect the problem and try again.");
+        return;
+    }
+
+    btnSourceNext->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ActionRepositories()
+{
+    const TGitApplicationType LSourceType =
+        static_cast<TGitApplicationType>((unsigned char)cboSourceApp->Selected->Data);
+    SourceApplication->ApplicationType = LSourceType;
+    SourceApplication->ApiUrl = txtSourceUrl->Text;
+    SourceApplication->Token = txtSourceToken->Text;
+
+    String LUrl = SourceApplication->ApiUrl;
+    if(chkSourceTypeOrg->IsChecked == true)
+    {
+        LUrl += "/orgs/" + SourceApplication->User + "/repos";
+
+        SourceApplication->Endpoint = TApiEndpoint::Organization;
+        SourceApplication->User = txtSourceName->Text;
+    }
+    else
+    {
+        LUrl += "/user/repos";
+
+        SourceApplication->Endpoint = TApiEndpoint::User;
+        SourceApplication->User = "";
+
+        String LExceptionMsg;
+        try
+        {
+            SourceApplication->User = GetAuthenticatedUser(SourceApplication);
+        }
+        catch(const Exception& e)
+        {
+            LExceptionMsg = e.Message;
+        }
+        if(SourceApplication->User.IsEmpty() == true)
+        {
+            btnRepoBack->Enabled = true;
+            String LMessage = "Cannot get authenticated user!";
+            if(LExceptionMsg.IsEmpty() == false)
+            {
+                LMessage += String(EOL) + String(EOL) + LExceptionMsg;
+            }
+            LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+            ShowMessage(LMessage);
+
+            return;
+        }
+    }
+
+    try
+    {
+        PrepareRequest(SourceApplication);
+        const String LContent = IdHTTP1->Get(LUrl);
+
+        TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
+        if(LRepos != NULL)
+        {
+            TJSONArrayEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
+            while(LRepoEnumerator->MoveNext() == true)
+            {
+                TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
+
+                const String LSourceJson = LRepo->ToString();
+                TRepository LSourceRepository;
+                JsonToRepo(LSourceJson, LSourceRepository);
+
+                if(SourceApplication->Endpoint == TApiEndpoint::User &&
+                    LSourceRepository.Owner.Login != SourceApplication->User)
+                {
+                    continue;
+                }
+
+                TListBoxItem* LListBoxItem = new TListBoxItem(this);
+                LListBoxItem->Parent = ListBoxRepo;
+                LListBoxItem->IsChecked = true;
+                LListBoxItem->Text = LSourceRepository.FullName;
+                LListBoxItem->TagString = LSourceJson;
+
+                Application->ProcessMessages();
+            }
+        }
+    }
+    catch(const Idhttp::EIdHTTPProtocolException& e)
+    {
+        btnRepoBack->Enabled = true;
+        ShowMessage("Get repository exception: " + e.Message + "\n\nGo Back, change the settings and try again.");
+        return;
+    }
+
+    btnRepoNext->Enabled = true;
+    btnRepoBack->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ActionDestination()
+{
+    btnDestinationNext->Enabled = true;
+    btnDestinationBack->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ActionCreateRepo()
+{
+    const TGitApplicationType LDestinationype =
+        static_cast<TGitApplicationType>((unsigned char)cboDestinationApp->Selected->Data);
+    DestinationApplication->ApplicationType = LDestinationype;
+    DestinationApplication->ApiUrl = txtDestinationUrl->Text;
+    DestinationApplication->Token = txtDestinationToken->Text;
+
+    if(chkDestinationTypeOrg->IsChecked == true)
+    {
+        DestinationApplication->Endpoint = TApiEndpoint::Organization;
+        DestinationApplication->User = txtDestinationName->Text;
+    }
+    else
+    {
+        DestinationApplication->Endpoint = TApiEndpoint::User;
+        DestinationApplication->User = "";
+
+        String LExceptionMsg;
+        try
+        {
+            DestinationApplication->User = GetAuthenticatedUser(DestinationApplication);
+        }
+        catch(const Exception& e)
+        {
+            LExceptionMsg = e.Message;
+        }
+        if(DestinationApplication->User.IsEmpty() == true)
+        {
+            btnCreateRepoBack->Enabled = true;
+
+            String LMessage = "Cannot get authenticated user!";
+            if(LExceptionMsg.IsEmpty() == false)
+            {
+                LMessage += String(EOL) + String(EOL) + LExceptionMsg;
+            }
+            LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+            ShowMessage(LMessage);
+
+            return;
+        }
+    }
+
+    const int LCount = ListBoxRepo->Items->Count;
+    for(int i = 0; i < LCount; ++i)
+    {
+        TListBoxItem *LItem = ListBoxRepo->ItemByIndex(i);
+        if(LItem->IsChecked == false)
+        {
+            continue;
+        }
+
+        try
+        {
+            const String LSourceJson = LItem->TagString;
+
+            TRepository LDestinationRepository;
+
+            TRepository LSourceRepository;
+            JsonToRepo(LSourceJson, LSourceRepository);
+
+            const String LLog = String().sprintf(L"====== %s ======",
+                LSourceRepository.FullName.c_str());
+            memoLog->Lines->Add(LLog);
+
+            bool LIsCreated = CreateRepo(LSourceJson, LDestinationRepository);
+
+            if(LIsCreated == false)
+            {   // Don't do rest if issue was not created
+                continue;
+            }
+
+            if(LSourceRepository.OpenIssueCount > 0)
+            {
+                const String LLog = String().sprintf(L"%d issue(s) not created!", LSourceRepository.OpenIssueCount);
+                memoLog->Lines->Add(LLog);
+            }
+
+            try
+            {
+                Clone(LSourceRepository.CloneUrl);
+                AddRemote(LDestinationRepository.CloneUrl, "temp.git");
+                Push("temp.git");
+                memoLog->Lines->Add("Pushed repository");
+                try
+                {
+                    const String LSourceWikiUrl = StringReplace(
+                        LSourceRepository.CloneUrl,
+                        ".git", ".wiki.git", TReplaceFlags());
+                    const String LCDestinationWikiUrl = StringReplace(
+                        LDestinationRepository.CloneUrl,
+                        ".git", ".wiki.git", TReplaceFlags());
+
+                    Ioutils::TDirectory::Delete("temp.git", true);
+
+                    Clone(LSourceWikiUrl);
+                    AddRemote(LCDestinationWikiUrl, "temp.git");
+                    Push("temp.git");
+                    memoLog->Lines->Add("Pushed Wiki repository");
+                }
+                catch(...)
+                {
+                    memoLog->Lines->Add("Wiki could not be exported");
+                }
+            }
+            __finally
+            {
+                try
+                {
+                    Ioutils::TDirectory::Delete("temp.git", true);
+                }
+                catch(...)
+                {
+                }
+            }
+
+            Application->ProcessMessages();
+        }
+        catch(const Sysutils::Exception& e)
+        {
+
+        }
+    }
+
+    memoLog->Lines->Add("");
+    memoLog->Lines->Add("");
+    memoLog->Lines->Add("Completed!");
+
+    btnCreateRepoBack->Enabled = true;
+    btnCreateRepoClose->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::btnErrorOkClick(TObject *Sender)
+{
+    HideMessage();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::btnCreateRepoCloseClick(TObject *Sender)
+{
+    Close();
 }
 //---------------------------------------------------------------------------
 
