@@ -432,6 +432,11 @@ void __fastcall TForm2::JsonToRepo(const String AJson, TRepository& ARepository)
     TJSONPair* Pair;
     TJSONObject* LRepo = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
 
+    if(LRepo == NULL)
+    {
+        throw Exception("Invalid JSON input!");
+    }
+
     if((Pair = LRepo->Get("owner")) != NULL)
     {
         TJSONObject* LOwner = static_cast<TJSONObject*>(Pair->JsonValue);
