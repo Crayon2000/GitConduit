@@ -22,7 +22,7 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     // We don't want to allow people to change tab with Tab + Arrow keys
     for(int i = 0; i < TabControl1->TabCount; ++i)
     {
-        TabControl1->Tabs[i]->HitTest = false;
+        TabControl1->Tabs[i]->TabStop = false;
     }
     TabControl1->TabIndex = -1;
 

@@ -13,7 +13,7 @@ object Form2: TForm2
     Size.Width = 528.000000000000000000
     Size.Height = 438.000000000000000000
     Size.PlatformDefault = False
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 2
     TabPosition = None
     OnChange = TabControl1Change
@@ -21,12 +21,11 @@ object Form2: TForm2
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
-      Text = 'TabItemSource'
       object Layout2: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
@@ -212,12 +211,11 @@ object Form2: TForm2
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
-      Text = 'TabItemDestination'
       object Layout3: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
@@ -337,7 +335,6 @@ object Form2: TForm2
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
-      Text = 'TabItemCreate'
       object Label13: TLabel
         Align = Top
         Margins.Top = 8.000000000000000000
