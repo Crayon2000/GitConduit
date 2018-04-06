@@ -331,6 +331,43 @@ void __fastcall TForm2::JsonToRepo(const String AJson, TRepository& ARepository)
     }
 #endif
 
+    if((Pair = LRepo->Get("private")) != NULL)
+    {
+        if(dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+        {
+            ARepository.Private = false;
+        }
+        else
+        {
+            ARepository.Private = true;
+        }
+    }
+#ifdef _DEBUG
+    else
+    {
+        throw Exception("private not found");
+    }
+#endif
+
+    if((Pair = LRepo->Get("description")) != NULL)
+    {
+        TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
+        if(LJsonString->Null == false)
+        {
+            ARepository.Description = LJsonString->Value();
+        }
+        else
+        {
+            ARepository.Description = "";
+        }
+    }
+#ifdef _DEBUG
+    else
+    {
+        throw Exception("description not found");
+    }
+#endif
+
     if((Pair = LRepo->Get("clone_url")) != NULL)
     {
         ARepository.CloneUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
@@ -527,6 +564,17 @@ void __fastcall TForm2::ActionRepositories()
                 LListBoxItem->IsChecked = true;
                 LListBoxItem->Text = LSourceRepository.FullName;
                 LListBoxItem->TagString = LSourceJson;
+                if(LSourceRepository.Description.IsEmpty() == false)
+                {
+                    LListBoxItem->ItemData->Detail = LSourceRepository.Description;
+                    LListBoxItem->Height = 50.0f;
+                    LListBoxItem->StyleLookup = "listboxitembottomdetail";
+                }
+                else
+                {
+                    LListBoxItem->Height = 40.0f;
+                    LListBoxItem->StyleLookup = "listboxitemnodetail";
+                }
 
                 Application->ProcessMessages();
             }

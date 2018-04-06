@@ -40,6 +40,8 @@ public:
     TOwner Owner;
     String Name;
     String FullName;
+    bool Private;
+    String Description;
     String CloneUrl;
     int OpenIssueCount;
 };
