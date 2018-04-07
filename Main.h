@@ -27,24 +27,7 @@
 #include <FMX.Objects.hpp>
 //---------------------------------------------------------------------------
 class TGitApplication;
-
-class TOwner
-{
-public:
-    String Login;
-};
-
-class TRepository
-{
-public:
-    TOwner Owner;
-    String Name;
-    String FullName;
-    bool Private;
-    String Description;
-    String CloneUrl;
-    int OpenIssueCount;
-};
+class TRepository;
 
 class TForm2 : public TForm
 {
@@ -125,7 +108,6 @@ protected:
     void __fastcall AddRemote(const String AGitRepo, const String ADirectory);
     void __fastcall Push(const String ADirectory);
     bool __fastcall CheckGitExe();
-    void __fastcall JsonToRepo(const String AJson, TRepository& ARepository);
     void __fastcall ShowMessage(const String AMessage);
     void __fastcall HideMessage();
     void __fastcall OnApplicationIdle(System::TObject* Sender, bool &Done);

@@ -330,6 +330,10 @@
             <DependentOn>GitApplication.h</DependentOn>
             <BuildOrder>3</BuildOrder>
         </CppCompile>
+        <CppCompile Include="GitRepository.cpp">
+            <DependentOn>GitRepository.h</DependentOn>
+            <BuildOrder>4</BuildOrder>
+        </CppCompile>
         <CppCompile Include="GogsToGitBucket.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
