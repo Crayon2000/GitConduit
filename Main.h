@@ -25,6 +25,8 @@
 #include <FMX.ListBox.hpp>
 #include <FMX.TabControl.hpp>
 #include <FMX.Objects.hpp>
+#include <FMX.ImgList.hpp>
+#include <System.ImageList.hpp>
 //---------------------------------------------------------------------------
 class TGitApplication;
 class TRepository;
@@ -84,6 +86,7 @@ __published:    // IDE-managed Components
     TEdit *txtDestinationName;
     TEdit *txtDestinationToken;
     TEdit *txtDestinationUrl;
+    TImageList *ImageList1;
     void __fastcall TabControl1Change(TObject *Sender);
     void __fastcall WizardButtonClick(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);

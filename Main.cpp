@@ -451,7 +451,21 @@ void __fastcall TForm2::ActionRepositories()
                 LListBoxItem->IsChecked = true;
                 LListBoxItem->Text = LSourceRepository.FullName;
                 LListBoxItem->TagString = LSourceJson;
-                LListBoxItem->ImageIndex = -1;
+                if(LSourceRepository.Private == true)
+                {   // Private
+                    LListBoxItem->ImageIndex = 0;
+                }
+                else
+                {
+                    if(LSourceRepository.Fork == false)
+                    {   // Public
+                        LListBoxItem->ImageIndex = 1;
+                    }
+                    else
+                    {   // Fork
+                        LListBoxItem->ImageIndex = 2;
+                    }
+                }
                 if(LSourceRepository.Description.IsEmpty() == false)
                 {
                     LListBoxItem->ItemData->Detail = LSourceRepository.Description;
