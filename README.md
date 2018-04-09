@@ -1,6 +1,6 @@
-# Gogs to GitBucket
+# GitConduit
 
-A Windows application to export all git repositories from one Git web platform to another.
+GitConduit is a Windows application use to export git repositories from one Git web platform to another.
 
 It supports the following services:
 * Gogs

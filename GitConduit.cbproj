@@ -3,7 +3,7 @@
         <ProjectGuid>{995D4CF9-9C26-411F-A0B6-BD5CE77BA65E}</ProjectGuid>
         <ProjectVersion>17.2</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
-        <MainSource>GogsToGitBucket.cpp</MainSource>
+        <MainSource>GitConduit.cpp</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -123,7 +123,7 @@
         <AUP_WRITE_EXTERNAL_STORAGE>true</AUP_WRITE_EXTERNAL_STORAGE>
         <AUP_INTERNET>true</AUP_INTERNET>
         <AUP_WRITE_CALENDAR>true</AUP_WRITE_CALENDAR>
-        <SanitizedProjectName>GogsToGitBucket</SanitizedProjectName>
+        <SanitizedProjectName>GitConduit</SanitizedProjectName>
         <AUP_READ_CALENDAR>true</AUP_READ_CALENDAR>
         <AUP_READ_EXTERNAL_STORAGE>true</AUP_READ_EXTERNAL_STORAGE>
         <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
@@ -145,7 +145,7 @@
         <Android_LauncherIcon48>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png</Android_LauncherIcon48>
         <IncludePath>$(BDSINCLUDE)\android\fmx;$(IncludePath)</IncludePath>
         <Android_LauncherIcon144>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_144x144.png</Android_LauncherIcon144>
-        <BCC_PCHName_Clang>GogsToGitBucketPCH.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
         <Android_SplashImage960>$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png</Android_SplashImage960>
         <Android_LauncherIcon36>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_36x36.png</Android_LauncherIcon36>
         <Android_LauncherIcon72>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_72x72.png</Android_LauncherIcon72>
@@ -182,7 +182,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <iPhone_Spotlight40>$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_40x40.png</iPhone_Spotlight40>
         <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
-        <BCC_PCHName_Clang>GogsToGitBucketPCH.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
         <iPad_Launch2048>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1496.png</iPad_Launch2048>
         <iPad_Launch768>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_768x1004.png</iPad_Launch768>
         <iPad_Launch2048x1536>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1536.png</iPad_Launch2048x1536>
@@ -227,7 +227,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <iPhone_Spotlight40>$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_40x40.png</iPhone_Spotlight40>
         <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
-        <BCC_PCHName_Clang>GogsToGitBucketPCH.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
         <iPad_Launch2048>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1496.png</iPad_Launch2048>
         <iPad_Launch768>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_768x1004.png</iPad_Launch768>
         <iPad_Launch2048x1536>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1536.png</iPad_Launch2048x1536>
@@ -265,7 +265,7 @@
         <IncludePath>$(BDSINCLUDE)\windows\fmx;$(IncludePath)</IncludePath>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <BCC_PCHName_Clang>GogsToGitBucketPCH.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
         <PackageImports>adortl;appanalytics;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CloudService;CustomIPTransport;DataSnapClient;DataSnapCommon;DataSnapConnectors;DatasnapConnectorsFreePascal;DataSnapFireDAC;DataSnapIndy10ServerTransport;DataSnapNativeClient;DataSnapProviderClient;DataSnapServer;DataSnapServerMidas;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXDb2Driver;DBXFirebirdDriver;DBXInformixDriver;DBXInterBaseDriver;DBXMSSQLDriver;DBXMySQLDriver;DBXOdbcDriver;DBXOracleDriver;DBXSqliteDriver;DBXSybaseASADriver;DBXSybaseASEDriver;dsnap;dsnapcon;dsnapxml;emsclient;emsclientfiredac;FireDAC;FireDACADSDriver;FireDACASADriver;FireDACCommon;FireDACCommonDriver;FireDACDb2Driver;FireDACDBXDriver;FireDACDSDriver;FireDACIBDriver;FireDACInfxDriver;FireDACMSAccDriver;FireDACMSSQLDriver;FireDACMySQLDriver;FireDACODBCDriver;FireDACOracleDriver;FireDACPgDriver;FireDACSqliteDriver;FireDACTDataDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;Intraweb;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;vclribbon;VclSmp;vcltouch;vclx;xmlrtl;$(PackageImports)</PackageImports>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
@@ -309,37 +309,37 @@
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Android)'!=''">
-        <BCC_PCHName_Clang>GogsToGitBucketPCH.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_iOSDevice32)'!=''">
+        <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
-        <BCC_PCHName_Clang>GogsToGitBucketPCH.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_iOSDevice64)'!=''">
+        <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
-        <BCC_PCHName_Clang>GogsToGitBucketPCH.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_OSX32)'!=''">
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <BCC_PCHName_Clang>GogsToGitBucketPCH.h</BCC_PCHName_Clang>
+        <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <ItemGroup>
         <CppCompile Include="GitApplication.cpp">
             <DependentOn>GitApplication.h</DependentOn>
             <BuildOrder>3</BuildOrder>
         </CppCompile>
+        <CppCompile Include="GitConduit.cpp">
+            <BuildOrder>0</BuildOrder>
+        </CppCompile>
+        <PCHCompile Include="GitConduitPCH.h">
+            <BuildOrder>2</BuildOrder>
+        </PCHCompile>
         <CppCompile Include="GitRepository.cpp">
             <DependentOn>GitRepository.h</DependentOn>
             <BuildOrder>4</BuildOrder>
         </CppCompile>
-        <CppCompile Include="GogsToGitBucket.cpp">
-            <BuildOrder>0</BuildOrder>
-        </CppCompile>
-        <PCHCompile Include="GogsToGitBucketPCH.h">
-            <BuildOrder>2</BuildOrder>
-        </PCHCompile>
         <CppCompile Include="Main.cpp">
             <Form>Form2</Form>
             <FormType>fmx</FormType>
@@ -371,7 +371,7 @@
                     <ProjectProperties Name="IndexFiles">False</ProjectProperties>
                 </ProjectProperties>
                 <Source>
-                    <Source Name="MainSource">GogsToGitBucket.cpp</Source>
+                    <Source Name="MainSource">GitConduit.cpp</Source>
                 </Source>
             </CPlusPlusBuilder.Personality>
             <Deployment Version="1">
@@ -425,15 +425,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Win32\Debug\GogsToGitBucket.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName=".\Win32\Debug\GitConduit.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>GogsToGitBucket.exe</RemoteName>
+                        <RemoteName>GitConduit.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Win32\Debug\GogsToGitBucket.tds" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName=".\Win32\Debug\GitConduit.tds" Configuration="Debug" Class="DebugSymbols">
                     <Platform Name="Win32">
-                        <RemoteName>GogsToGitBucket.tds</RemoteName>
+                        <RemoteName>GitConduit.tds</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -17,7 +17,7 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     , SourceApplication(NULL)
     , DestinationApplication(NULL)
 {
-    Caption = "Gogs To GitBucket";
+    Caption = "GitConduit";
 
     // TabPosition is set to None
     // We don't want to allow people to change tab with Tab + Arrow keys
