@@ -87,6 +87,7 @@ __published:    // IDE-managed Components
     TEdit *txtDestinationToken;
     TEdit *txtDestinationUrl;
     TImageList *ImageList1;
+    TStyleBook *StyleBook1;
     void __fastcall TabControl1Change(TObject *Sender);
     void __fastcall WizardButtonClick(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);

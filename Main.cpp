@@ -177,9 +177,9 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     si.wShowWindow = SW_HIDE;
     si.cbReserved2 = 0;
     si.lpReserved2 = NULL;
-    si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    si.hStdInput = NULL;
     si.hStdOutput = NULL;
-    si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+    si.hStdError = NULL;
 
     sa.nLength = sizeof(sa);
     sa.lpSecurityDescriptor = NULL;
