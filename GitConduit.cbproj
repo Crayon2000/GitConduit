@@ -363,6 +363,11 @@
             <DependentOn>Main.h</DependentOn>
             <BuildOrder>1</BuildOrder>
         </CppCompile>
+        <ResourceCompile Include="Resource.rc">
+            <ModuleName>Resource.rc</ModuleName>
+            <Form>Resource.res</Form>
+            <BuildOrder>5</BuildOrder>
+        </ResourceCompile>
         <FormResources Include="Main.fmx"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
