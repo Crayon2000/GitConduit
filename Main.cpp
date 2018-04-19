@@ -451,7 +451,7 @@ void __fastcall TForm2::ActionRepositories()
                 LListBoxItem->IsChecked = true;
                 LListBoxItem->Text = LSourceRepository.FullName;
                 LListBoxItem->TagString = LSourceJson;
-                LListBoxItem->OnApplyStyleLookup = NULL;
+                LListBoxItem->OnApplyStyleLookup = ListBoxItemApplyStyleLookup;
                 if(LSourceRepository.Private == true)
                 {   // Private
                     LListBoxItem->ImageIndex = 0;
@@ -644,6 +644,46 @@ void __fastcall TForm2::btnErrorOkClick(TObject *Sender)
 void __fastcall TForm2::btnCreateRepoCloseClick(TObject *Sender)
 {
     Close();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ListBoxItemApplyStyleLookup(TObject *Sender)
+{
+    TListBoxItem* LListBoxItem = dynamic_cast<TListBoxItem*>(Sender);
+    if(LListBoxItem == NULL)
+    {
+        return;
+    }
+
+    try
+    {
+        LListBoxItem->BeginUpdate();
+
+        Fmx::Types::TFmxObject* GlyphStyleResource = LListBoxItem->FindStyleResource("glyphstyle");
+        if(GlyphStyleResource != NULL && GlyphStyleResource->ClassNameIs("TGlyph") == true)
+        {
+            TGlyph* LGlyph = static_cast<TGlyph*>(GlyphStyleResource);
+            LGlyph->Position->X = 20.0f; // Make sure checkbox is really MostLeft
+        }
+
+        Fmx::Types::TFmxObject* IconStyleResource = LListBoxItem->FindStyleResource("icon");
+        if(IconStyleResource != NULL && IconStyleResource->ClassNameIs("TImage") == true)
+        {
+            TImage* LImage = static_cast<TImage*>(IconStyleResource);
+            LImage->Position->X = 20.0f; // Make sure checkbox is really MostLeft
+        }
+
+        Fmx::Types::TFmxObject* CheckStyleResource = LListBoxItem->FindStyleResource("check");
+        if(CheckStyleResource != NULL && CheckStyleResource->ClassNameIs("TCheckBox") == true)
+        {
+            TCheckBox* LCheckBox = static_cast<TCheckBox*>(CheckStyleResource);
+            LCheckBox->Position->X = 0.0f;
+        }
+    }
+    __finally
+    {
+        LListBoxItem->EndUpdate();
+    }
 }
 //---------------------------------------------------------------------------
 

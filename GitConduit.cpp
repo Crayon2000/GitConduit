@@ -9,6 +9,7 @@
 USEFORM("Main.cpp", Form2);
 //---------------------------------------------------------------------------
 void __fastcall UpdateStyle();
+void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const String AStyleLookup);
 //---------------------------------------------------------------------------
 extern "C" int FMXmain()
 {
@@ -21,7 +22,7 @@ extern "C" int FMXmain()
     }
     catch (Exception &exception)
     {
-        Application->ShowException(&exception);
+         Application->ShowException(&exception);
     }
     catch (...)
     {
@@ -46,6 +47,45 @@ void __fastcall UpdateStyle()
     Fmx::Types::TFmxObject* LStyle = TStyleStreaming::LoadFromResource(
         (NativeUInt)HInstance, L"DATA_STYLE", RT_RCDATA);
     TStyleManager::SetStyle(LStyle);
+
+    SetListBoxItemMargins(LStyle, "listboxitemnodetail");
+    SetListBoxItemMargins(LStyle, "listboxitembottomdetail");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const String AStyleLookup)
+{
+    Fmx::Types::TFmxObject* StyleResource = AStyle->FindStyleResource(AStyleLookup);
+    if(StyleResource != NULL && StyleResource->ClassNameIs("TLayout") == true)
+    {
+        Fmx::Types::TFmxObject* GlyphStyleResource = StyleResource->FindStyleResource("glyphstyle");
+        if(GlyphStyleResource != NULL && GlyphStyleResource->ClassNameIs("TGlyph") == true)
+        {
+            TGlyph* LGlyph = static_cast<TGlyph*>(GlyphStyleResource);
+            LGlyph->Margins->Top = 4.0f;
+            LGlyph->Margins->Bottom = 4.0f;
+        }
+
+        Fmx::Types::TFmxObject* IconStyleResource = StyleResource->FindStyleResource("icon");
+        if(IconStyleResource != NULL && IconStyleResource->ClassNameIs("TImage") == true)
+        {
+            TImage* LImage = static_cast<TImage*>(IconStyleResource);
+            LImage->Margins->Top = 4.0f;
+            LImage->Margins->Bottom = 4.0f;
+        }
+
+        Fmx::Types::TFmxObject* CheckStyleResource = StyleResource->FindStyleResource("check");
+        if(CheckStyleResource != NULL && CheckStyleResource->ClassNameIs("TCheckBox") == true)
+        {
+            TCheckBox* LCheckBox = static_cast<TCheckBox*>(CheckStyleResource);
+            LCheckBox->Margins->Left = 8.0f;
+            LCheckBox->Margins->Right = 0.0f;
+        }
+    }
+    else
+    {
+        throw Exception("Style was changed, resource '" + AStyleLookup + "' is missing!");
+    }
 }
 //---------------------------------------------------------------------------
 
