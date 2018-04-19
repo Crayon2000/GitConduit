@@ -69,13 +69,13 @@ object Form2: TForm2
       object chkSourceTypeOrg: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 232.000000000000000000
-        TabOrder = 11
+        TabOrder = 12
         Text = 'Organization'
       end
       object chkSourceTypeUser: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 192.000000000000000000
-        TabOrder = 10
+        TabOrder = 11
         Text = 'User (me)'
       end
       object Label1: TLabel
@@ -112,7 +112,7 @@ object Form2: TForm2
       end
       object txtSourceName: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 12
+        TabOrder = 13
         Position.X = 304.000000000000000000
         Position.Y = 232.000000000000000000
         Size.Width = 225.000000000000000000
@@ -285,13 +285,13 @@ object Form2: TForm2
       object chkDestinationTypeOrg: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 232.000000000000000000
-        TabOrder = 11
+        TabOrder = 12
         Text = 'Organization'
       end
       object chkDestinationTypeUser: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 192.000000000000000000
-        TabOrder = 10
+        TabOrder = 11
         Text = 'User (me)'
       end
       object Label3: TLabel
@@ -328,7 +328,7 @@ object Form2: TForm2
       end
       object txtDestinationName: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 12
+        TabOrder = 13
         Position.X = 304.000000000000000000
         Position.Y = 232.000000000000000000
         Size.Width = 225.000000000000000000
@@ -516,6 +516,8 @@ object Form2: TForm2
     MaxLineAction = maException
     Port = 0
     DefaultPort = 0
+    SSLOptions.Method = sslvTLSv1_2
+    SSLOptions.SSLVersions = [sslvTLSv1_2]
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
