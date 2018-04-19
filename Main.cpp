@@ -387,7 +387,7 @@ void __fastcall TForm2::ActionRepositories()
     String LUrl = SourceApplication->ApiUrl;
     if(chkSourceTypeOrg->IsChecked == true)
     {
-        LUrl += "/orgs/" + SourceApplication->User + "/repos";
+        LUrl += "/orgs/" + txtSourceName->Text + "/repos";
 
         SourceApplication->Endpoint = TApiEndpoint::Organization;
         SourceApplication->User = txtSourceName->Text;
@@ -451,6 +451,7 @@ void __fastcall TForm2::ActionRepositories()
                 LListBoxItem->IsChecked = true;
                 LListBoxItem->Text = LSourceRepository.FullName;
                 LListBoxItem->TagString = LSourceJson;
+                LListBoxItem->OnApplyStyleLookup = NULL;
                 if(LSourceRepository.Private == true)
                 {   // Private
                     LListBoxItem->ImageIndex = 0;
