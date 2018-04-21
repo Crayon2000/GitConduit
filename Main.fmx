@@ -29,9 +29,9 @@ object Form2: TForm2
       object Layout2: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
-        Position.Y = 376.000000000000000000
+        Position.Y = 373.000000000000000000
         Size.Width = 545.000000000000000000
-        Size.Height = 57.000000000000000000
+        Size.Height = 60.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
         object btnSourceNext: TSpeedButton
@@ -69,20 +69,26 @@ object Form2: TForm2
       object chkSourceTypeOrg: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 232.000000000000000000
-        TabOrder = 12
+        Size.Width = 120.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
         Text = 'Organization'
       end
       object chkSourceTypeUser: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 192.000000000000000000
-        TabOrder = 11
+        Size.Width = 120.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 12
         Text = 'User (me)'
       end
       object Label1: TLabel
         Position.X = 8.000000000000000000
         Position.Y = 96.000000000000000000
         Size.Width = 161.000000000000000000
-        Size.Height = 17.000000000000000000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'API URL:'
       end
@@ -90,7 +96,7 @@ object Form2: TForm2
         Position.X = 8.000000000000000000
         Position.Y = 144.000000000000000000
         Size.Width = 161.000000000000000000
-        Size.Height = 17.000000000000000000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'Authorization Token:'
       end
@@ -98,7 +104,7 @@ object Form2: TForm2
         Position.X = 8.000000000000000000
         Position.Y = 192.000000000000000000
         Size.Width = 161.000000000000000000
-        Size.Height = 17.000000000000000000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'Type:'
       end
@@ -106,13 +112,13 @@ object Form2: TForm2
         Position.X = 8.000000000000000000
         Position.Y = 48.000000000000000000
         Size.Width = 161.000000000000000000
-        Size.Height = 17.000000000000000000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'Application:'
       end
       object txtSourceName: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 13
+        TabOrder = 14
         Position.X = 304.000000000000000000
         Position.Y = 232.000000000000000000
         Size.Width = 225.000000000000000000
@@ -150,9 +156,9 @@ object Form2: TForm2
       object Layout4: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
-        Position.Y = 376.000000000000000000
+        Position.Y = 373.000000000000000000
         Size.Width = 545.000000000000000000
-        Size.Height = 57.000000000000000000
+        Size.Height = 60.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
         object btnRepoBack: TSpeedButton
@@ -185,7 +191,7 @@ object Form2: TForm2
         Margins.Right = 8.000000000000000000
         Margins.Bottom = 8.000000000000000000
         Size.Width = 529.000000000000000000
-        Size.Height = 294.000000000000000000
+        Size.Height = 291.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
         DisableFocusEffect = True
@@ -195,7 +201,7 @@ object Form2: TForm2
         DefaultItemStyles.GroupFooterStyle = ''
         ShowCheckboxes = True
         Viewport.Width = 525.000000000000000000
-        Viewport.Height = 290.000000000000000000
+        Viewport.Height = 287.000000000000000000
       end
       object Label9: TLabel
         Align = Top
@@ -234,9 +240,9 @@ object Form2: TForm2
       object Layout3: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
-        Position.Y = 376.000000000000000000
+        Position.Y = 373.000000000000000000
         Size.Width = 545.000000000000000000
-        Size.Height = 57.000000000000000000
+        Size.Height = 60.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
         object btnDestinationBack: TSpeedButton
@@ -285,20 +291,26 @@ object Form2: TForm2
       object chkDestinationTypeOrg: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 232.000000000000000000
-        TabOrder = 12
+        Size.Width = 120.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
         Text = 'Organization'
       end
       object chkDestinationTypeUser: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 192.000000000000000000
-        TabOrder = 11
+        Size.Width = 120.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 12
         Text = 'User (me)'
       end
       object Label3: TLabel
         Position.X = 8.000000000000000000
         Position.Y = 96.000000000000000000
         Size.Width = 161.000000000000000000
-        Size.Height = 17.000000000000000000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'API URL:'
       end
@@ -306,7 +318,7 @@ object Form2: TForm2
         Position.X = 8.000000000000000000
         Position.Y = 144.000000000000000000
         Size.Width = 161.000000000000000000
-        Size.Height = 17.000000000000000000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'Authorization Token:'
       end
@@ -314,7 +326,7 @@ object Form2: TForm2
         Position.X = 8.000000000000000000
         Position.Y = 192.000000000000000000
         Size.Width = 161.000000000000000000
-        Size.Height = 17.000000000000000000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'Type:'
       end
@@ -322,13 +334,13 @@ object Form2: TForm2
         Position.X = 8.000000000000000000
         Position.Y = 48.000000000000000000
         Size.Width = 161.000000000000000000
-        Size.Height = 17.000000000000000000
+        Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'Application:'
       end
       object txtDestinationName: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 13
+        TabOrder = 14
         Position.X = 304.000000000000000000
         Position.Y = 232.000000000000000000
         Size.Width = 225.000000000000000000
@@ -378,9 +390,9 @@ object Form2: TForm2
       object Layout6: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
-        Position.Y = 376.000000000000000000
+        Position.Y = 373.000000000000000000
         Size.Width = 545.000000000000000000
-        Size.Height = 57.000000000000000000
+        Size.Height = 60.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
         object btnCreateRepoBack: TSpeedButton
@@ -412,7 +424,7 @@ object Form2: TForm2
         Margins.Right = 8.000000000000000000
         Margins.Bottom = 8.000000000000000000
         Size.Width = 529.000000000000000000
-        Size.Height = 327.000000000000000000
+        Size.Height = 324.000000000000000000
         Size.PlatformDefault = False
         Text = 'Log'
         TabOrder = 2
@@ -425,11 +437,11 @@ object Form2: TForm2
           Margins.Right = 8.000000000000000000
           Margins.Bottom = 8.000000000000000000
           Size.Width = 513.000000000000000000
-          Size.Height = 295.000000000000000000
+          Size.Height = 292.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
           Viewport.Width = 509.000000000000000000
-          Viewport.Height = 291.000000000000000000
+          Viewport.Height = 288.000000000000000000
         end
       end
     end
