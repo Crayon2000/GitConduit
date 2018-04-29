@@ -59,3 +59,7 @@ To get an authorization token:
 5. Enter your password if required
 6. Choose a **Token description** and select scopes
 7. Click on the **Generate token** button
+
+## Licence
+
+See the [LICENCE](LICENCE.md) file for licence rights and limitations (MIT).

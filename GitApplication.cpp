@@ -35,8 +35,17 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
 
 void __fastcall TGitApplication::SetApiUrl(String AApiUrl)
 {
-    FApiUrl = TIdURI::URLEncode(AApiUrl.Trim());
-    if(*FApiUrl.LastChar() == L'/')
+    try
+    {
+        // URLEncode may throw an exception
+        FApiUrl = TIdURI::URLEncode(AApiUrl.Trim());
+    }
+    catch(...)
+    {
+        FApiUrl = AApiUrl;
+    }
+
+    if(FApiUrl.Length() > 0 && *FApiUrl.LastChar() == L'/')
     {
         FApiUrl = FApiUrl.SubString(0, FApiUrl.Length() - 1);
     }
