@@ -50,8 +50,10 @@ __fastcall TForm2::TForm2(TComponent* Owner)
 
     chkSourceTypeUser->GroupName = "Source";
     chkSourceTypeOrg->GroupName = "Source";
+    chkSourceTypeUser->IsChecked = true;
     chkDestinationTypeUser->GroupName = "Destination";
     chkDestinationTypeOrg->GroupName = "Destination";
+    chkDestinationTypeUser->IsChecked = true;
 
     SourceApplication = new TGitApplication();
     DestinationApplication = new TGitApplication();
