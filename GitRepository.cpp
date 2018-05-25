@@ -119,12 +119,10 @@ void __fastcall JsonToRepo(const String AJson, TRepository& ARepository)
             ARepository.Fork = false;
         }
     }
-#ifdef _DEBUG
     else
     {
-        throw Exception("fork not found");
+        ARepository.Fork = false;
     }
-#endif
 
     if((Pair = LRepo->Get("clone_url")) != NULL)
     {
