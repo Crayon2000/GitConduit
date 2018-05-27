@@ -385,8 +385,8 @@ void __fastcall TForm2::ActionRepositories()
     SourceApplication->ApplicationType = LSourceType;
     SourceApplication->ApiUrl = txtSourceUrl->Text;
     SourceApplication->Token = txtSourceToken->Text;
-    SourceApplication->Username = "";
-    SourceApplication->Password = "";
+    SourceApplication->Username = txtSourceUsername->Text;
+    SourceApplication->Password = txtSourcePassword->Text;
 
     String LUrl = SourceApplication->ApiUrl;
     if(chkSourceTypeOrg->IsChecked == true)
@@ -513,8 +513,8 @@ void __fastcall TForm2::ActionCreateRepo()
     DestinationApplication->ApplicationType = LDestinationype;
     DestinationApplication->ApiUrl = txtDestinationUrl->Text;
     DestinationApplication->Token = txtDestinationToken->Text;
-    DestinationApplication->Username = "";
-    DestinationApplication->Password = "";
+    DestinationApplication->Username = txtDestinationUsername->Text;
+    DestinationApplication->Password = txtDestinationPassword->Text;
 
     if(chkDestinationTypeOrg->IsChecked == true)
     {

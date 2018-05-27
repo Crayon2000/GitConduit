@@ -2,7 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- Select User radio buttons by default.
+- Username and password can be entered.
+- User radio buttons are selected by default.
 
 ## 0.0.1 - 2018-04-29
 - Initial release.

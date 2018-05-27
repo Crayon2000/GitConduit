@@ -1,7 +1,7 @@
 object Form2: TForm2
   Left = 0
   Top = 0
-  ClientHeight = 438
+  ClientHeight = 450
   ClientWidth = 545
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -11,7 +11,7 @@ object Form2: TForm2
   object TabControl1: TTabControl
     Align = Client
     Size.Width = 545.000000000000000000
-    Size.Height = 438.000000000000000000
+    Size.Height = 450.000000000000000000
     Size.PlatformDefault = False
     TabIndex = 0
     TabOrder = 2
@@ -29,7 +29,7 @@ object Form2: TForm2
       object Layout2: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
-        Position.Y = 373.000000000000000000
+        Position.Y = 385.000000000000000000
         Size.Width = 545.000000000000000000
         Size.Height = 60.000000000000000000
         Size.PlatformDefault = False
@@ -39,7 +39,7 @@ object Form2: TForm2
           Margins.Right = 5.000000000000000000
           Position.X = 460.000000000000000000
           Size.Width = 80.000000000000000000
-          Size.Height = 68.000000000000000000
+          Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'forwardbuttontext'
           Text = 'Next'
@@ -68,20 +68,20 @@ object Form2: TForm2
       end
       object chkSourceTypeOrg: TRadioButton
         Position.X = 168.000000000000000000
-        Position.Y = 232.000000000000000000
+        Position.Y = 328.000000000000000000
         Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 13
+        TabOrder = 15
         Text = 'Organization'
       end
       object chkSourceTypeUser: TRadioButton
         Position.X = 168.000000000000000000
-        Position.Y = 192.000000000000000000
+        Position.Y = 288.000000000000000000
         Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 12
+        TabOrder = 14
         Text = 'User (me)'
       end
       object Label1: TLabel
@@ -102,7 +102,7 @@ object Form2: TForm2
       end
       object Label5: TLabel
         Position.X = 8.000000000000000000
-        Position.Y = 192.000000000000000000
+        Position.Y = 288.000000000000000000
         Size.Width = 161.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
@@ -118,9 +118,9 @@ object Form2: TForm2
       end
       object txtSourceName: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 14
+        TabOrder = 16
         Position.X = 304.000000000000000000
-        Position.Y = 232.000000000000000000
+        Position.Y = 328.000000000000000000
         Size.Width = 225.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
@@ -143,6 +143,41 @@ object Form2: TForm2
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
       end
+      object Label14: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 192.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Username:'
+      end
+      object txtSourceUsername: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 5
+        Position.X = 168.000000000000000000
+        Position.Y = 192.000000000000000000
+        Size.Width = 361.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object txtSourcePassword: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 7
+        Password = True
+        Position.X = 168.000000000000000000
+        Position.Y = 240.000000000000000000
+        Size.Width = 361.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label15: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 240.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Password:'
+      end
     end
     object TabItemRepo: TTabItem
       CustomIcon = <
@@ -156,7 +191,7 @@ object Form2: TForm2
       object Layout4: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
-        Position.Y = 373.000000000000000000
+        Position.Y = 385.000000000000000000
         Size.Width = 545.000000000000000000
         Size.Height = 60.000000000000000000
         Size.PlatformDefault = False
@@ -166,7 +201,7 @@ object Form2: TForm2
           Margins.Left = 5.000000000000000000
           Position.X = 5.000000000000000000
           Size.Width = 80.000000000000000000
-          Size.Height = 68.000000000000000000
+          Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'backbuttontext'
           Text = 'Back'
@@ -177,7 +212,7 @@ object Form2: TForm2
           Margins.Right = 5.000000000000000000
           Position.X = 460.000000000000000000
           Size.Width = 80.000000000000000000
-          Size.Height = 68.000000000000000000
+          Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'forwardbuttontext'
           Text = 'Next'
@@ -191,7 +226,7 @@ object Form2: TForm2
         Margins.Right = 8.000000000000000000
         Margins.Bottom = 8.000000000000000000
         Size.Width = 529.000000000000000000
-        Size.Height = 291.000000000000000000
+        Size.Height = 303.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
         DisableFocusEffect = True
@@ -201,7 +236,7 @@ object Form2: TForm2
         DefaultItemStyles.GroupFooterStyle = ''
         ShowCheckboxes = True
         Viewport.Width = 525.000000000000000000
-        Viewport.Height = 287.000000000000000000
+        Viewport.Height = 299.000000000000000000
       end
       object Label9: TLabel
         Align = Top
@@ -240,7 +275,7 @@ object Form2: TForm2
       object Layout3: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
-        Position.Y = 373.000000000000000000
+        Position.Y = 385.000000000000000000
         Size.Width = 545.000000000000000000
         Size.Height = 60.000000000000000000
         Size.PlatformDefault = False
@@ -250,7 +285,7 @@ object Form2: TForm2
           Margins.Left = 5.000000000000000000
           Position.X = 5.000000000000000000
           Size.Width = 80.000000000000000000
-          Size.Height = 68.000000000000000000
+          Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'backbuttontext'
           Text = 'Back'
@@ -261,7 +296,7 @@ object Form2: TForm2
           Margins.Right = 5.000000000000000000
           Position.X = 460.000000000000000000
           Size.Width = 80.000000000000000000
-          Size.Height = 68.000000000000000000
+          Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'forwardbuttontext'
           Text = 'Next'
@@ -290,20 +325,20 @@ object Form2: TForm2
       end
       object chkDestinationTypeOrg: TRadioButton
         Position.X = 168.000000000000000000
-        Position.Y = 232.000000000000000000
+        Position.Y = 328.000000000000000000
         Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 13
+        TabOrder = 15
         Text = 'Organization'
       end
       object chkDestinationTypeUser: TRadioButton
         Position.X = 168.000000000000000000
-        Position.Y = 192.000000000000000000
+        Position.Y = 288.000000000000000000
         Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 12
+        TabOrder = 14
         Text = 'User (me)'
       end
       object Label3: TLabel
@@ -324,7 +359,7 @@ object Form2: TForm2
       end
       object Label6: TLabel
         Position.X = 8.000000000000000000
-        Position.Y = 192.000000000000000000
+        Position.Y = 288.000000000000000000
         Size.Width = 161.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
@@ -340,9 +375,9 @@ object Form2: TForm2
       end
       object txtDestinationName: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 14
+        TabOrder = 16
         Position.X = 304.000000000000000000
-        Position.Y = 232.000000000000000000
+        Position.Y = 328.000000000000000000
         Size.Width = 225.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
@@ -361,6 +396,41 @@ object Form2: TForm2
         TabOrder = 1
         Position.X = 168.000000000000000000
         Position.Y = 96.000000000000000000
+        Size.Width = 361.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label16: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 192.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Username:'
+      end
+      object Label17: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 240.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Password:'
+      end
+      object txtDestinationUsername: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 5
+        Position.X = 168.000000000000000000
+        Position.Y = 192.000000000000000000
+        Size.Width = 361.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object txtDestinationPassword: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 7
+        Password = True
+        Position.X = 168.000000000000000000
+        Position.Y = 240.000000000000000000
         Size.Width = 361.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
@@ -390,7 +460,7 @@ object Form2: TForm2
       object Layout6: TLayout
         Align = Bottom
         Margins.Bottom = 5.000000000000000000
-        Position.Y = 373.000000000000000000
+        Position.Y = 385.000000000000000000
         Size.Width = 545.000000000000000000
         Size.Height = 60.000000000000000000
         Size.PlatformDefault = False
@@ -400,7 +470,7 @@ object Form2: TForm2
           Margins.Left = 5.000000000000000000
           Position.X = 5.000000000000000000
           Size.Width = 80.000000000000000000
-          Size.Height = 68.000000000000000000
+          Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'backbuttontext'
           Text = 'Back'
@@ -411,7 +481,7 @@ object Form2: TForm2
           Margins.Right = 5.000000000000000000
           Position.X = 460.000000000000000000
           Size.Width = 80.000000000000000000
-          Size.Height = 68.000000000000000000
+          Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'closebuttontext'
           Text = 'Close'
@@ -424,7 +494,7 @@ object Form2: TForm2
         Margins.Right = 8.000000000000000000
         Margins.Bottom = 8.000000000000000000
         Size.Width = 529.000000000000000000
-        Size.Height = 324.000000000000000000
+        Size.Height = 336.000000000000000000
         Size.PlatformDefault = False
         Text = 'Log'
         TabOrder = 2
@@ -437,19 +507,19 @@ object Form2: TForm2
           Margins.Right = 8.000000000000000000
           Margins.Bottom = 8.000000000000000000
           Size.Width = 513.000000000000000000
-          Size.Height = 292.000000000000000000
+          Size.Height = 304.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
           Viewport.Width = 509.000000000000000000
-          Viewport.Height = 288.000000000000000000
+          Viewport.Height = 300.000000000000000000
         end
       end
     end
   end
   object Rectangle1: TRectangle
     Fill.Color = x4F000000
-    Position.X = 88.000000000000000000
-    Position.Y = 272.000000000000000000
+    Position.X = 136.000000000000000000
+    Position.Y = 376.000000000000000000
     Size.Width = 313.000000000000000000
     Size.Height = 161.000000000000000000
     Size.PlatformDefault = False

@@ -8,7 +8,7 @@ It supports the following services:
 * GitHub
 
 ## How To Use
-* Make sure *git.exe* is in your path and credentials are saved
+* Make sure *git.exe* is in your path
 * Fill the **Source** section and click on the **Next** button
 * Select the repositories you want to export and click on the **Next** button
 * Fill the **Destination** section and click on the **Next** button

@@ -87,6 +87,14 @@ __published:    // IDE-managed Components
     TEdit *txtDestinationToken;
     TEdit *txtDestinationUrl;
     TImageList *ImageList1;
+    TLabel *Label14;
+    TEdit *txtSourceUsername;
+    TEdit *txtSourcePassword;
+    TLabel *Label15;
+    TLabel *Label16;
+    TLabel *Label17;
+    TEdit *txtDestinationUsername;
+    TEdit *txtDestinationPassword;
     void __fastcall TabControl1Change(TObject *Sender);
     void __fastcall WizardButtonClick(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);
