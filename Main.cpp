@@ -385,6 +385,8 @@ void __fastcall TForm2::ActionRepositories()
     SourceApplication->ApplicationType = LSourceType;
     SourceApplication->ApiUrl = txtSourceUrl->Text;
     SourceApplication->Token = txtSourceToken->Text;
+    SourceApplication->Username = "";
+    SourceApplication->Password = "";
 
     String LUrl = SourceApplication->ApiUrl;
     if(chkSourceTypeOrg->IsChecked == true)
@@ -511,6 +513,8 @@ void __fastcall TForm2::ActionCreateRepo()
     DestinationApplication->ApplicationType = LDestinationype;
     DestinationApplication->ApiUrl = txtDestinationUrl->Text;
     DestinationApplication->Token = txtDestinationToken->Text;
+    DestinationApplication->Username = "";
+    DestinationApplication->Password = "";
 
     if(chkDestinationTypeOrg->IsChecked == true)
     {
@@ -584,9 +588,45 @@ void __fastcall TForm2::ActionCreateRepo()
 
             try
             {
-                Clone(LSourceRepository.CloneUrl);
-                AddRemote(LDestinationRepository.CloneUrl, "temp.git");
+                String LSourceUrl = LSourceRepository.CloneUrl;
+                if(SourceApplication->Username.IsEmpty() == false &&
+                    SourceApplication->Password.IsEmpty() == false)
+                {
+                    const String LSourceCredential =
+                        SourceApplication->Username + ":" +
+                        SourceApplication->Password + "@";
+                    LSourceUrl = StringReplace(
+                        LSourceUrl, "https://",
+                        "https://" + LSourceCredential,
+                        TReplaceFlags() << rfIgnoreCase);
+                    LSourceUrl = StringReplace(
+                        LSourceUrl, "http://",
+                        "http://" + LSourceCredential,
+                        TReplaceFlags() << rfIgnoreCase);
+                }
+
+                Clone(LSourceUrl);
+
+                String LDestinationUrl = LDestinationRepository.CloneUrl;
+                if(DestinationApplication->Username.IsEmpty() == false &&
+                    DestinationApplication->Password.IsEmpty() == false)
+                {
+                    const String LDestinationCredential =
+                        DestinationApplication->Username + ":" +
+                        DestinationApplication->Password + "@";
+                    LDestinationUrl = StringReplace(
+                        LDestinationUrl, "https://",
+                        "https://" + LDestinationCredential,
+                        TReplaceFlags() << rfIgnoreCase);
+                    LDestinationUrl = StringReplace(
+                        LDestinationUrl, "http://",
+                        "http://" + LDestinationCredential,
+                        TReplaceFlags() << rfIgnoreCase);
+                }
+
+                AddRemote(LDestinationUrl, "temp.git");
                 Push("temp.git");
+
                 memoLog->Lines->Add("Pushed repository");
                 try
                 {

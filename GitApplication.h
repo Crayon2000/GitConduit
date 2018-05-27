@@ -27,6 +27,8 @@ private:
     String FApiUrl;
     String FToken;
     String FUser;
+    String FUsername;
+    String FPassword;
     TApiEndpoint FEndpoint;
 protected:
     void __fastcall SetApplicationType(TGitApplicationType AApplicationType);
@@ -40,6 +42,8 @@ public:
     __property String ApiUrl = {read=FApiUrl, write=SetApiUrl};
     __property String Token = {read=FToken, write=FToken};
     __property String User = {read=FUser, write=FUser};
+    __property String Username = {read=FUsername, write=FUsername};
+    __property String Password = {read=FPassword, write=FPassword};
     __property TApiEndpoint Endpoint = {read=FEndpoint, write=FEndpoint};
 };
 //---------------------------------------------------------------------------
