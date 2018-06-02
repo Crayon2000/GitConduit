@@ -27,6 +27,7 @@ public:
     bool Fork;
     String CloneUrl;
     int OpenIssueCount;
+    bool HasWiki;
 };
 
 void __fastcall JsonToRepo(const String AJson, TRepository& ARepository);

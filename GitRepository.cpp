@@ -13,7 +13,8 @@ __fastcall TOwner::TOwner()
 __fastcall TRepository::TRepository() :
     Private(true),
     Fork(false),
-    OpenIssueCount(0)
+    OpenIssueCount(0),
+    HasWiki(true)
 {
 }
 
@@ -108,19 +109,13 @@ void __fastcall JsonToRepo(const String AJson, TRepository& ARepository)
     }
 #endif
 
-    if((Pair = LRepo->Get("fork")) != NULL)
+    if((Pair = LRepo->Get("fork")) != NULL &&
+        dynamic_cast<TJSONTrue*>(Pair->JsonValue) != NULL)
     {
-        if(dynamic_cast<TJSONTrue*>(Pair->JsonValue) != NULL)
-        {
-            ARepository.Fork = true;
-        }
-        else
-        {
-            ARepository.Fork = false;
-        }
+        ARepository.Fork = true;
     }
     else
-    {
+    {   // Default value is false, this is the most commun case
         ARepository.Fork = false;
     }
 
@@ -143,6 +138,16 @@ void __fastcall JsonToRepo(const String AJson, TRepository& ARepository)
     else
     {
         ARepository.OpenIssueCount = 0;
+    }
+
+    if((Pair = LRepo->Get("has_wiki")) != NULL &&
+        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+    {
+        ARepository.HasWiki = false;
+    }
+    else
+    {   // Default value is true, let's presume there is a Wiki
+        ARepository.HasWiki = true;
     }
 }
 

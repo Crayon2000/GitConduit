@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- ...
+- Add credential support to Wiki repository.
 
 ## [0.1.0] - 2018-05-28
 - Username and password can be entered.

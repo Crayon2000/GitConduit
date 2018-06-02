@@ -628,25 +628,27 @@ void __fastcall TForm2::ActionCreateRepo()
                 Push("temp.git");
 
                 memoLog->Lines->Add("Pushed repository");
-                try
-                {
-                    const String LSourceWikiUrl = StringReplace(
-                        LSourceRepository.CloneUrl,
-                        ".git", ".wiki.git", TReplaceFlags());
-                    const String LCDestinationWikiUrl = StringReplace(
-                        LDestinationRepository.CloneUrl,
-                        ".git", ".wiki.git", TReplaceFlags());
 
-                    Ioutils::TDirectory::Delete("temp.git", true);
-
-                    Clone(LSourceWikiUrl);
-                    AddRemote(LCDestinationWikiUrl, "temp.git");
-                    Push("temp.git");
-                    memoLog->Lines->Add("Pushed Wiki repository");
-                }
-                catch(...)
+                if(LSourceRepository.HasWiki == true)
                 {
-                    memoLog->Lines->Add("Wiki could not be exported");
+                    try
+                    {
+                        const String LSourceWikiUrl = StringReplace(
+                            LSourceUrl, ".git", ".wiki.git", TReplaceFlags());
+                        const String LCDestinationWikiUrl = StringReplace(
+                            LDestinationUrl, ".git", ".wiki.git", TReplaceFlags());
+
+                        Ioutils::TDirectory::Delete("temp.git", true);
+
+                        Clone(LSourceWikiUrl);
+                        AddRemote(LCDestinationWikiUrl, "temp.git");
+                        Push("temp.git");
+                        memoLog->Lines->Add("Pushed Wiki repository");
+                    }
+                    catch(...)
+                    {
+                        memoLog->Lines->Add("Wiki could not be exported");
+                    }
                 }
             }
             __finally
