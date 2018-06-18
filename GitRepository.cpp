@@ -151,3 +151,48 @@ void __fastcall JsonToRepo(const String AJson, TRepository& ARepository)
     }
 }
 
+__fastcall TIssue::TIssue()
+{
+}
+
+void __fastcall JsonToIssue(const String AJson, TIssue& AIssue)
+{
+    TJSONPair* Pair;
+    TJSONObject* LIssue = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+
+    if(LIssue == NULL)
+    {
+        throw Exception("Invalid JSON input!");
+    }
+
+    AIssue.Title = "";
+    if((Pair = LIssue->Get("title")) != NULL)
+    {
+        TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
+        if(LJsonString->Null == false)
+        {
+            AIssue.Title = LJsonString->Value();
+        }
+    }
+
+    AIssue.Body = "";
+    if((Pair = LIssue->Get("body")) != NULL)
+    {
+        TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
+        if(LJsonString->Null == false)
+        {
+            AIssue.Body = LJsonString->Value();
+        }
+    }
+
+    AIssue.State = "";
+    if((Pair = LIssue->Get("state")) != NULL)
+    {
+        TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
+        if(LJsonString->Null == false)
+        {
+            AIssue.State = LJsonString->Value();
+        }
+    }
+}
+

@@ -123,6 +123,7 @@ protected:
     void __fastcall HideMessage();
     void __fastcall OnApplicationIdle(System::TObject* Sender, bool &Done);
     void __fastcall ListBoxItemApplyStyleLookup(TObject *Sender);
+    void __fastcall PrintIssues(TGitApplication* AGitApplication, TRepository* ARepository);
 public:     // User declarations
     __fastcall TForm2(TComponent* Owner);
     __fastcall virtual ~TForm2(void);

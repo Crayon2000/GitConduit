@@ -582,8 +582,9 @@ void __fastcall TForm2::ActionCreateRepo()
 
             if(LSourceRepository.OpenIssueCount > 0)
             {
-                const String LLog = String().sprintf(L"%d issue(s) not created!", LSourceRepository.OpenIssueCount);
+                const String LLog = String().sprintf(L"%d open issue(s) not created!", LSourceRepository.OpenIssueCount);
                 memoLog->Lines->Add(LLog);
+                PrintIssues(SourceApplication, &LSourceRepository);
             }
 
             try
@@ -727,6 +728,38 @@ void __fastcall TForm2::ListBoxItemApplyStyleLookup(TObject *Sender)
     __finally
     {
         LListBoxItem->EndUpdate();
+    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepository* ARepository)
+{
+    const String LUrl = AGitApplication->ApiUrl + "/repos/" +
+        AGitApplication->User + "/" + ARepository->Name + "/issues";
+    try
+    {
+        PrepareRequest(AGitApplication);
+        const String LContent = IdHTTP1->Get(LUrl);
+
+        TJSONArray* LIssues = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
+        if(LIssues != NULL)
+        {
+            TJSONArrayEnumerator* LIssueEnumerator = LIssues->GetEnumerator();
+            while(LIssueEnumerator->MoveNext() == true)
+            {
+                TJSONObject* LIssue = static_cast<TJSONObject*>(LIssueEnumerator->Current);
+
+                const String LIssueJson = LIssue->ToString();
+                TIssue LIssueToPrint;
+                JsonToIssue(LIssueJson, LIssueToPrint);
+
+                const String LLog = String().sprintf(L"    Issue: %s", LIssueToPrint.Title);
+                memoLog->Lines->Add(LLog);
+            }
+        }
+    }
+    catch(...)
+    {
     }
 }
 //---------------------------------------------------------------------------

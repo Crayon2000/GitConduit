@@ -30,6 +30,18 @@ public:
     bool HasWiki;
 };
 
+class TIssue
+{
+public:
+    __fastcall TIssue();
+    inline __fastcall virtual ~TIssue(void) { }
+
+    String Title;
+    String Body;
+    String State;
+};
+
 void __fastcall JsonToRepo(const String AJson, TRepository& ARepository);
+void __fastcall JsonToIssue(const String AJson, TIssue& AIssue);
 //---------------------------------------------------------------------------
 #endif
