@@ -115,7 +115,7 @@ protected:
     void __fastcall PrepareRequest(TGitApplication* AGitApplication);
     HANDLE __fastcall ExecuteProgramEx(const String ACmd, const String ADirectory = ".");
     DWORD __fastcall Wait(HANDLE AHandle);
-    void __fastcall Clone(const String AGitRepo);
+    void __fastcall Clone(const String ADirectory, const String AGitRepo, bool AIsBare = false);
     void __fastcall AddRemote(const String AGitRepo, const String ADirectory);
     void __fastcall Push(const String ADirectory);
     bool __fastcall CheckGitExe();

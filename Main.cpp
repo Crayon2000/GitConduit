@@ -233,9 +233,13 @@ DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::Clone(const String AGitRepo)
+void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, bool AIsBare)
 {
-    const String LCmd = String().sprintf(L"git clone %s temp.git --bare", AGitRepo.c_str());
+    String LCmd = String().sprintf(L"git clone %s %s", AGitRepo.c_str(), ADirectory.c_str());
+    if(AIsBare == true)
+    {
+        LCmd += " --bare";
+    }
     HANDLE LHandle = ExecuteProgramEx(LCmd);
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
@@ -606,7 +610,7 @@ void __fastcall TForm2::ActionCreateRepo()
                         TReplaceFlags() << rfIgnoreCase);
                 }
 
-                Clone(LSourceUrl);
+                Clone("temp.git", LSourceUrl, true);
 
                 String LDestinationUrl = LDestinationRepository.CloneUrl;
                 if(DestinationApplication->Username.IsEmpty() == false &&
@@ -641,7 +645,7 @@ void __fastcall TForm2::ActionCreateRepo()
 
                         Ioutils::TDirectory::Delete("temp.git", true);
 
-                        Clone(LSourceWikiUrl);
+                        Clone("temp.git", LSourceWikiUrl, true);
                         AddRemote(LCDestinationWikiUrl, "temp.git");
                         Push("temp.git");
                         memoLog->Lines->Add("Pushed Wiki repository");
