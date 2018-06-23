@@ -7,6 +7,7 @@
 #include "GitRepository.h"
 #include <System.JSON.hpp>
 #include <System.IOUtils.hpp>
+#include <System.RegularExpressions.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.fmx"
@@ -433,62 +434,67 @@ void __fastcall TForm2::ActionRepositories()
 
     try
     {
-        PrepareRequest(SourceApplication);
-        const String LContent = IdHTTP1->Get(LUrl);
-
-        TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
-        if(LRepos != NULL)
+        while(LUrl.IsEmpty() == false)
         {
-            TJSONArrayEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
-            while(LRepoEnumerator->MoveNext() == true)
+            PrepareRequest(SourceApplication);
+            const String LContent = IdHTTP1->Get(LUrl);
+
+            TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
+            if(LRepos != NULL)
             {
-                TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
-
-                const String LSourceJson = LRepo->ToString();
-                TRepository LSourceRepository;
-                JsonToRepo(LSourceJson, LSourceRepository);
-
-                if(SourceApplication->Endpoint == TApiEndpoint::User &&
-                    LSourceRepository.Owner.Login != SourceApplication->User)
+                TJSONArrayEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
+                while(LRepoEnumerator->MoveNext() == true)
                 {
-                    continue;
-                }
+                    TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
 
-                TListBoxItem* LListBoxItem = new TListBoxItem(this);
-                LListBoxItem->Parent = ListBoxRepo;
-                LListBoxItem->IsChecked = true;
-                LListBoxItem->Text = LSourceRepository.FullName;
-                LListBoxItem->TagString = LSourceJson;
-                LListBoxItem->OnApplyStyleLookup = ListBoxItemApplyStyleLookup;
-                if(LSourceRepository.Private == true)
-                {   // Private
-                    LListBoxItem->ImageIndex = 0;
-                }
-                else
-                {
-                    if(LSourceRepository.Fork == false)
-                    {   // Public
-                        LListBoxItem->ImageIndex = 1;
+                    const String LSourceJson = LRepo->ToString();
+                    TRepository LSourceRepository;
+                    JsonToRepo(LSourceJson, LSourceRepository);
+
+                    if(SourceApplication->Endpoint == TApiEndpoint::User &&
+                        LSourceRepository.Owner.Login != SourceApplication->User)
+                    {
+                        continue;
+                    }
+
+                    TListBoxItem* LListBoxItem = new TListBoxItem(this);
+                    LListBoxItem->Parent = ListBoxRepo;
+                    LListBoxItem->IsChecked = true;
+                    LListBoxItem->Text = LSourceRepository.FullName;
+                    LListBoxItem->TagString = LSourceJson;
+                    LListBoxItem->OnApplyStyleLookup = ListBoxItemApplyStyleLookup;
+                    if(LSourceRepository.Private == true)
+                    {   // Private
+                        LListBoxItem->ImageIndex = 0;
                     }
                     else
-                    {   // Fork
-                        LListBoxItem->ImageIndex = 2;
+                    {
+                        if(LSourceRepository.Fork == false)
+                        {   // Public
+                            LListBoxItem->ImageIndex = 1;
+                        }
+                        else
+                        {   // Fork
+                            LListBoxItem->ImageIndex = 2;
+                        }
                     }
-                }
-                if(LSourceRepository.Description.IsEmpty() == false)
-                {
-                    LListBoxItem->ItemData->Detail = LSourceRepository.Description;
-                    LListBoxItem->Height = 50.0f;
-                    LListBoxItem->StyleLookup = "listboxitembottomdetail";
-                }
-                else
-                {
-                    LListBoxItem->Height = 40.0f;
-                    LListBoxItem->StyleLookup = "listboxitemnodetail";
-                }
+                    if(LSourceRepository.Description.IsEmpty() == false)
+                    {
+                        LListBoxItem->ItemData->Detail = LSourceRepository.Description;
+                        LListBoxItem->Height = 50.0f;
+                        LListBoxItem->StyleLookup = "listboxitembottomdetail";
+                    }
+                    else
+                    {
+                        LListBoxItem->Height = 40.0f;
+                        LListBoxItem->StyleLookup = "listboxitemnodetail";
+                    }
 
-                Application->ProcessMessages();
+                    Application->ProcessMessages();
+                }
             }
+
+            LUrl = GetNextUrl();
         }
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
@@ -765,6 +771,23 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
     catch(...)
     {
     }
+}
+//---------------------------------------------------------------------------
+
+String __fastcall TForm2::GetNextUrl()
+{
+    String Result;
+    const String LLink = IdHTTP1->Response->RawHeaders->Values["Link"];
+    if(LLink.IsEmpty() == false)
+    {
+        const String LExpression = "<(\\S+)>; rel=\"next\"";
+        TMatch LMatch = TRegEx::Match(LLink, LExpression, TRegExOptions() << TRegExOption::roSingleLine);
+        if(LMatch.Success == true && LMatch.Groups.Count >= 1)
+        {
+            Result = LMatch.Groups[1].Value;
+        }
+    }
+    return Result;
 }
 //---------------------------------------------------------------------------
 
