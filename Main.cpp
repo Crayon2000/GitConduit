@@ -56,6 +56,23 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     chkDestinationTypeOrg->GroupName = "Destination";
     chkDestinationTypeUser->IsChecked = true;
 
+    if(cboeSourceName->Items->Count > 0)
+    {
+        cboeSourceName->StyleLookup = "comboeditstyle";
+    }
+    else
+    {   // No need to look like a TComboEdit, it's empty
+        cboeSourceName->StyleLookup = "editstyle";
+    }
+    if(cboeDestinationName->Items->Count > 0)
+    {
+        cboeDestinationName->StyleLookup = "comboeditstyle";
+    }
+    else
+    {   // No need to look like a TComboEdit, it's empty
+        cboeDestinationName->StyleLookup = "editstyle";
+    }
+
     SourceApplication = new TGitApplication();
     DestinationApplication = new TGitApplication();
 
@@ -396,10 +413,10 @@ void __fastcall TForm2::ActionRepositories()
     String LUrl = SourceApplication->ApiUrl;
     if(chkSourceTypeOrg->IsChecked == true)
     {
-        LUrl += "/orgs/" + txtSourceName->Text + "/repos";
+        LUrl += "/orgs/" + cboeSourceName->Text + "/repos";
 
         SourceApplication->Endpoint = TApiEndpoint::Organization;
-        SourceApplication->User = txtSourceName->Text;
+        SourceApplication->User = cboeSourceName->Text;
     }
     else
     {
@@ -529,7 +546,7 @@ void __fastcall TForm2::ActionCreateRepo()
     if(chkDestinationTypeOrg->IsChecked == true)
     {
         DestinationApplication->Endpoint = TApiEndpoint::Organization;
-        DestinationApplication->User = txtDestinationName->Text;
+        DestinationApplication->User = cboeDestinationName->Text;
     }
     else
     {

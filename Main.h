@@ -27,6 +27,7 @@
 #include <FMX.Objects.hpp>
 #include <FMX.ImgList.hpp>
 #include <System.ImageList.hpp>
+#include <FMX.ComboEdit.hpp>
 //---------------------------------------------------------------------------
 class TGitApplication;
 class TRepository;
@@ -73,7 +74,7 @@ __published:    // IDE-managed Components
     TLabel *Label2;
     TLabel *Label5;
     TLabel *Label7;
-    TEdit *txtSourceName;
+    TComboEdit *cboeSourceName;
     TEdit *txtSourceToken;
     TEdit *txtSourceUrl;
     TComboBox *cboDestinationApp;
@@ -83,7 +84,7 @@ __published:    // IDE-managed Components
     TLabel *Label4;
     TLabel *Label6;
     TLabel *Label8;
-    TEdit *txtDestinationName;
+    TComboEdit *cboeDestinationName;
     TEdit *txtDestinationToken;
     TEdit *txtDestinationUrl;
     TImageList *ImageList1;

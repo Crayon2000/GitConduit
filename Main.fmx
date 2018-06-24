@@ -72,7 +72,7 @@ object Form2: TForm2
         Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 15
+        TabOrder = 16
         Text = 'Organization'
       end
       object chkSourceTypeUser: TRadioButton
@@ -81,7 +81,7 @@ object Form2: TForm2
         Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 14
+        TabOrder = 15
         Text = 'User (me)'
       end
       object Label1: TLabel
@@ -116,9 +116,11 @@ object Form2: TForm2
         Size.PlatformDefault = False
         Text = 'Application:'
       end
-      object txtSourceName: TEdit
+      object cboeSourceName: TComboEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 16
+        TabOrder = 17
+        ItemHeight = 19.000000000000000000
+        ItemIndex = -1
         Position.X = 304.000000000000000000
         Position.Y = 328.000000000000000000
         Size.Width = 225.000000000000000000
@@ -329,7 +331,7 @@ object Form2: TForm2
         Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 15
+        TabOrder = 16
         Text = 'Organization'
       end
       object chkDestinationTypeUser: TRadioButton
@@ -338,7 +340,7 @@ object Form2: TForm2
         Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 14
+        TabOrder = 15
         Text = 'User (me)'
       end
       object Label3: TLabel
@@ -373,9 +375,11 @@ object Form2: TForm2
         Size.PlatformDefault = False
         Text = 'Application:'
       end
-      object txtDestinationName: TEdit
+      object cboeDestinationName: TComboEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 16
+        TabOrder = 17
+        ItemHeight = 19.000000000000000000
+        ItemIndex = -1
         Position.X = 304.000000000000000000
         Position.Y = 328.000000000000000000
         Size.Width = 225.000000000000000000
