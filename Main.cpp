@@ -13,11 +13,12 @@
 #pragma resource "*.fmx"
 TForm2 *Form2;
 
-#define TABIDSOURCE         0
-#define TABIDSOURCEOWNER    1
-#define TABIDREPOSITORIES   2
-#define TABIDDESTINATION    3
-#define TABIDCREATE         4
+#define TABIDSOURCE             0
+#define TABIDSOURCEOWNER        1
+#define TABIDREPOSITORIES       2
+#define TABIDDESTINATION        3
+#define TABIDDESTINATIONOWNER   4
+#define TABIDCREATE             5
 //---------------------------------------------------------------------------
 __fastcall TForm2::TForm2(TComponent* Owner)
     : TForm(Owner)
@@ -42,11 +43,13 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     btnSourceNext->TagObject = TabItemSourceOwner;
     btnSourceOwnerNext->TagObject = TabItemRepo;
     btnRepoNext->TagObject = TabItemDestination;
-    btnDestinationNext->TagObject = TabItemCreate;
+    btnDestinationNext->TagObject = TabItemDestinationOwner;
+    btnDestinationOwnerNext->TagObject = TabItemCreate;
     btnSourceOwnerBack->TagObject = TabItemSource;
     btnRepoBack->TagObject = TabItemSourceOwner;
     btnDestinationBack->TagObject = TabItemRepo;
-    btnCreateRepoBack->TagObject = TabItemDestination;
+    btnDestinationOwnerBack->TagObject = TabItemDestination;
+    btnCreateRepoBack->TagObject = TabItemDestinationOwner;
 
     cboSourceApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
     cboSourceApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
@@ -63,15 +66,6 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     chkDestinationTypeUser->GroupName = "Destination";
     chkDestinationTypeOrg->GroupName = "Destination";
     chkDestinationTypeUser->IsChecked = true;
-
-    if(cboeDestinationName->Items->Count > 0)
-    {
-        cboeDestinationName->StyleLookup = "comboeditstyle";
-    }
-    else
-    {   // No need to look like a TComboEdit, it's empty
-        cboeDestinationName->StyleLookup = "editstyle";
-    }
 
     SourceApplication = new TGitApplication();
     DestinationApplication = new TGitApplication();
@@ -368,6 +362,13 @@ void __fastcall TForm2::TabControl1Change(TObject *Sender)
             btnDestinationNext->Enabled = false;
             btnDestinationBack->Enabled = false;
             break;
+        case TABIDDESTINATIONOWNER:
+            btnDestinationOwnerNext->Enabled = false;
+            btnDestinationOwnerBack->Enabled = false;
+
+            chkDestinationTypeUser->Text = "User";
+            cboeDestinationName->StyleLookup = "editstyle";
+            break;
         case TABIDCREATE:
             btnCreateRepoBack->Enabled = false;
             btnCreateRepoClose->Enabled = false;
@@ -427,6 +428,9 @@ void __fastcall TForm2::OnApplicationIdle(System::TObject* Sender, bool &Done)
             break;
         case TABIDDESTINATION:
             ActionDestination();
+            break;
+        case TABIDDESTINATIONOWNER:
+            ActionDestinationOwner();
             break;
         case TABIDCREATE:
             ActionCreateRepo();
@@ -613,7 +617,7 @@ void __fastcall TForm2::ActionDestination()
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::ActionCreateRepo()
+void __fastcall TForm2::ActionDestinationOwner()
 {
     const TGitApplicationType LDestinationype =
         static_cast<TGitApplicationType>((unsigned char)cboDestinationApp->Selected->Data);
@@ -623,6 +627,60 @@ void __fastcall TForm2::ActionCreateRepo()
     DestinationApplication->Username = txtDestinationUsername->Text;
     DestinationApplication->Password = txtDestinationPassword->Text;
 
+    String LUser;
+    String LExceptionMsg;
+    try
+    {
+        LUser = GetAuthenticatedUser(DestinationApplication);
+    }
+    catch(const Exception& e)
+    {
+        LExceptionMsg = e.Message;
+    }
+    if(LUser.IsEmpty() == true)
+    {
+        btnDestinationOwnerBack->Enabled = true;
+        String LMessage = "Cannot get authenticated user!";
+        if(LExceptionMsg.IsEmpty() == false)
+        {
+            LMessage += String(EOL) + String(EOL) + LExceptionMsg;
+        }
+        LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+        ShowMessage(LMessage);
+
+        return;
+    }
+
+    chkDestinationTypeUser->Text = String().sprintf(L"User (%s)", LUser.c_str());
+    chkDestinationTypeUser->TagString = LUser;
+
+    try
+    {
+        GetOrganizations(DestinationApplication, cboeDestinationName->Items);
+    }
+    catch(const Exception& e)
+    {
+        btnDestinationOwnerBack->Enabled = true;
+        String LMessage = "Cannot get organizations list!";
+        LMessage += String(EOL) + String(EOL) + e.Message;
+        LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+        ShowMessage(LMessage);
+
+        return;
+    }
+
+    if(cboeDestinationName->Items->Count > 0)
+    {
+        cboeDestinationName->StyleLookup = "comboeditstyle";
+    }
+
+    btnDestinationOwnerNext->Enabled = true;
+    btnDestinationOwnerBack->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ActionCreateRepo()
+{
     if(chkDestinationTypeOrg->IsChecked == true)
     {
         DestinationApplication->Endpoint = TApiEndpoint::Organization;
@@ -631,31 +689,7 @@ void __fastcall TForm2::ActionCreateRepo()
     else
     {
         DestinationApplication->Endpoint = TApiEndpoint::User;
-        DestinationApplication->User = "";
-
-        String LExceptionMsg;
-        try
-        {
-            DestinationApplication->User = GetAuthenticatedUser(DestinationApplication);
-        }
-        catch(const Exception& e)
-        {
-            LExceptionMsg = e.Message;
-        }
-        if(DestinationApplication->User.IsEmpty() == true)
-        {
-            btnCreateRepoBack->Enabled = true;
-
-            String LMessage = "Cannot get authenticated user!";
-            if(LExceptionMsg.IsEmpty() == false)
-            {
-                LMessage += String(EOL) + String(EOL) + LExceptionMsg;
-            }
-            LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
-            ShowMessage(LMessage);
-
-            return;
-        }
+        DestinationApplication->User = chkDestinationTypeUser->TagString;
     }
 
     const int LCount = ListBoxRepo->Items->Count;

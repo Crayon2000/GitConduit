@@ -74,13 +74,9 @@ __published:    // IDE-managed Components
     TEdit *txtSourceToken;
     TEdit *txtSourceUrl;
     TComboBox *cboDestinationApp;
-    TRadioButton *chkDestinationTypeOrg;
-    TRadioButton *chkDestinationTypeUser;
     TLabel *Label3;
     TLabel *Label4;
-    TLabel *Label6;
     TLabel *Label8;
-    TComboEdit *cboeDestinationName;
     TEdit *txtDestinationToken;
     TEdit *txtDestinationUrl;
     TImageList *ImageList1;
@@ -101,6 +97,15 @@ __published:    // IDE-managed Components
     TLayout *Layout1;
     TSpeedButton *btnSourceOwnerBack;
     TSpeedButton *btnSourceOwnerNext;
+    TTabItem *TabItemDestinationOwner;
+    TLayout *Layout7;
+    TSpeedButton *btnDestinationOwnerBack;
+    TSpeedButton *btnDestinationOwnerNext;
+    TLabel *Label19;
+    TLabel *Label20;
+    TRadioButton *chkDestinationTypeUser;
+    TRadioButton *chkDestinationTypeOrg;
+    TComboEdit *cboeDestinationName;
     void __fastcall TabControl1Change(TObject *Sender);
     void __fastcall WizardButtonClick(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);
@@ -115,6 +120,7 @@ private:    // User declarations
     void __fastcall ActionSourceOwner();
     void __fastcall ActionRepositories();
     void __fastcall ActionDestination();
+    void __fastcall ActionDestinationOwner();
     void __fastcall ActionCreateRepo();
 protected:
     bool __fastcall CreateRepo(const String AJson, TRepository& ARepository);

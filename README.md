@@ -13,6 +13,7 @@ It supports the following services:
 * Select the owner of the source repositories and click on the **Next** button
 * Select the repositories you want to export and click on the **Next** button
 * Fill the **Destination** section and click on the **Next** button
+* Select the owner of the destination repositories and click on the **Next** button
 * Wait and look at the **Log** for more information
 * Click on the **Close** button to exit the application
 
