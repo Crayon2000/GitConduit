@@ -605,7 +605,10 @@ void __fastcall TForm2::ActionRepositories()
         return;
     }
 
-    btnRepoNext->Enabled = true;
+    if(ListBoxRepo->Items->Count > 0)
+    {
+        btnRepoNext->Enabled = true;
+    }
     btnRepoBack->Enabled = true;
 }
 //---------------------------------------------------------------------------
