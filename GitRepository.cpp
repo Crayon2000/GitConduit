@@ -2,7 +2,6 @@
 #pragma hdrstop
 
 #include "GitRepository.h"
-#include <System.JSON.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
@@ -20,8 +19,14 @@ __fastcall TRepository::TRepository() :
 
 void __fastcall JsonToRepo(const String AJson, TRepository& ARepository)
 {
-    TJSONPair* Pair;
     TJSONObject* LRepo = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+    JsonToRepo(LRepo, ARepository);
+}
+
+void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
+{
+    TJSONPair* Pair;
+    TJSONObject* LRepo = AJsonObject;
 
     if(LRepo == NULL)
     {
@@ -157,8 +162,14 @@ __fastcall TIssue::TIssue()
 
 void __fastcall JsonToIssue(const String AJson, TIssue& AIssue)
 {
-    TJSONPair* Pair;
     TJSONObject* LIssue = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+    JsonToIssue(LIssue, AIssue);
+}
+
+void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue& AIssue)
+{
+    TJSONPair* Pair;
+    TJSONObject* LIssue = AJsonObject;
 
     if(LIssue == NULL)
     {
@@ -192,6 +203,53 @@ void __fastcall JsonToIssue(const String AJson, TIssue& AIssue)
         if(LJsonString->Null == false)
         {
             AIssue.State = LJsonString->Value();
+        }
+    }
+}
+
+__fastcall TOrganization::TOrganization()
+{
+}
+
+void __fastcall JsonToOrganization(const String AJson, TOrganization& AOrganization)
+{
+    TJSONObject* LOrg = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+    JsonToOrganization(LOrg, AOrganization);
+}
+
+void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization& AOrganization)
+{
+    TJSONObject* LOrg = AJsonObject;
+    TJSONPair* Pair;
+
+    if(LOrg == NULL)
+    {
+        throw Exception("Invalid JSON input!");
+    }
+
+    if((Pair = LOrg->Get("login")) != NULL)
+    {
+        TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
+        if(LJsonString->Null == false)
+        {
+            AOrganization.Login = LJsonString->Value();
+        }
+    }
+    else if((Pair = LOrg->Get("username")) != NULL)
+    {
+        TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
+        if(LJsonString->Null == false)
+        {
+            AOrganization.Login = LJsonString->Value();
+        }
+    }
+
+    if((Pair = LOrg->Get("description")) != NULL)
+    {
+        TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
+        if(LJsonString->Null == false)
+        {
+            AOrganization.Description = LJsonString->Value();
         }
     }
 }

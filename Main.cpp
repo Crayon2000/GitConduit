@@ -12,6 +12,12 @@
 #pragma package(smart_init)
 #pragma resource "*.fmx"
 TForm2 *Form2;
+
+#define TABIDSOURCE         0
+#define TABIDSOURCEOWNER    1
+#define TABIDREPOSITORIES   2
+#define TABIDDESTINATION    3
+#define TABIDCREATE         4
 //---------------------------------------------------------------------------
 __fastcall TForm2::TForm2(TComponent* Owner)
     : TForm(Owner)
@@ -33,10 +39,12 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     FTabAction = -1;
     Fmx::Forms::Application->OnIdle = OnApplicationIdle;
 
-    btnSourceNext->TagObject = TabItemRepo;
+    btnSourceNext->TagObject = TabItemSourceOwner;
+    btnSourceOwnerNext->TagObject = TabItemRepo;
     btnRepoNext->TagObject = TabItemDestination;
     btnDestinationNext->TagObject = TabItemCreate;
-    btnRepoBack->TagObject = TabItemSource;
+    btnSourceOwnerBack->TagObject = TabItemSource;
+    btnRepoBack->TagObject = TabItemSourceOwner;
     btnDestinationBack->TagObject = TabItemRepo;
     btnCreateRepoBack->TagObject = TabItemDestination;
 
@@ -56,14 +64,6 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     chkDestinationTypeOrg->GroupName = "Destination";
     chkDestinationTypeUser->IsChecked = true;
 
-    if(cboeSourceName->Items->Count > 0)
-    {
-        cboeSourceName->StyleLookup = "comboeditstyle";
-    }
-    else
-    {   // No need to look like a TComboEdit, it's empty
-        cboeSourceName->StyleLookup = "editstyle";
-    }
     if(cboeDestinationName->Items->Count > 0)
     {
         cboeDestinationName->StyleLookup = "comboeditstyle";
@@ -172,6 +172,45 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
     }
 
     return Result;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
+    System::Classes::TStrings* AItems)
+{
+    String LJson;
+    const String LUrl = AGitApplication->ApiUrl + "/user/orgs";
+
+    AItems->Clear();
+
+    PrepareRequest(AGitApplication);
+    try
+    {
+        LJson = IdHTTP1->Get(LUrl); // May throw exception
+    }
+    catch(const Idhttp::EIdHTTPProtocolException& e)
+    {
+        if(e.ErrorCode != 404)
+        {   // GitBucket does not support this service
+            // So error 404 is normal
+            throw;
+        }
+    }
+
+    TJSONArray* LOrgs = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LJson));
+    if(LOrgs != NULL)
+    {
+        TJSONArrayEnumerator* LOrgsEnumerator = LOrgs->GetEnumerator();
+        while(LOrgsEnumerator->MoveNext() == true)
+        {
+            TJSONObject* LOrg = static_cast<TJSONObject*>(LOrgsEnumerator->Current);
+
+            TOrganization Org;
+            JsonToOrganization(LOrg, Org);
+
+            AItems->AddObject(Org.Login, NULL);
+        }
+    }
 }
 //---------------------------------------------------------------------------
 
@@ -309,20 +348,27 @@ void __fastcall TForm2::TabControl1Change(TObject *Sender)
     const int LIndex = TabControl1->TabIndex;
     switch(LIndex)
     {
-        case 0:
+        case TABIDSOURCE:
             btnSourceNext->Enabled = false;
             break;
-        case 1:
+        case TABIDSOURCEOWNER:
+            btnSourceOwnerNext->Enabled = false;
+            btnSourceOwnerBack->Enabled = false;
+
+            chkSourceTypeUser->Text = "User";
+            cboeSourceName->StyleLookup = "editstyle";
+            break;
+        case TABIDREPOSITORIES:
             btnRepoNext->Enabled = false;
             btnRepoBack->Enabled = false;
 
             ListBoxRepo->Clear();
             break;
-        case 2:
+        case TABIDDESTINATION:
             btnDestinationNext->Enabled = false;
             btnDestinationBack->Enabled = false;
             break;
-        case 3:
+        case TABIDCREATE:
             btnCreateRepoBack->Enabled = false;
             btnCreateRepoClose->Enabled = false;
 
@@ -370,16 +416,19 @@ void __fastcall TForm2::OnApplicationIdle(System::TObject* Sender, bool &Done)
 
     switch(LTabAction)
     {
-        case 0:
+        case TABIDSOURCE:
             ActionSource();
             break;
-        case 1:
+        case TABIDSOURCEOWNER:
+            ActionSourceOwner();
+            break;
+        case TABIDREPOSITORIES:
             ActionRepositories();
             break;
-        case 2:
+        case TABIDDESTINATION:
             ActionDestination();
             break;
-        case 3:
+        case TABIDCREATE:
             ActionCreateRepo();
             break;
         default:
@@ -400,7 +449,7 @@ void __fastcall TForm2::ActionSource()
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::ActionRepositories()
+void __fastcall TForm2::ActionSourceOwner()
 {
     const TGitApplicationType LSourceType =
         static_cast<TGitApplicationType>((unsigned char)cboSourceApp->Selected->Data);
@@ -410,6 +459,60 @@ void __fastcall TForm2::ActionRepositories()
     SourceApplication->Username = txtSourceUsername->Text;
     SourceApplication->Password = txtSourcePassword->Text;
 
+    String LUser;
+    String LExceptionMsg;
+    try
+    {
+        LUser = GetAuthenticatedUser(SourceApplication);
+    }
+    catch(const Exception& e)
+    {
+        LExceptionMsg = e.Message;
+    }
+    if(LUser.IsEmpty() == true)
+    {
+        btnSourceOwnerBack->Enabled = true;
+        String LMessage = "Cannot get authenticated user!";
+        if(LExceptionMsg.IsEmpty() == false)
+        {
+            LMessage += String(EOL) + String(EOL) + LExceptionMsg;
+        }
+        LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+        ShowMessage(LMessage);
+
+        return;
+    }
+
+    chkSourceTypeUser->Text = String().sprintf(L"User (%s)", LUser.c_str());
+    chkSourceTypeUser->TagString = LUser;
+
+    try
+    {
+        GetOrganizations(SourceApplication, cboeSourceName->Items);
+    }
+    catch(const Exception& e)
+    {
+        btnSourceOwnerBack->Enabled = true;
+        String LMessage = "Cannot get organizations list!";
+        LMessage += String(EOL) + String(EOL) + e.Message;
+        LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+        ShowMessage(LMessage);
+
+        return;
+    }
+
+    if(cboeSourceName->Items->Count > 0)
+    {
+        cboeSourceName->StyleLookup = "comboeditstyle";
+    }
+
+    btnSourceOwnerNext->Enabled = true;
+    btnSourceOwnerBack->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm2::ActionRepositories()
+{
     String LUrl = SourceApplication->ApiUrl;
     if(chkSourceTypeOrg->IsChecked == true)
     {
@@ -423,30 +526,7 @@ void __fastcall TForm2::ActionRepositories()
         LUrl += "/user/repos";
 
         SourceApplication->Endpoint = TApiEndpoint::User;
-        SourceApplication->User = "";
-
-        String LExceptionMsg;
-        try
-        {
-            SourceApplication->User = GetAuthenticatedUser(SourceApplication);
-        }
-        catch(const Exception& e)
-        {
-            LExceptionMsg = e.Message;
-        }
-        if(SourceApplication->User.IsEmpty() == true)
-        {
-            btnRepoBack->Enabled = true;
-            String LMessage = "Cannot get authenticated user!";
-            if(LExceptionMsg.IsEmpty() == false)
-            {
-                LMessage += String(EOL) + String(EOL) + LExceptionMsg;
-            }
-            LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
-            ShowMessage(LMessage);
-
-            return;
-        }
+        SourceApplication->User = chkSourceTypeUser->TagString;
     }
 
     try
@@ -776,9 +856,8 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
             {
                 TJSONObject* LIssue = static_cast<TJSONObject*>(LIssueEnumerator->Current);
 
-                const String LIssueJson = LIssue->ToString();
                 TIssue LIssueToPrint;
-                JsonToIssue(LIssueJson, LIssueToPrint);
+                JsonToIssue(LIssue, LIssueToPrint);
 
                 const String LLog = String().sprintf(L"    Issue: %s", LIssueToPrint.Title);
                 memoLog->Lines->Add(LLog);

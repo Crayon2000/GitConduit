@@ -3,6 +3,7 @@
 #define GitRepositoryH
 //---------------------------------------------------------------------------
 #include <System.hpp>
+#include <System.JSON.hpp>
 //---------------------------------------------------------------------------
 class TOwner
 {
@@ -41,7 +42,23 @@ public:
     String State;
 };
 
+class TOrganization
+{
+public:
+    __fastcall TOrganization();
+    inline __fastcall virtual ~TOrganization(void) { }
+
+    String Login;
+    String Description;
+};
+
 void __fastcall JsonToRepo(const String AJson, TRepository& ARepository);
+void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository);
+
 void __fastcall JsonToIssue(const String AJson, TIssue& AIssue);
+void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue& AIssue);
+
+void __fastcall JsonToOrganization(const String AJson, TOrganization& AOrganization);
+void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization& AOrganization);
 //---------------------------------------------------------------------------
 #endif

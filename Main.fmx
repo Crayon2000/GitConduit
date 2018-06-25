@@ -66,24 +66,6 @@ object Form2: TForm2
         Size.PlatformDefault = False
         TabOrder = 0
       end
-      object chkSourceTypeOrg: TRadioButton
-        Position.X = 168.000000000000000000
-        Position.Y = 328.000000000000000000
-        Size.Width = 120.000000000000000000
-        Size.Height = 32.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 16
-        Text = 'Organization'
-      end
-      object chkSourceTypeUser: TRadioButton
-        Position.X = 168.000000000000000000
-        Position.Y = 288.000000000000000000
-        Size.Width = 120.000000000000000000
-        Size.Height = 32.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 15
-        Text = 'User (me)'
-      end
       object Label1: TLabel
         Position.X = 8.000000000000000000
         Position.Y = 96.000000000000000000
@@ -100,14 +82,6 @@ object Form2: TForm2
         Size.PlatformDefault = False
         Text = 'Authorization Token:'
       end
-      object Label5: TLabel
-        Position.X = 8.000000000000000000
-        Position.Y = 288.000000000000000000
-        Size.Width = 161.000000000000000000
-        Size.Height = 32.000000000000000000
-        Size.PlatformDefault = False
-        Text = 'Type:'
-      end
       object Label7: TLabel
         Position.X = 8.000000000000000000
         Position.Y = 48.000000000000000000
@@ -115,17 +89,6 @@ object Form2: TForm2
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'Application:'
-      end
-      object cboeSourceName: TComboEdit
-        Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 17
-        ItemHeight = 19.000000000000000000
-        ItemIndex = -1
-        Position.X = 304.000000000000000000
-        Position.Y = 328.000000000000000000
-        Size.Width = 225.000000000000000000
-        Size.Height = 32.000000000000000000
-        Size.PlatformDefault = False
       end
       object txtSourceToken: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -179,6 +142,96 @@ object Form2: TForm2
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         Text = 'Password:'
+      end
+    end
+    object TabItemSourceOwner: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Label18: TLabel
+        Align = Top
+        Margins.Top = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 545.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'listboxheaderlabel'
+        TextSettings.HorzAlign = Center
+        Text = 'Source Owner'
+      end
+      object Label5: TLabel
+        Position.X = 8.000000000000000000
+        Position.Y = 48.000000000000000000
+        Size.Width = 161.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Type:'
+      end
+      object chkSourceTypeUser: TRadioButton
+        Position.X = 168.000000000000000000
+        Position.Y = 48.000000000000000000
+        Size.Width = 361.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 15
+        Text = 'User'
+      end
+      object chkSourceTypeOrg: TRadioButton
+        Position.X = 168.000000000000000000
+        Position.Y = 88.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 16
+        Text = 'Organization'
+      end
+      object cboeSourceName: TComboEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 17
+        ItemHeight = 19.000000000000000000
+        ItemIndex = -1
+        Position.X = 304.000000000000000000
+        Position.Y = 88.000000000000000000
+        Size.Width = 225.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Layout1: TLayout
+        Align = Bottom
+        Margins.Bottom = 5.000000000000000000
+        Position.Y = 385.000000000000000000
+        Size.Width = 545.000000000000000000
+        Size.Height = 60.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object btnSourceOwnerBack: TSpeedButton
+          Align = Left
+          Margins.Left = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 60.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'backbuttontext'
+          Text = 'Back'
+          OnClick = WizardButtonClick
+        end
+        object btnSourceOwnerNext: TSpeedButton
+          Align = Right
+          Margins.Right = 5.000000000000000000
+          Position.X = 460.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 60.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'forwardbuttontext'
+          Text = 'Next'
+          OnClick = WizardButtonClick
+        end
       end
     end
     object TabItemRepo: TTabItem
@@ -337,7 +390,7 @@ object Form2: TForm2
       object chkDestinationTypeUser: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 288.000000000000000000
-        Size.Width = 120.000000000000000000
+        Size.Width = 361.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 15

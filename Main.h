@@ -68,13 +68,9 @@ __published:    // IDE-managed Components
     TSpeedButton *btnCreateRepoBack;
     TSpeedButton *btnCreateRepoClose;
     TComboBox *cboSourceApp;
-    TRadioButton *chkSourceTypeOrg;
-    TRadioButton *chkSourceTypeUser;
     TLabel *Label1;
     TLabel *Label2;
-    TLabel *Label5;
     TLabel *Label7;
-    TComboEdit *cboeSourceName;
     TEdit *txtSourceToken;
     TEdit *txtSourceUrl;
     TComboBox *cboDestinationApp;
@@ -96,6 +92,15 @@ __published:    // IDE-managed Components
     TLabel *Label17;
     TEdit *txtDestinationUsername;
     TEdit *txtDestinationPassword;
+    TTabItem *TabItemSourceOwner;
+    TLabel *Label18;
+    TLabel *Label5;
+    TRadioButton *chkSourceTypeUser;
+    TRadioButton *chkSourceTypeOrg;
+    TComboEdit *cboeSourceName;
+    TLayout *Layout1;
+    TSpeedButton *btnSourceOwnerBack;
+    TSpeedButton *btnSourceOwnerNext;
     void __fastcall TabControl1Change(TObject *Sender);
     void __fastcall WizardButtonClick(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);
@@ -107,12 +112,14 @@ private:    // User declarations
     int FTabAction;
 
     void __fastcall ActionSource();
+    void __fastcall ActionSourceOwner();
     void __fastcall ActionRepositories();
     void __fastcall ActionDestination();
     void __fastcall ActionCreateRepo();
 protected:
     bool __fastcall CreateRepo(const String AJson, TRepository& ARepository);
     String __fastcall GetAuthenticatedUser(TGitApplication* AGitApplication);
+    void __fastcall GetOrganizations(TGitApplication* AGitApplication, System::Classes::TStrings* AItems);
     void __fastcall PrepareRequest(TGitApplication* AGitApplication);
     HANDLE __fastcall ExecuteProgramEx(const String ACmd, const String ADirectory = ".");
     DWORD __fastcall Wait(HANDLE AHandle);
