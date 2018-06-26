@@ -176,7 +176,7 @@ object Form2: TForm2
       object chkSourceTypeUser: TRadioButton
         Position.X = 168.000000000000000000
         Position.Y = 48.000000000000000000
-        Size.Width = 361.000000000000000000
+        Size.Width = 120.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 15
@@ -193,7 +193,7 @@ object Form2: TForm2
       end
       object cboeSourceName: TComboEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
-        TabOrder = 17
+        TabOrder = 18
         ItemHeight = 19.000000000000000000
         ItemIndex = -1
         Position.X = 304.000000000000000000
@@ -232,6 +232,17 @@ object Form2: TForm2
           Text = 'Next'
           OnClick = WizardButtonClick
         end
+      end
+      object cboeSourceUser: TComboEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 17
+        ItemHeight = 19.000000000000000000
+        ItemIndex = -1
+        Position.X = 304.000000000000000000
+        Position.Y = 48.000000000000000000
+        Size.Width = 225.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
       end
     end
     object TabItemRepo: TTabItem

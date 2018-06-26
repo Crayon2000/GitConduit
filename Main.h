@@ -106,6 +106,7 @@ __published:    // IDE-managed Components
     TRadioButton *chkDestinationTypeUser;
     TRadioButton *chkDestinationTypeOrg;
     TComboEdit *cboeDestinationName;
+    TComboEdit *cboeSourceUser;
     void __fastcall TabControl1Change(TObject *Sender);
     void __fastcall WizardButtonClick(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);

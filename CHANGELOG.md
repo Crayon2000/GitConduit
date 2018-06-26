@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Allow another user as source.
+- Split Source tab in two tabs.
+- Split Destination tab in two tabs.
 - Show list of open issues in the log.
 - Add credential support to Wiki repository.
 

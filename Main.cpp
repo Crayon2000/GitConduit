@@ -349,7 +349,7 @@ void __fastcall TForm2::TabControl1Change(TObject *Sender)
             btnSourceOwnerNext->Enabled = false;
             btnSourceOwnerBack->Enabled = false;
 
-            chkSourceTypeUser->Text = "User";
+            cboeSourceUser->StyleLookup = "editstyle";
             cboeSourceName->StyleLookup = "editstyle";
             break;
         case TABIDREPOSITORIES:
@@ -487,8 +487,10 @@ void __fastcall TForm2::ActionSourceOwner()
         return;
     }
 
-    chkSourceTypeUser->Text = String().sprintf(L"User (%s)", LUser.c_str());
-    chkSourceTypeUser->TagString = LUser;
+    cboeSourceUser->Items->Clear();
+    cboeSourceUser->Items->AddObject(LUser, NULL);
+    cboeSourceUser->ItemIndex = 0;
+    cboeSourceUser->StyleLookup = "comboeditstyle";
 
     try
     {
@@ -520,17 +522,25 @@ void __fastcall TForm2::ActionRepositories()
     String LUrl = SourceApplication->ApiUrl;
     if(chkSourceTypeOrg->IsChecked == true)
     {
-        LUrl += "/orgs/" + cboeSourceName->Text + "/repos";
-
         SourceApplication->Endpoint = TApiEndpoint::Organization;
         SourceApplication->User = cboeSourceName->Text;
+
+        LUrl += "/orgs/" + cboeSourceName->Text + "/repos";
     }
     else
     {
-        LUrl += "/user/repos";
-
         SourceApplication->Endpoint = TApiEndpoint::User;
-        SourceApplication->User = chkSourceTypeUser->TagString;
+        SourceApplication->User = cboeSourceUser->Text;
+
+        if(cboeSourceUser->Items->Count > 0 &&
+            cboeSourceUser->Items->Strings[0] == cboeSourceUser->Text)
+        {
+            LUrl += "/user/repos";
+        }
+        else
+        {
+            LUrl += "/users/" + cboeSourceUser->Text + "/repos";
+        }
     }
 
     try
