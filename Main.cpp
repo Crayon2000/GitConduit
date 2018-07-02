@@ -906,7 +906,7 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
                 TIssue LIssueToPrint;
                 JsonToIssue(LIssue, LIssueToPrint);
 
-                const String LLog = String().sprintf(L"    Issue: %s", LIssueToPrint.Title);
+                const String LLog = String().sprintf(L"    Issue: %s", LIssueToPrint.Title.c_str());
                 memoLog->Lines->Add(LLog);
             }
         }
