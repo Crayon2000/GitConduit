@@ -40,6 +40,7 @@ public:
     String Title;
     String Body;
     String State;
+    int Number;
 };
 
 class TOrganization

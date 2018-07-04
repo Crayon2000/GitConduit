@@ -156,7 +156,8 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
     }
 }
 
-__fastcall TIssue::TIssue()
+__fastcall TIssue::TIssue() :
+    Number(0)
 {
 }
 
@@ -204,6 +205,16 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue& AIssue)
         {
             AIssue.State = LJsonString->Value();
         }
+    }
+
+    if((Pair = LIssue->Get("number")) != NULL)
+    {
+        TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
+        AIssue.Number = LIssueNumber->AsInt;
+    }
+    else
+    {
+        AIssue.Number = 0;
     }
 }
 

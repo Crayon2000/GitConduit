@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
--
+- Add issue number.
 
 ## [0.2.0] - 2018-07-02
 - Allow another user as source.
