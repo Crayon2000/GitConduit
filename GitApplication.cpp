@@ -9,9 +9,9 @@
 
 __fastcall TGitApplication::TGitApplication() :
     System::TObject(),
-    ApplicationType(TGitApplicationType::Gogs),
     FEndpoint(TApiEndpoint::User)
 {
+    SetApplicationType(TGitApplicationType::Gogs);
 }
 
 void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplicationType)
