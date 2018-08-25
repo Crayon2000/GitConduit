@@ -100,14 +100,21 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository& ARepository)
     }
 
     String LAnswer;
-    System::Classes::TStringStream* SourceFile = NULL;
+    System::Classes::TMemoryStream* SourceFile = NULL;
     try
     {
         PrepareRequest(DestinationApplication);
-        SourceFile = new System::Classes::TStringStream(AJson);
+        SourceFile = new System::Classes::TMemoryStream();
+        WriteStringToStream(SourceFile, AJson, enUTF8);
+        SourceFile->Position = 0;
         LAnswer = IdHTTP1->Post(LUrl, SourceFile);
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
+    {
+        const String LLog = "Repository creation HTTP protocol exception: " + e.Message;
+        memoLog->Lines->Add(LLog);
+    }
+    catch(const Exception& e)
     {
         const String LLog = "Repository creation exception: " + e.Message;
         memoLog->Lines->Add(LLog);

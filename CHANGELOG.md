@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Fix problem with JSON encoding when creating repositories.
 - Add issue number.
 
 ## [0.2.0] - 2018-07-02
