@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.2.1] - 2018-08-25
 - Fix problem with JSON encoding when creating repositories.
 - Add issue number.
 
@@ -19,6 +19,6 @@ All notable changes to this project will be documented in this file.
 ## 0.0.1 - 2018-04-29
 - Initial release.
 
-[Unreleased]: https://github.com/Crayon2000/GitConduit/compare/v0.2.0...HEAD
+[0.2.1]: https://github.com/Crayon2000/GitConduit/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Crayon2000/GitConduit/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Crayon2000/GitConduit/compare/v0.0.1...v0.1.0

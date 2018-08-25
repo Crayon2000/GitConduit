@@ -7,8 +7,11 @@ It supports the following services:
 * GitBucket
 * GitHub
 
-## How To Use
+## Requierements
 * Make sure *git.exe* is in your path
+* If you are exporting to an organisation, make sure it exist in the destination application
+
+## How To Use
 * Fill the **Source** section and click on the **Next** button
 * Select the owner of the source repositories and click on the **Next** button
 * Select the repositories you want to export and click on the **Next** button
