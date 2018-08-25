@@ -543,6 +543,7 @@ void __fastcall TForm2::ActionRepositories()
         }
     }
 
+    String LExceptionMsg;
     try
     {
         while(LUrl.IsEmpty() == false)
@@ -610,8 +611,22 @@ void __fastcall TForm2::ActionRepositories()
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
-        btnRepoBack->Enabled = true;
-        ShowMessage("Get repository exception: " + e.Message + "\n\nGo Back, change the settings and try again.");
+        LExceptionMsg = "Get repository HTTP protocol exception: " + e.Message;
+    }
+    catch(const Idstack::EIdSocketError& e)
+    {
+        LExceptionMsg = "Get repository socket exception: " + e.Message;
+    }
+    catch(const Exception& e)
+    {
+        LExceptionMsg = "Get repository exception: " + e.Message;
+    }
+
+    btnRepoBack->Enabled = true;
+
+    if(LExceptionMsg.IsEmpty() == false)
+    {
+        ShowMessage(LExceptionMsg + "\n\nGo Back, change the settings and try again.");
         return;
     }
 
@@ -619,7 +634,6 @@ void __fastcall TForm2::ActionRepositories()
     {
         btnRepoNext->Enabled = true;
     }
-    btnRepoBack->Enabled = true;
 }
 //---------------------------------------------------------------------------
 
@@ -730,7 +744,7 @@ void __fastcall TForm2::ActionCreateRepo()
             bool LIsCreated = CreateRepo(LSourceJson, LDestinationRepository);
 
             if(LIsCreated == false)
-            {   // Don't do rest if issue was not created
+            {   // Don't do the rest if the issue was not created
                 continue;
             }
 
