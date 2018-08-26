@@ -111,6 +111,28 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository& ARepository)
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
+#ifdef GITBUCKET_FIX
+// The repository is created but an error 500 is received.
+// An issue was submitted to GitBucket.
+        if(DestinationApplication->Endpoint == TApiEndpoint::Organization &&
+            e.ErrorCode == 500)
+        {
+            // Get the repository name we wanted to create
+            TRepository LRepoInfo;
+            JsonToRepo(AJson, LRepoInfo);
+
+            LUrl = DestinationApplication->ApiUrl + "/repos/" +
+                DestinationApplication->User + "/" + LRepoInfo.Name;
+
+            try
+            {
+                LAnswer = IdHTTP1->Get(LUrl);
+            }
+            catch(...)
+            {
+            }
+        }
+#endif
         const String LLog = "Repository creation HTTP protocol exception: " + e.Message;
         memoLog->Lines->Add(LLog);
     }
