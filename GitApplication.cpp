@@ -27,6 +27,9 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
         case TGitApplicationType::GitHub:
             FApplicationName = "GitHub";
             break;
+        case TGitApplicationType::GitLab:
+            FApplicationName = "GitLab";
+            break;
         default:
             throw Exception("Invalid application type!");
     }

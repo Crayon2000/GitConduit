@@ -51,13 +51,13 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     btnDestinationOwnerBack->TagObject = TabItemDestination;
     btnCreateRepoBack->TagObject = TabItemDestinationOwner;
 
-    cboSourceApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
-    cboSourceApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
-    cboSourceApp->Items->AddObject("GitHub", (TObject*)TGitApplicationType::GitHub);
+    cboSourceApp->Items->AddObject("Gogs", reinterpret_cast<TObject*>(TGitApplicationType::Gogs));
+    cboSourceApp->Items->AddObject("GitBucket", reinterpret_cast<TObject*>(TGitApplicationType::GitBucket));
+    cboSourceApp->Items->AddObject("GitHub", reinterpret_cast<TObject*>(TGitApplicationType::GitHub));
     cboSourceApp->ItemIndex = 0;
-    cboDestinationApp->Items->AddObject("Gogs", (TObject*)TGitApplicationType::Gogs);
-    cboDestinationApp->Items->AddObject("GitBucket", (TObject*)TGitApplicationType::GitBucket);
-    cboDestinationApp->Items->AddObject("GitHub", (TObject*)TGitApplicationType::GitHub);
+    cboDestinationApp->Items->AddObject("Gogs", reinterpret_cast<TObject*>(TGitApplicationType::Gogs));
+    cboDestinationApp->Items->AddObject("GitBucket", reinterpret_cast<TObject*>(TGitApplicationType::GitBucket));
+    cboDestinationApp->Items->AddObject("GitHub", reinterpret_cast<TObject*>(TGitApplicationType::GitHub));
     cboDestinationApp->ItemIndex = 1;
 
     chkSourceTypeUser->GroupName = "Source";

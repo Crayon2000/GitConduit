@@ -8,7 +8,8 @@ enum class TGitApplicationType : unsigned char
 {
     Gogs,
     GitBucket,
-    GitHub
+    GitHub,
+    GitLab
 };
 
 enum class TApiEndpoint : unsigned char
