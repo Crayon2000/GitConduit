@@ -3631,6 +3631,7 @@ object TStyleContainer
           SourceRect.Right = 57.000000000000000000
           SourceRect.Bottom = 267.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -3729,6 +3730,7 @@ object TStyleContainer
           SourceRect.Right = 80.000000000000000000
           SourceRect.Bottom = 338.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -3825,6 +3827,7 @@ object TStyleContainer
           SourceRect.Right = 80.000000000000000000
           SourceRect.Bottom = 338.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -3923,6 +3926,7 @@ object TStyleContainer
           SourceRect.Right = 57.000000000000000000
           SourceRect.Bottom = 267.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TRectangle
       StyleName = 'fill'
@@ -4002,6 +4006,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TLayout
       StyleName = 'content'
@@ -4072,6 +4077,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGridLayout
       Align = MostRight
@@ -4187,6 +4193,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButton
       StyleName = 'arrow'
@@ -4275,6 +4282,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TLayout
       StyleName = 'content'
@@ -4342,6 +4350,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TLayout
       StyleName = 'content'
@@ -4694,6 +4703,7 @@ object TStyleContainer
         SourceRect.Right = 372.000000000000000000
         SourceRect.Bottom = 249.000000000000000000
       end>
+    TouchAnimation.Link = <>
     object TButtonStyleObject
       Align = Center
       CapMode = Tile
@@ -4730,6 +4740,94 @@ object TStyleContainer
           SourceRect.Right = 307.000000000000000000
           SourceRect.Bottom = 249.000000000000000000
         end>
+      TouchAnimation.Link = <>
+    end
+  end
+  object TButtonStyleObject
+    StyleName = 'spinleftbutton'
+    SourceLookup = 'MetroBluestyle.png'
+    HotLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 339.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 354.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    FocusedLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 320.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 336.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    NormalLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 320.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 336.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    PressedLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 357.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 372.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    TouchAnimation.Link = <>
+    object TButtonStyleObject
+      Align = Center
+      CapMode = Tile
+      SourceLookup = 'MetroBluestyle.png'
+      Size.Width = 11.000000000000000000
+      Size.Height = 13.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Center
+      HotLink = <
+        item
+          SourceRect.Left = 308.000000000000000000
+          SourceRect.Top = 236.000000000000000000
+          SourceRect.Right = 319.000000000000000000
+          SourceRect.Bottom = 249.000000000000000000
+        end>
+      FocusedLink = <
+        item
+          SourceRect.Left = 308.000000000000000000
+          SourceRect.Top = 236.000000000000000000
+          SourceRect.Right = 319.000000000000000000
+          SourceRect.Bottom = 249.000000000000000000
+        end>
+      NormalLink = <
+        item
+          SourceRect.Left = 308.000000000000000000
+          SourceRect.Top = 236.000000000000000000
+          SourceRect.Right = 319.000000000000000000
+          SourceRect.Bottom = 249.000000000000000000
+        end>
+      PressedLink = <
+        item
+          SourceRect.Left = 296.000000000000000000
+          SourceRect.Top = 236.000000000000000000
+          SourceRect.Right = 307.000000000000000000
+          SourceRect.Bottom = 249.000000000000000000
+        end>
+      TouchAnimation.Link = <>
     end
   end
   object TButtonStyleObject
@@ -4779,6 +4877,7 @@ object TStyleContainer
         SourceRect.Right = 372.000000000000000000
         SourceRect.Bottom = 249.000000000000000000
       end>
+    TouchAnimation.Link = <>
     object TButtonStyleObject
       Align = Center
       CapMode = Tile
@@ -4815,6 +4914,94 @@ object TStyleContainer
           SourceRect.Right = 307.000000000000000000
           SourceRect.Bottom = 231.000000000000000000
         end>
+      TouchAnimation.Link = <>
+    end
+  end
+  object TButtonStyleObject
+    StyleName = 'spinrightbutton'
+    SourceLookup = 'MetroBluestyle.png'
+    HotLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 339.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 354.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    FocusedLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 320.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 336.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    NormalLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 320.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 336.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    PressedLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 357.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 372.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    TouchAnimation.Link = <>
+    object TButtonStyleObject
+      Align = Center
+      CapMode = Tile
+      SourceLookup = 'MetroBluestyle.png'
+      Size.Width = 11.000000000000000000
+      Size.Height = 13.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Center
+      HotLink = <
+        item
+          SourceRect.Left = 309.000000000000000000
+          SourceRect.Top = 219.000000000000000000
+          SourceRect.Right = 320.000000000000000000
+          SourceRect.Bottom = 232.000000000000000000
+        end>
+      FocusedLink = <
+        item
+          SourceRect.Left = 309.000000000000000000
+          SourceRect.Top = 219.000000000000000000
+          SourceRect.Right = 320.000000000000000000
+          SourceRect.Bottom = 232.000000000000000000
+        end>
+      NormalLink = <
+        item
+          SourceRect.Left = 309.000000000000000000
+          SourceRect.Top = 219.000000000000000000
+          SourceRect.Right = 320.000000000000000000
+          SourceRect.Bottom = 232.000000000000000000
+        end>
+      PressedLink = <
+        item
+          SourceRect.Left = 296.000000000000000000
+          SourceRect.Top = 218.000000000000000000
+          SourceRect.Right = 307.000000000000000000
+          SourceRect.Bottom = 231.000000000000000000
+        end>
+      TouchAnimation.Link = <>
     end
   end
   object TButtonStyleObject
@@ -4864,6 +5051,7 @@ object TStyleContainer
         SourceRect.Right = 372.000000000000000000
         SourceRect.Bottom = 249.000000000000000000
       end>
+    TouchAnimation.Link = <>
     object TButtonStyleObject
       Align = Center
       SourceLookup = 'MetroBluestyle.png'
@@ -4899,6 +5087,93 @@ object TStyleContainer
           SourceRect.Right = 269.000000000000000000
           SourceRect.Bottom = 245.000000000000000000
         end>
+      TouchAnimation.Link = <>
+    end
+  end
+  object TButtonStyleObject
+    StyleName = 'spintopbutton'
+    SourceLookup = 'MetroBluestyle.png'
+    HotLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 339.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 354.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    FocusedLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 320.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 336.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    NormalLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 320.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 336.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    PressedLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 357.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 372.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    TouchAnimation.Link = <>
+    object TButtonStyleObject
+      Align = Center
+      SourceLookup = 'MetroBluestyle.png'
+      Size.Width = 13.000000000000000000
+      Size.Height = 11.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Center
+      HotLink = <
+        item
+          SourceRect.Left = 257.000000000000000000
+          SourceRect.Top = 221.000000000000000000
+          SourceRect.Right = 270.000000000000000000
+          SourceRect.Bottom = 232.000000000000000000
+        end>
+      FocusedLink = <
+        item
+          SourceRect.Left = 257.000000000000000000
+          SourceRect.Top = 221.000000000000000000
+          SourceRect.Right = 270.000000000000000000
+          SourceRect.Bottom = 232.000000000000000000
+        end>
+      NormalLink = <
+        item
+          SourceRect.Left = 257.000000000000000000
+          SourceRect.Top = 221.000000000000000000
+          SourceRect.Right = 270.000000000000000000
+          SourceRect.Bottom = 232.000000000000000000
+        end>
+      PressedLink = <
+        item
+          SourceRect.Left = 256.000000000000000000
+          SourceRect.Top = 234.000000000000000000
+          SourceRect.Right = 269.000000000000000000
+          SourceRect.Bottom = 245.000000000000000000
+        end>
+      TouchAnimation.Link = <>
     end
   end
   object TButtonStyleObject
@@ -4948,6 +5223,7 @@ object TStyleContainer
         SourceRect.Right = 372.000000000000000000
         SourceRect.Bottom = 249.000000000000000000
       end>
+    TouchAnimation.Link = <>
     object TButtonStyleObject
       Align = Center
       SourceLookup = 'MetroBluestyle.png'
@@ -4983,6 +5259,93 @@ object TStyleContainer
           SourceRect.Right = 287.000000000000000000
           SourceRect.Bottom = 245.000000000000000000
         end>
+      TouchAnimation.Link = <>
+    end
+  end
+  object TButtonStyleObject
+    StyleName = 'spinbottombutton'
+    SourceLookup = 'MetroBluestyle.png'
+    HotLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 339.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 354.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    FocusedLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 320.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 336.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    NormalLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 320.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 336.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    PressedLink = <
+      item
+        CapInsets.Left = 3.000000000000000000
+        CapInsets.Top = 3.000000000000000000
+        CapInsets.Right = 3.000000000000000000
+        CapInsets.Bottom = 3.000000000000000000
+        SourceRect.Left = 357.000000000000000000
+        SourceRect.Top = 234.000000000000000000
+        SourceRect.Right = 372.000000000000000000
+        SourceRect.Bottom = 249.000000000000000000
+      end>
+    TouchAnimation.Link = <>
+    object TButtonStyleObject
+      Align = Center
+      SourceLookup = 'MetroBluestyle.png'
+      Size.Width = 13.000000000000000000
+      Size.Height = 11.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Center
+      HotLink = <
+        item
+          SourceRect.Left = 274.000000000000000000
+          SourceRect.Top = 222.000000000000000000
+          SourceRect.Right = 287.000000000000000000
+          SourceRect.Bottom = 233.000000000000000000
+        end>
+      FocusedLink = <
+        item
+          SourceRect.Left = 274.000000000000000000
+          SourceRect.Top = 222.000000000000000000
+          SourceRect.Right = 287.000000000000000000
+          SourceRect.Bottom = 233.000000000000000000
+        end>
+      NormalLink = <
+        item
+          SourceRect.Left = 274.000000000000000000
+          SourceRect.Top = 222.000000000000000000
+          SourceRect.Right = 287.000000000000000000
+          SourceRect.Bottom = 233.000000000000000000
+        end>
+      PressedLink = <
+        item
+          SourceRect.Left = 274.000000000000000000
+          SourceRect.Top = 234.000000000000000000
+          SourceRect.Right = 287.000000000000000000
+          SourceRect.Bottom = 245.000000000000000000
+        end>
+      TouchAnimation.Link = <>
     end
   end
   object TStyleObject
@@ -5078,6 +5441,7 @@ object TStyleContainer
         SourceRect.Right = 244.000000000000000000
         SourceRect.Bottom = 253.000000000000000000
       end>
+    TouchAnimation.Link = <>
   end
   object TButtonStyleObject
     StyleName = 'vthumbstyle'
@@ -5126,6 +5490,7 @@ object TStyleContainer
         SourceRect.Right = 337.000000000000000000
         SourceRect.Bottom = 208.000000000000000000
       end>
+    TouchAnimation.Link = <>
   end
   object TStyleObject
     StyleName = 'statusbarstyle'
@@ -5775,9 +6140,6 @@ object TStyleContainer
         Margins.Right = 1.000000000000000000
         Position.X = 15.000000000000000000
         Position.Y = -8.000000000000000000
-        Size.Width = 75.833335876464840000
-        Size.Height = 21.281250000000000000
-        Size.PlatformDefault = False
         Text = 'Groupbox'
         TextSettings.Font.Size = 16.000000000000000000
         TextSettings.FontColor = claWhite
@@ -6137,6 +6499,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
       object TStyleObject
         Align = Left
         CapMode = Tile
@@ -6192,6 +6555,7 @@ object TStyleContainer
           Size.Width = 22.000000000000000000
           Size.Height = 46.000000000000000000
           Size.PlatformDefault = False
+          StyleLookup = 'cleareditbutton'
           TabOrder = 0
         end
       end
@@ -7125,7 +7489,7 @@ object TStyleContainer
       Align = Center
       Data.Path = {
         0500000000000000D36D3F431BEF4843010000001749E043BA09E54301000000
-        C9B63943C73B344401000000D36D3F431BEF4843030000000000000000000000}
+        D36D3F43C73B344401000000D36D3F431BEF484303000000D36D3F431BEF4843}
       Fill.Color = claBlack
       Locked = True
       HitTest = False
@@ -7145,8 +7509,8 @@ object TStyleContainer
     object TPath
       Align = Center
       Data.Path = {
-        0500000000000000CB11CF4379E93C4301000000DDB4CD4396230A4401000000
-        7DBF1E424871094401000000CB11CF4379E93C43030000000000000000000000}
+        0500000000000000CB11CF4379E93C4301000000CB11CF4396230A4401000000
+        7DBF1E4296230A4401000000CB11CF4379E93C4303000000CB11CF4379E93C43}
       Fill.Color = claBlack
       Locked = True
       HitTest = False
@@ -7263,6 +7627,10 @@ object TStyleContainer
   end
   object TLayout
     StyleName = 'tabcontrolstyle'
+    object TBrushObject
+      StyleName = 'scrollbackground'
+      Brush.Color = xFF1373A9
+    end
     object TStyleObject
       Align = Contents
       SourceLookup = 'MetroBluestyle.png'
@@ -7285,6 +7653,7 @@ object TStyleContainer
     object TTabStyleObject
       StyleName = 'top'
       Align = Contents
+      ClipChildren = True
       Locked = True
       SourceLookup = 'MetroBluestyle.png'
       ActiveTrigger = Selected
@@ -7387,6 +7756,7 @@ object TStyleContainer
     object TLayout
       StyleName = 'bottom'
       Align = Contents
+      ClipChildren = True
       Locked = True
       object TTabStyleObject
         Align = Contents
@@ -7497,6 +7867,7 @@ object TStyleContainer
     object TTabStyleObject
       StyleName = 'top'
       Align = Contents
+      ClipChildren = True
       Locked = True
       SourceLookup = 'MetroBluestyle.png'
       ActiveTrigger = Selected
@@ -8057,6 +8428,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
       object TLayout
         StyleName = 'content'
         Align = Client
@@ -8349,6 +8721,7 @@ object TStyleContainer
         SourceRect.Right = 109.000000000000000000
         SourceRect.Bottom = 241.000000000000000000
       end>
+    TouchAnimation.Link = <>
     Opaque = True
   end
   object TButtonStyleObject
@@ -8386,6 +8759,7 @@ object TStyleContainer
         SourceRect.Right = 109.000000000000000000
         SourceRect.Bottom = 241.000000000000000000
       end>
+    TouchAnimation.Link = <>
     Opaque = True
   end
   object TLayout
@@ -8466,6 +8840,8 @@ object TStyleContainer
         SourceRect.Right = 116.000000000000000000
         SourceRect.Bottom = 191.000000000000000000
       end>
+    TrackHot = <>
+    TrackHotOn = <>
     Thumb = <
       item
         SourceRect.Left = 113.000000000000000000
@@ -8480,6 +8856,8 @@ object TStyleContainer
         SourceRect.Right = 126.000000000000000000
         SourceRect.Bottom = 268.000000000000000000
       end>
+    ThumbHot = <>
+    ThumbHotOn = <>
     ThumbPressed = <>
     ThumbWrapMode = Center
     TextBitmap = <>
@@ -8504,6 +8882,13 @@ object TStyleContainer
     object TBrushObject
       StyleName = 'AlternatingRowBackground'
       Brush.Color = xFFE5E5E5
+    end
+    object TBrushObject
+      StyleName = 'EditorBackground'
+    end
+    object TBrushObject
+      StyleName = 'EditorLineFill'
+      Brush.Color = xFFE86625
     end
     object TBrushObject
       StyleName = 'linefill'
@@ -8671,6 +9056,7 @@ object TStyleContainer
           SourceRect.Right = 199.000000000000000000
           SourceRect.Bottom = 260.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TText
       StyleName = 'text'
@@ -8708,8 +9094,8 @@ object TStyleContainer
         SourceRect.Right = 392.000000000000000000
         SourceRect.Bottom = 72.000000000000000000
       end>
-    FixedWidth = 278
-    FixedHeight = 244
+    FixedWidth = 298
+    FixedHeight = 252
     Opaque = True
     object TLayout
       Align = MostTop
@@ -8811,7 +9197,6 @@ object TStyleContainer
         Locked = True
         Margins.Left = 5.000000000000000000
         Margins.Right = 5.000000000000000000
-        Size.Width = -97.000000000000000000
         Size.Height = 29.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'calendarlabelstyle'
@@ -8858,12 +9243,9 @@ object TStyleContainer
     end
     object TListBox
       StyleName = 'days'
-      Align = Top
+      Align = Client
       Locked = True
-      Position.X = 2.000000000000000000
-      Position.Y = 64.000000000000000000
       Size.Width = 46.000000000000000000
-      Size.Height = 174.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'transparentlistboxstyle'
       ShowScrollBars = False
@@ -8871,12 +9253,11 @@ object TStyleContainer
       CanFocus = False
       Columns = 7
       DisableFocusEffect = True
-      ItemHeight = 29.000000000000000000
       DefaultItemStyles.ItemStyle = ''
       DefaultItemStyles.GroupHeaderStyle = ''
       DefaultItemStyles.GroupFooterStyle = ''
       Viewport.Width = 200.000000000000000000
-      Viewport.Height = 174.000000000000000000
+      Viewport.Height = 200.000000000000000000
     end
   end
   object TLayout
@@ -8925,6 +9306,7 @@ object TStyleContainer
       Size.PlatformDefault = False
       Stroke.Color = xFF106697
       object TLayout
+        StyleName = 'header'
         Align = Top
         Size.Width = 50.000000000000000000
         Size.Height = 25.000000000000000000
@@ -9002,6 +9384,7 @@ object TStyleContainer
           SourceRect.Right = 395.000000000000000000
           SourceRect.Bottom = 192.000000000000000000
         end>
+      TouchAnimation.Link = <>
       object TFloatAnimation
         Duration = 0.000099999997473788
         PropertyName = 'Opacity'
@@ -9047,6 +9430,7 @@ object TStyleContainer
           SourceRect.Right = 395.000000000000000000
           SourceRect.Bottom = 213.000000000000000000
         end>
+      TouchAnimation.Link = <>
       object TFloatAnimation
         Duration = 0.000099999997473788
         PropertyName = 'Opacity'
@@ -9107,10 +9491,22 @@ object TStyleContainer
           SourceRect.Right = 234.000000000000000000
           SourceRect.Bottom = 129.000000000000000000
         end>
+      TouchAnimation.Link = <>
+    end
+    object TGlyph
+      StyleName = 'glyphstyle'
+      Margins.Left = 1.000000000000000000
+      Margins.Top = 1.000000000000000000
+      Margins.Right = 1.000000000000000000
+      Margins.Bottom = 1.000000000000000000
+      Align = VertCenter
+      Size.Width = 16.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
     end
     object TButtonStyleObject
       StyleName = 'icon'
-      Align = Contents
+      Align = Center
       CapMode = Tile
       SourceLookup = 'MetroBluestyle.png'
       WrapMode = Center
@@ -9142,6 +9538,7 @@ object TStyleContainer
           SourceRect.Right = 245.000000000000000000
           SourceRect.Bottom = 93.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
   end
   object TLayout
@@ -9174,6 +9571,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
       object TActiveStyleObject
         StyleName = 'Arrow'
         Align = Right
@@ -9207,6 +9605,7 @@ object TStyleContainer
             SourceRect.Right = 232.000000000000000000
             SourceRect.Bottom = 125.000000000000000000
           end>
+        TouchAnimation.Link = <>
         object TActiveStyleObject
           StyleName = 'background'
           Align = Center
@@ -9231,6 +9630,7 @@ object TStyleContainer
               SourceRect.Right = 230.000000000000000000
               SourceRect.Bottom = 93.000000000000000000
             end>
+          TouchAnimation.Link = <>
         end
       end
     end
@@ -9238,12 +9638,12 @@ object TStyleContainer
       StyleName = 'content'
       Align = Contents
       Locked = True
-      Margins.Left = 4.000000000000000000
-      Margins.Top = 3.000000000000000000
+      Margins.Left = 2.000000000000000000
+      Margins.Top = 2.000000000000000000
       Margins.Right = 23.000000000000000000
-      Margins.Bottom = 3.000000000000000000
-      Size.Width = 23.000000000000000000
-      Size.Height = 44.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Size.Width = 25.000000000000000000
+      Size.Height = 46.000000000000000000
       Size.PlatformDefault = False
     end
     object TBrushObject
@@ -9313,6 +9713,7 @@ object TStyleContainer
           SourceRect.Right = 315.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
       object TLayout
         Align = Right
         Position.X = 30.000000000000000000
@@ -9320,20 +9721,42 @@ object TStyleContainer
         Size.Width = 18.000000000000000000
         Size.Height = 46.000000000000000000
         Size.PlatformDefault = False
-        object TStyleObject
+        object TButtonStyleObject
           Align = Center
           SourceLookup = 'MetroBluestyle.png'
           Size.Width = 13.000000000000000000
           Size.Height = 11.000000000000000000
           Size.PlatformDefault = False
           WrapMode = Center
-          SourceLink = <
+          HotLink = <
+            item
+              SourceRect.Left = 232.000000000000000000
+              SourceRect.Top = 81.000000000000000000
+              SourceRect.Right = 245.000000000000000000
+              SourceRect.Bottom = 93.000000000000000000
+            end>
+          FocusedLink = <
+            item
+              SourceRect.Left = 232.000000000000000000
+              SourceRect.Top = 81.000000000000000000
+              SourceRect.Right = 245.000000000000000000
+              SourceRect.Bottom = 93.000000000000000000
+            end>
+          NormalLink = <
             item
               SourceRect.Left = 217.000000000000000000
               SourceRect.Top = 82.000000000000000000
               SourceRect.Right = 230.000000000000000000
               SourceRect.Bottom = 93.000000000000000000
             end>
+          PressedLink = <
+            item
+              SourceRect.Left = 232.000000000000000000
+              SourceRect.Top = 82.000000000000000000
+              SourceRect.Right = 245.000000000000000000
+              SourceRect.Bottom = 93.000000000000000000
+            end>
+          TouchAnimation.Link = <>
         end
       end
     end
@@ -9342,9 +9765,11 @@ object TStyleContainer
       Align = Client
       Locked = True
       Margins.Left = 2.000000000000000000
+      Margins.Top = 2.000000000000000000
       Margins.Right = 20.000000000000000000
+      Margins.Bottom = 2.000000000000000000
       Size.Width = 28.000000000000000000
-      Size.Height = 50.000000000000000000
+      Size.Height = 46.000000000000000000
       Size.PlatformDefault = False
     end
     object TFontObject
@@ -9458,6 +9883,10 @@ object TStyleContainer
   object TStyleObject
     StyleName = 'combopopupstyle'
     Align = Contents
+    Padding.Left = 2.000000000000000000
+    Padding.Top = 2.000000000000000000
+    Padding.Right = 2.000000000000000000
+    Padding.Bottom = 2.000000000000000000
     SourceLookup = 'MetroBluestyle.png'
     SourceLink = <
       item
@@ -9514,6 +9943,7 @@ object TStyleContainer
           SourceRect.Right = 281.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TLayout
       StyleName = 'content'
@@ -9606,6 +10036,7 @@ object TStyleContainer
           SourceRect.Right = 315.000000000000000000
           SourceRect.Bottom = 113.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TLayout
       Align = Right
@@ -9613,20 +10044,42 @@ object TStyleContainer
       Size.Width = 17.000000000000000000
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
-      object TStyleObject
+      object TButtonStyleObject
         Align = Center
         SourceLookup = 'MetroBluestyle.png'
         Size.Width = 13.000000000000000000
         Size.Height = 11.000000000000000000
         Size.PlatformDefault = False
         WrapMode = Center
-        SourceLink = <
+        HotLink = <
+          item
+            SourceRect.Left = 232.000000000000000000
+            SourceRect.Top = 82.000000000000000000
+            SourceRect.Right = 245.000000000000000000
+            SourceRect.Bottom = 93.000000000000000000
+          end>
+        FocusedLink = <
+          item
+            SourceRect.Left = 232.000000000000000000
+            SourceRect.Top = 82.000000000000000000
+            SourceRect.Right = 245.000000000000000000
+            SourceRect.Bottom = 93.000000000000000000
+          end>
+        NormalLink = <
           item
             SourceRect.Left = 217.000000000000000000
             SourceRect.Top = 82.000000000000000000
             SourceRect.Right = 230.000000000000000000
             SourceRect.Bottom = 93.000000000000000000
           end>
+        PressedLink = <
+          item
+            SourceRect.Left = 232.000000000000000000
+            SourceRect.Top = 82.000000000000000000
+            SourceRect.Right = 245.000000000000000000
+            SourceRect.Bottom = 93.000000000000000000
+          end>
+        TouchAnimation.Link = <>
       end
     end
     object TButtonStyleTextObject
@@ -10068,6 +10521,7 @@ object TStyleContainer
       item
       end>
     HitTest = False
+    WrapMode = Place
     object TBitmapListAnimation
       StyleName = 'ani'
       AnimationBitmap.PNG = {
@@ -11773,6 +12227,7 @@ object TStyleContainer
           SourceRect.Right = 390.000000000000000000
           SourceRect.Bottom = 425.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -11890,6 +12345,7 @@ object TStyleContainer
           SourceRect.Right = 56.000000000000000000
           SourceRect.Bottom = 337.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -12271,6 +12727,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 769.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -12324,6 +12781,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 769.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -12385,6 +12843,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 769.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -12438,6 +12897,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 769.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -12499,6 +12959,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 769.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -12552,6 +13013,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 769.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -12613,6 +13075,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 813.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -12666,6 +13129,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 813.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -12727,6 +13191,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 813.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -12780,6 +13245,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 813.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -12841,6 +13307,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 812.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -12894,6 +13361,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 812.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -12955,6 +13423,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 468.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13008,6 +13477,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 468.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13069,6 +13539,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 468.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13122,6 +13593,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 468.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13183,6 +13655,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 468.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13236,6 +13709,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 468.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13297,6 +13771,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 511.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13350,6 +13825,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 511.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13411,6 +13887,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 511.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13464,6 +13941,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 511.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13525,6 +14003,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 511.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13578,6 +14057,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 511.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13639,6 +14119,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 554.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13692,6 +14173,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 554.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13753,6 +14235,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 554.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13806,6 +14289,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 554.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13867,6 +14351,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 554.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -13920,6 +14405,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 554.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -13981,6 +14467,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 598.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14034,6 +14521,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 598.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -14095,6 +14583,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 598.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14148,6 +14637,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 598.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -14209,6 +14699,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 598.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14262,6 +14753,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 598.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -14323,6 +14815,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 640.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14376,6 +14869,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 640.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -14437,6 +14931,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 640.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14490,6 +14985,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 640.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -14551,6 +15047,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 640.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14604,6 +15101,7 @@ object TStyleContainer
           SourceRect.Right = 391.000000000000000000
           SourceRect.Bottom = 640.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -14665,6 +15163,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 683.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14718,6 +15217,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 683.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -14779,6 +15279,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 683.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14832,6 +15333,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 683.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -14893,6 +15395,7 @@ object TStyleContainer
           SourceRect.Right = 392.000000000000000000
           SourceRect.Bottom = 683.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -14946,6 +15449,7 @@ object TStyleContainer
           SourceRect.Right = 392.000000000000000000
           SourceRect.Bottom = 683.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -15007,6 +15511,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 726.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15060,6 +15565,7 @@ object TStyleContainer
           SourceRect.Right = 130.000000000000000000
           SourceRect.Bottom = 726.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -15121,6 +15627,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 726.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15174,6 +15681,7 @@ object TStyleContainer
           SourceRect.Right = 261.000000000000000000
           SourceRect.Bottom = 726.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -15235,6 +15743,7 @@ object TStyleContainer
           SourceRect.Right = 392.000000000000000000
           SourceRect.Bottom = 726.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15288,6 +15797,7 @@ object TStyleContainer
           SourceRect.Right = 392.000000000000000000
           SourceRect.Bottom = 726.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TButtonStyleTextObject
       StyleName = 'text'
@@ -15354,6 +15864,7 @@ object TStyleContainer
           SourceRect.Right = 57.000000000000000000
           SourceRect.Bottom = 267.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15425,6 +15936,7 @@ object TStyleContainer
           SourceRect.Right = 150.000000000000000000
           SourceRect.Bottom = 416.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15523,6 +16035,7 @@ object TStyleContainer
           SourceRect.Right = 706.000000000000000000
           SourceRect.Bottom = 461.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15621,6 +16134,7 @@ object TStyleContainer
           SourceRect.Right = 57.000000000000000000
           SourceRect.Bottom = 267.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15709,6 +16223,7 @@ object TStyleContainer
           SourceRect.Right = 381.000000000000000000
           SourceRect.Bottom = 344.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15779,6 +16294,7 @@ object TStyleContainer
           SourceRect.Right = 381.000000000000000000
           SourceRect.Bottom = 379.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15849,6 +16365,7 @@ object TStyleContainer
           SourceRect.Right = 269.000000000000000000
           SourceRect.Bottom = 343.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15919,6 +16436,7 @@ object TStyleContainer
           SourceRect.Right = 381.000000000000000000
           SourceRect.Bottom = 310.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -15987,6 +16505,7 @@ object TStyleContainer
           SourceRect.Right = 706.000000000000000000
           SourceRect.Bottom = 461.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -16090,6 +16609,7 @@ object TStyleContainer
           SourceRect.Right = 479.000000000000000000
           SourceRect.Bottom = 608.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -16160,6 +16680,7 @@ object TStyleContainer
           SourceRect.Right = 553.000000000000000000
           SourceRect.Bottom = 608.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -16230,6 +16751,7 @@ object TStyleContainer
           SourceRect.Right = 628.000000000000000000
           SourceRect.Bottom = 608.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -16300,6 +16822,7 @@ object TStyleContainer
           SourceRect.Right = 704.000000000000000000
           SourceRect.Bottom = 608.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'
@@ -16586,6 +17109,7 @@ object TStyleContainer
           SourceRect.Right = 56.000000000000000000
           SourceRect.Bottom = 337.000000000000000000
         end>
+      TouchAnimation.Link = <>
     end
     object TGlyph
       StyleName = 'glyphstyle'

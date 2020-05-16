@@ -223,7 +223,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
     TJSONArray* LOrgs = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LJson));
     if(LOrgs != NULL)
     {
-        TJSONArrayEnumerator* LOrgsEnumerator = LOrgs->GetEnumerator();
+        TJSONArray::TEnumerator* LOrgsEnumerator = LOrgs->GetEnumerator();
         while(LOrgsEnumerator->MoveNext() == true)
         {
             TJSONObject* LOrg = static_cast<TJSONObject*>(LOrgsEnumerator->Current);
@@ -583,7 +583,7 @@ void __fastcall TForm2::ActionRepositories()
             TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
             if(LRepos != NULL)
             {
-                TJSONArrayEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
+                TJSONArray::TEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
                 while(LRepoEnumerator->MoveNext() == true)
                 {
                     TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
@@ -941,7 +941,7 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
         TJSONArray* LIssues = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
         if(LIssues != NULL)
         {
-            TJSONArrayEnumerator* LIssueEnumerator = LIssues->GetEnumerator();
+            TJSONArray::TEnumerator* LIssueEnumerator = LIssues->GetEnumerator();
             while(LIssueEnumerator->MoveNext() == true)
             {
                 TJSONObject* LIssue = static_cast<TJSONObject*>(LIssueEnumerator->Current);
