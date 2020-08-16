@@ -5,22 +5,26 @@
 #include <System.hpp>
 #include <System.JSON.hpp>
 //---------------------------------------------------------------------------
-class TOwner
+class TUser : public System::TObject
 {
+    typedef System::TObject inherited;
+
 public:
-    __fastcall TOwner();
-    inline __fastcall virtual ~TOwner(void) { }
+    __fastcall TUser();
+    inline __fastcall virtual ~TUser(void) { }
 
     String Login;
 };
 
-class TRepository
+class TRepository : public System::TObject
 {
+    typedef System::TObject inherited;
+
 public:
     __fastcall TRepository();
-    inline __fastcall virtual ~TRepository(void) { }
+    __fastcall virtual ~TRepository(void);
 
-    TOwner Owner;
+    TUser* Owner;
     String Name;
     String FullName;
     bool Private;
@@ -31,8 +35,10 @@ public:
     bool HasWiki;
 };
 
-class TIssue
+class TIssue : public System::TObject
 {
+    typedef System::TObject inherited;
+
 public:
     __fastcall TIssue();
     inline __fastcall virtual ~TIssue(void) { }
@@ -43,8 +49,10 @@ public:
     int Number;
 };
 
-class TOrganization
+class TOrganization : public System::TObject
 {
+    typedef System::TObject inherited;
+
 public:
     __fastcall TOrganization();
     inline __fastcall virtual ~TOrganization(void) { }
@@ -53,13 +61,16 @@ public:
     String Description;
 };
 
-void __fastcall JsonToRepo(const String AJson, TRepository& ARepository);
-void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository);
+void __fastcall JsonToUser(const String AJson, TUser* AUser);
+void __fastcall JsonToUser(TJSONObject* AJsonObject, TUser* AUser);
 
-void __fastcall JsonToIssue(const String AJson, TIssue& AIssue);
-void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue& AIssue);
+void __fastcall JsonToRepo(const String AJson, TRepository* ARepository);
+void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository);
 
-void __fastcall JsonToOrganization(const String AJson, TOrganization& AOrganization);
-void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization& AOrganization);
+void __fastcall JsonToIssue(const String AJson, TIssue* AIssue);
+void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue);
+
+void __fastcall JsonToOrganization(const String AJson, TOrganization* AOrganization);
+void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrganization);
 //---------------------------------------------------------------------------
 #endif

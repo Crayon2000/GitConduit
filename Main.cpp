@@ -84,7 +84,7 @@ __fastcall TForm2::~TForm2()
 }
 //---------------------------------------------------------------------------
 
-bool __fastcall TForm2::CreateRepo(const String AJson, TRepository& ARepository)
+bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
 {
     bool Result = false;
 
@@ -151,7 +151,7 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository& ARepository)
         {
             JsonToRepo(LAnswer, ARepository);
 
-            const String LLog = "Created repository " + ARepository.FullName +
+            const String LLog = "Created repository " + ARepository->FullName +
                 " on " + DestinationApplication->ApplicationName;
             memoLog->Lines->Add(LLog);
             Result = true;
@@ -228,10 +228,12 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
         {
             TJSONObject* LOrg = static_cast<TJSONObject*>(LOrgsEnumerator->Current);
 
-            TOrganization Org;
+            TOrganization* Org = new TOrganization();
             JsonToOrganization(LOrg, Org);
 
-            AItems->AddObject(Org.Login, NULL);
+            AItems->AddObject(Org->Login, NULL);
+
+            delete Org;
         }
     }
 }
@@ -589,28 +591,29 @@ void __fastcall TForm2::ActionRepositories()
                     TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
 
                     const String LSourceJson = LRepo->ToString();
-                    TRepository LSourceRepository;
+                    TRepository* LSourceRepository = new TRepository();
                     JsonToRepo(LSourceJson, LSourceRepository);
 
                     if(SourceApplication->Endpoint == TApiEndpoint::User &&
-                        LSourceRepository.Owner.Login != SourceApplication->User)
+                        LSourceRepository->Owner->Login != SourceApplication->User)
                     {
+                        delete LSourceRepository;
                         continue;
                     }
 
                     TListBoxItem* LListBoxItem = new TListBoxItem(this);
                     LListBoxItem->Parent = ListBoxRepo;
                     LListBoxItem->IsChecked = true;
-                    LListBoxItem->Text = LSourceRepository.FullName;
+                    LListBoxItem->Text = LSourceRepository->FullName;
                     LListBoxItem->TagString = LSourceJson;
                     LListBoxItem->OnApplyStyleLookup = ListBoxItemApplyStyleLookup;
-                    if(LSourceRepository.Private == true)
+                    if(LSourceRepository->Private == true)
                     {   // Private
                         LListBoxItem->ImageIndex = 0;
                     }
                     else
                     {
-                        if(LSourceRepository.Fork == false)
+                        if(LSourceRepository->Fork == false)
                         {   // Public
                             LListBoxItem->ImageIndex = 1;
                         }
@@ -619,9 +622,9 @@ void __fastcall TForm2::ActionRepositories()
                             LListBoxItem->ImageIndex = 2;
                         }
                     }
-                    if(LSourceRepository.Description.IsEmpty() == false)
+                    if(LSourceRepository->Description.IsEmpty() == false)
                     {
-                        LListBoxItem->ItemData->Detail = LSourceRepository.Description;
+                        LListBoxItem->ItemData->Detail = LSourceRepository->Description;
                         LListBoxItem->Height = 50.0f;
                         LListBoxItem->StyleLookup = "listboxitembottomdetail";
                     }
@@ -630,6 +633,8 @@ void __fastcall TForm2::ActionRepositories()
                         LListBoxItem->Height = 40.0f;
                         LListBoxItem->StyleLookup = "listboxitemnodetail";
                     }
+
+                    delete LSourceRepository;
 
                     Application->ProcessMessages();
                 }
@@ -757,36 +762,40 @@ void __fastcall TForm2::ActionCreateRepo()
             continue;
         }
 
+        TRepository *LSourceRepository;
+        TRepository* LDestinationRepository;
         try
         {
             const String LSourceJson = LItem->TagString;
 
-            TRepository LDestinationRepository;
+            LDestinationRepository = new TRepository();
 
-            TRepository LSourceRepository;
+            LSourceRepository = new TRepository();
             JsonToRepo(LSourceJson, LSourceRepository);
 
             const String LLog = String().sprintf(L"====== %s ======",
-                LSourceRepository.FullName.c_str());
+                LSourceRepository->FullName.c_str());
             memoLog->Lines->Add(LLog);
 
             bool LIsCreated = CreateRepo(LSourceJson, LDestinationRepository);
 
             if(LIsCreated == false)
             {   // Don't do the rest if the issue was not created
+                delete LDestinationRepository;
+                delete LSourceRepository;
                 continue;
             }
 
-            if(LSourceRepository.OpenIssueCount > 0)
+            if(LSourceRepository->OpenIssueCount > 0)
             {
-                const String LLog = String().sprintf(L"%d open issue(s) not created!", LSourceRepository.OpenIssueCount);
+                const String LLog = String().sprintf(L"%d open issue(s) not created!", LSourceRepository->OpenIssueCount);
                 memoLog->Lines->Add(LLog);
-                PrintIssues(SourceApplication, &LSourceRepository);
+                PrintIssues(SourceApplication, LSourceRepository);
             }
 
             try
             {
-                String LSourceUrl = LSourceRepository.CloneUrl;
+                String LSourceUrl = LSourceRepository->CloneUrl;
                 if(SourceApplication->Username.IsEmpty() == false &&
                     SourceApplication->Password.IsEmpty() == false)
                 {
@@ -805,7 +814,7 @@ void __fastcall TForm2::ActionCreateRepo()
 
                 Clone("temp.git", LSourceUrl, true);
 
-                String LDestinationUrl = LDestinationRepository.CloneUrl;
+                String LDestinationUrl = LDestinationRepository->CloneUrl;
                 if(DestinationApplication->Username.IsEmpty() == false &&
                     DestinationApplication->Password.IsEmpty() == false)
                 {
@@ -827,7 +836,7 @@ void __fastcall TForm2::ActionCreateRepo()
 
                 memoLog->Lines->Add("Pushed repository");
 
-                if(LSourceRepository.HasWiki == true)
+                if(LSourceRepository->HasWiki == true)
                 {
                     try
                     {
@@ -866,6 +875,9 @@ void __fastcall TForm2::ActionCreateRepo()
         {
 
         }
+
+        delete LDestinationRepository;
+        delete LSourceRepository;
     }
 
     memoLog->Lines->Add("");
@@ -946,11 +958,13 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
             {
                 TJSONObject* LIssue = static_cast<TJSONObject*>(LIssueEnumerator->Current);
 
-                TIssue LIssueToPrint;
+                TIssue* LIssueToPrint = new TIssue();
                 JsonToIssue(LIssue, LIssueToPrint);
 
-                const String LLog = String().sprintf(L"    Issue #%d: %s", LIssueToPrint.Number, LIssueToPrint.Title.c_str());
+                const String LLog = String().sprintf(L"    Issue #%d: %s", LIssueToPrint->Number, LIssueToPrint->Title.c_str());
                 memoLog->Lines->Add(LLog);
+
+                delete LIssueToPrint;
             }
         }
     }

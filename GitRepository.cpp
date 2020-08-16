@@ -5,11 +5,40 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
-__fastcall TOwner::TOwner()
+__fastcall TUser::TUser() :
+    System::TObject()
 {
 }
 
+void __fastcall JsonToUser(const String AJson, TUser* AUser)
+{
+    TJSONObject* LUser = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+    JsonToUser(LUser, AUser);
+}
+
+void __fastcall JsonToUser(TJSONObject* AJsonObject, TUser* AUser)
+{
+    TJSONPair* Pair;
+    TJSONObject* LUser = AJsonObject;
+
+    if(LUser == NULL)
+    {
+        throw Exception("Invalid JSON input!");
+    }
+
+    if((Pair = LUser->Get("login")) != NULL)
+    {
+        AUser->Login = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+    }
+    else
+    {
+        throw Exception("login not found");
+    }
+}
+
 __fastcall TRepository::TRepository() :
+    System::TObject(),
+    Owner(new TUser()),
     Private(true),
     Fork(false),
     OpenIssueCount(0),
@@ -17,13 +46,18 @@ __fastcall TRepository::TRepository() :
 {
 }
 
-void __fastcall JsonToRepo(const String AJson, TRepository& ARepository)
+__fastcall TRepository::~TRepository()
+{
+    delete Owner;
+}
+
+void __fastcall JsonToRepo(const String AJson, TRepository* ARepository)
 {
     TJSONObject* LRepo = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
     JsonToRepo(LRepo, ARepository);
 }
 
-void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
+void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
 {
     TJSONPair* Pair;
     TJSONObject* LRepo = AJsonObject;
@@ -36,17 +70,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
     if((Pair = LRepo->Get("owner")) != NULL)
     {
         TJSONObject* LOwner = static_cast<TJSONObject*>(Pair->JsonValue);
-        if((Pair = LOwner->Get("login")) != NULL)
-        {
-            ARepository.Owner.Login =
-                static_cast<TJSONString*>(Pair->JsonValue)->Value();
-        }
-#ifdef _DEBUG
-        else
-        {
-            throw Exception("login not found");
-        }
-#endif
+        JsonToUser(LOwner, ARepository->Owner);
     }
 #ifdef _DEBUG
     else
@@ -57,7 +81,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
 
     if((Pair = LRepo->Get("name")) != NULL)
     {
-        ARepository.Name = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        ARepository->Name = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
 #ifdef _DEBUG
     else
@@ -68,7 +92,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
 
     if((Pair = LRepo->Get("full_name")) != NULL)
     {
-        ARepository.FullName = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        ARepository->FullName = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
 #ifdef _DEBUG
     else
@@ -81,11 +105,11 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
     {
         if(dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
         {
-            ARepository.Private = false;
+            ARepository->Private = false;
         }
         else
         {
-            ARepository.Private = true;
+            ARepository->Private = true;
         }
     }
 #ifdef _DEBUG
@@ -100,11 +124,11 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            ARepository.Description = LJsonString->Value();
+            ARepository->Description = LJsonString->Value();
         }
         else
         {
-            ARepository.Description = "";
+            ARepository->Description = "";
         }
     }
 #ifdef _DEBUG
@@ -117,16 +141,16 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
     if((Pair = LRepo->Get("fork")) != NULL &&
         dynamic_cast<TJSONTrue*>(Pair->JsonValue) != NULL)
     {
-        ARepository.Fork = true;
+        ARepository->Fork = true;
     }
     else
     {   // Default value is false, this is the most commun case
-        ARepository.Fork = false;
+        ARepository->Fork = false;
     }
 
     if((Pair = LRepo->Get("clone_url")) != NULL)
     {
-        ARepository.CloneUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        ARepository->CloneUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
 #ifdef _DEBUG
     else
@@ -138,36 +162,37 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository& ARepository)
     if((Pair = LRepo->Get("open_issues_count")) != NULL)
     {
         TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
-        ARepository.OpenIssueCount = LIssueNumber->AsInt;
+        ARepository->OpenIssueCount = LIssueNumber->AsInt;
     }
     else
     {
-        ARepository.OpenIssueCount = 0;
+        ARepository->OpenIssueCount = 0;
     }
 
     if((Pair = LRepo->Get("has_wiki")) != NULL &&
         dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
     {
-        ARepository.HasWiki = false;
+        ARepository->HasWiki = false;
     }
     else
     {   // Default value is true, let's presume there is a Wiki
-        ARepository.HasWiki = true;
+        ARepository->HasWiki = true;
     }
 }
 
 __fastcall TIssue::TIssue() :
+    System::TObject(),
     Number(0)
 {
 }
 
-void __fastcall JsonToIssue(const String AJson, TIssue& AIssue)
+void __fastcall JsonToIssue(const String AJson, TIssue* AIssue)
 {
     TJSONObject* LIssue = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
     JsonToIssue(LIssue, AIssue);
 }
 
-void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue& AIssue)
+void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue)
 {
     TJSONPair* Pair;
     TJSONObject* LIssue = AJsonObject;
@@ -177,58 +202,59 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue& AIssue)
         throw Exception("Invalid JSON input!");
     }
 
-    AIssue.Title = "";
+    AIssue->Title = "";
     if((Pair = LIssue->Get("title")) != NULL)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AIssue.Title = LJsonString->Value();
+            AIssue->Title = LJsonString->Value();
         }
     }
 
-    AIssue.Body = "";
+    AIssue->Body = "";
     if((Pair = LIssue->Get("body")) != NULL)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AIssue.Body = LJsonString->Value();
+            AIssue->Body = LJsonString->Value();
         }
     }
 
-    AIssue.State = "";
+    AIssue->State = "";
     if((Pair = LIssue->Get("state")) != NULL)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AIssue.State = LJsonString->Value();
+            AIssue->State = LJsonString->Value();
         }
     }
 
     if((Pair = LIssue->Get("number")) != NULL)
     {
         TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
-        AIssue.Number = LIssueNumber->AsInt;
+        AIssue->Number = LIssueNumber->AsInt;
     }
     else
     {
-        AIssue.Number = 0;
+        AIssue->Number = 0;
     }
 }
 
-__fastcall TOrganization::TOrganization()
+__fastcall TOrganization::TOrganization() :
+    System::TObject()
 {
 }
 
-void __fastcall JsonToOrganization(const String AJson, TOrganization& AOrganization)
+void __fastcall JsonToOrganization(const String AJson, TOrganization* AOrganization)
 {
     TJSONObject* LOrg = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
     JsonToOrganization(LOrg, AOrganization);
 }
 
-void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization& AOrganization)
+void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrganization)
 {
     TJSONObject* LOrg = AJsonObject;
     TJSONPair* Pair;
@@ -243,7 +269,7 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization& AOrg
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AOrganization.Login = LJsonString->Value();
+            AOrganization->Login = LJsonString->Value();
         }
     }
     else if((Pair = LOrg->Get("username")) != NULL)
@@ -251,7 +277,7 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization& AOrg
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AOrganization.Login = LJsonString->Value();
+            AOrganization->Login = LJsonString->Value();
         }
     }
 
@@ -260,7 +286,7 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization& AOrg
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AOrganization.Description = LJsonString->Value();
+            AOrganization->Description = LJsonString->Value();
         }
     }
 }
