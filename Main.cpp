@@ -5,6 +5,7 @@
 #include "Main.h"
 #include "GitApplication.h"
 #include "GitRepository.h"
+#include "HttpModule.h"
 #include <System.JSON.hpp>
 #include <System.IOUtils.hpp>
 #include <System.RegularExpressions.hpp>
@@ -70,15 +71,14 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     SourceApplication = new TGitApplication();
     DestinationApplication = new TGitApplication();
 
-    IdHTTP1->HandleRedirects = true;
-    IdHTTP1->IOHandler = IdSSLIOHandlerSocketOpenSSL1;
-    IdHTTP1->Request->UserAgent =
-        "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36";
+    FHTTPModule = new TDataModule1(NULL);
+    FHTTPClient = FHTTPModule->IdHTTP1;
 }
 //---------------------------------------------------------------------------
 
 __fastcall TForm2::~TForm2()
 {
+    delete FHTTPModule;
     delete SourceApplication;
     delete DestinationApplication;
 }
@@ -107,7 +107,7 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
         SourceFile = new System::Classes::TMemoryStream();
         WriteStringToStream(SourceFile, AJson, enUTF8);
         SourceFile->Position = 0;
-        LAnswer = IdHTTP1->Post(LUrl, SourceFile);
+        LAnswer = FHTTPClient->Post(LUrl, SourceFile);
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
@@ -176,7 +176,7 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
     const String LUrl = AGitApplication->ApiUrl + "/user";
 
     PrepareRequest(AGitApplication);
-    LJson = IdHTTP1->Get(LUrl); // May throw exception
+    LJson = FHTTPClient->Get(LUrl); // May throw exception
 
     if(LJson.IsEmpty() == true)
     {
@@ -209,7 +209,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
     PrepareRequest(AGitApplication);
     try
     {
-        LJson = IdHTTP1->Get(LUrl); // May throw exception
+        LJson = FHTTPClient->Get(LUrl); // May throw exception
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
@@ -242,7 +242,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
 void __fastcall TForm2::PrepareRequest(TGitApplication* AGitApplication)
 {
     // Set authorization token
-    IdHTTP1->Request->CustomHeaders->Values["Authorization"] =
+    FHTTPClient->Request->CustomHeaders->Values["Authorization"] =
         "token " + AGitApplication->Token;
 }
 //---------------------------------------------------------------------------
@@ -580,7 +580,7 @@ void __fastcall TForm2::ActionRepositories()
         while(LUrl.IsEmpty() == false)
         {
             PrepareRequest(SourceApplication);
-            const String LContent = IdHTTP1->Get(LUrl);
+            const String LContent = FHTTPClient->Get(LUrl);
 
             TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
             if(LRepos != NULL)
@@ -948,7 +948,7 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
     try
     {
         PrepareRequest(AGitApplication);
-        const String LContent = IdHTTP1->Get(LUrl);
+        const String LContent = FHTTPClient->Get(LUrl);
 
         TJSONArray* LIssues = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
         if(LIssues != NULL)
@@ -977,7 +977,7 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
 String __fastcall TForm2::GetNextUrl()
 {
     String Result;
-    const String LLink = IdHTTP1->Response->RawHeaders->Values["Link"];
+    const String LLink = FHTTPClient->Response->RawHeaders->Values["Link"];
     if(LLink.IsEmpty() == false)
     {
         const String LExpression = "<(\\S+)>; rel=\"next\"";

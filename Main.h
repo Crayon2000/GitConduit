@@ -8,16 +8,6 @@
 #include <FMX.Controls.Presentation.hpp>
 #include <FMX.StdCtrls.hpp>
 #include <FMX.Types.hpp>
-#include <IdBaseComponent.hpp>
-#include <IdComponent.hpp>
-#include <IdHTTP.hpp>
-#include <IdIOHandler.hpp>
-#include <IdIOHandlerSocket.hpp>
-#include <IdIOHandlerStack.hpp>
-#include <IdSSL.hpp>
-#include <IdSSLOpenSSL.hpp>
-#include <IdTCPClient.hpp>
-#include <IdTCPConnection.hpp>
 #include <FMX.Edit.hpp>
 #include <FMX.Memo.hpp>
 #include <FMX.ScrollBox.hpp>
@@ -29,14 +19,17 @@
 #include <System.ImageList.hpp>
 #include <FMX.ComboEdit.hpp>
 //---------------------------------------------------------------------------
+namespace Idhttp
+{
+    class TIdHTTP;
+};
+class TDataModule1;
 class TGitApplication;
 class TRepository;
 
 class TForm2 : public TForm
 {
 __published:    // IDE-managed Components
-    TIdHTTP *IdHTTP1;
-    TIdSSLIOHandlerSocketOpenSSL *IdSSLIOHandlerSocketOpenSSL1;
     TMemo *memoLog;
     TGroupBox *GroupBox4;
     TTabControl *TabControl1;
@@ -116,6 +109,9 @@ private:    // User declarations
     TGitApplication* SourceApplication;
     TGitApplication* DestinationApplication;
     int FTabAction;
+
+    TDataModule1* FHTTPModule;
+    Idhttp::TIdHTTP *FHTTPClient;
 
     void __fastcall ActionSource();
     void __fastcall ActionSourceOwner();

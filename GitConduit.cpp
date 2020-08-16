@@ -7,6 +7,7 @@
 #include <System.StartUpCopy.hpp>
 //---------------------------------------------------------------------------
 USEFORM("Main.cpp", Form2);
+USEFORM("HttpModule.cpp", DataModule1); /* TDataModule: File Type */
 //---------------------------------------------------------------------------
 void __fastcall UpdateStyle();
 void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const String AStyleLookup);
