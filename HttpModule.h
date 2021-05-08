@@ -17,12 +17,13 @@
 class TDataModule1 : public TDataModule
 {
 __published:    // IDE-managed Components
-    TIdHTTP *IdHTTP1;
     TIdSSLIOHandlerSocketOpenSSL *IdSSLIOHandlerSocketOpenSSL1;
 private:    // User declarations
 public:     // User declarations
     __fastcall TDataModule1(TComponent* Owner);
     inline __fastcall virtual ~TDataModule1() { }
+
+    TIdHTTP *IdHTTP1;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TDataModule1 *DataModule1;

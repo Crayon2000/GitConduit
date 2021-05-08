@@ -3,15 +3,18 @@
 GitConduit is a Windows application use to export git repositories from one Git web platform to another.
 
 It supports the following services:
+
 * Gogs
 * GitBucket
 * GitHub
 
-## Requierements
+## Requirements
+
 * Make sure *git.exe* is in your path
-* If you are exporting to an organisation, make sure it exist in the destination application
+* If you are exporting to an organization, make sure it exist in the destination application
 
 ## How To Use
+
 * Fill the **Source** section and click on the **Next** button
 * Select the owner of the source repositories and click on the **Next** button
 * Select the repositories you want to export and click on the **Next** button
@@ -25,11 +28,13 @@ It supports the following services:
 ### Gogs
 
 #### API URL
+
 The v1 API is used and the URL should look like: https://myserver.com/api/v1
 
 #### Authorization Token
 
 To get an authorization token:
+
 1. Go to **Your Settings**
 2. Select **Applications**
 3. Click on **Generate New Token**
@@ -39,11 +44,13 @@ To get an authorization token:
 ### GitBucket
 
 #### API URL
+
 The v3 API is used and the URL should look like: https://myserver.com/api/v3
 
 #### Authorization Token
 
 To get an authorization token:
+
 1. Go to **Account settings**
 2. Select **Applications**
 3. Choose a **Token description**
@@ -52,11 +59,13 @@ To get an authorization token:
 ### GitHub
 
 #### API URL
+
 The v3 API is used and the URL is https://api.github.com
 
 #### Authorization Token
 
 To get an authorization token:
+
 1. Go to **Settings**
 2. Select **Developer settings**
 3. Select **Personal access tokens**
