@@ -138,7 +138,7 @@ protected:
     String __fastcall GetNextUrl();
 public:     // User declarations
     __fastcall TForm2(TComponent* Owner);
-    __fastcall virtual ~TForm2(void);
+    __fastcall virtual ~TForm2();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm2 *Form2;

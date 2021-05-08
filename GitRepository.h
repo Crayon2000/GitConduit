@@ -11,7 +11,7 @@ class TUser : public System::TObject
 
 public:
     __fastcall TUser();
-    inline __fastcall virtual ~TUser(void) { }
+    inline __fastcall virtual ~TUser() { }
 
     String Login;
 };
@@ -22,7 +22,7 @@ class TRepository : public System::TObject
 
 public:
     __fastcall TRepository();
-    __fastcall virtual ~TRepository(void);
+    __fastcall virtual ~TRepository();
 
     TUser* Owner;
     String Name;
@@ -41,7 +41,7 @@ class TIssue : public System::TObject
 
 public:
     __fastcall TIssue();
-    inline __fastcall virtual ~TIssue(void) { }
+    inline __fastcall virtual ~TIssue() { }
 
     String Title;
     String Body;
@@ -55,7 +55,7 @@ class TOrganization : public System::TObject
 
 public:
     __fastcall TOrganization();
-    inline __fastcall virtual ~TOrganization(void) { }
+    inline __fastcall virtual ~TOrganization() { }
 
     String Login;
     String Description;

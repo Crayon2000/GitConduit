@@ -36,7 +36,7 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
     FApplicationType = AApplicationType;
 }
 
-void __fastcall TGitApplication::SetApiUrl(String AApiUrl)
+void __fastcall TGitApplication::SetApiUrl(const String AApiUrl)
 {
     try
     {

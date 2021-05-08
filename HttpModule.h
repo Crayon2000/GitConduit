@@ -22,6 +22,7 @@ __published:    // IDE-managed Components
 private:    // User declarations
 public:     // User declarations
     __fastcall TDataModule1(TComponent* Owner);
+    inline __fastcall virtual ~TDataModule1() { }
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TDataModule1 *DataModule1;

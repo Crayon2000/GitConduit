@@ -33,10 +33,10 @@ private:
     TApiEndpoint FEndpoint;
 protected:
     void __fastcall SetApplicationType(TGitApplicationType AApplicationType);
-    void __fastcall SetApiUrl(String AApiUrl);
+    void __fastcall SetApiUrl(const String AApiUrl);
 public:
     __fastcall TGitApplication();
-    inline __fastcall virtual ~TGitApplication(void) { }
+    inline __fastcall virtual ~TGitApplication() { }
 
     __property TGitApplicationType ApplicationType = {read=FApplicationType, write=SetApplicationType};
     __property String ApplicationName = {read=FApplicationName};

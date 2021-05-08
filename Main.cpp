@@ -107,6 +107,7 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
         SourceFile = new System::Classes::TMemoryStream();
         WriteStringToStream(SourceFile, AJson, enUTF8);
         SourceFile->Position = 0;
+        FHTTPClient->Request->ContentType = "application/json";
         LAnswer = FHTTPClient->Post(LUrl, SourceFile);
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
@@ -762,8 +763,8 @@ void __fastcall TForm2::ActionCreateRepo()
             continue;
         }
 
-        TRepository *LSourceRepository;
-        TRepository* LDestinationRepository;
+        TRepository *LSourceRepository = NULL;
+        TRepository* LDestinationRepository = NULL;
         try
         {
             const String LSourceJson = LItem->TagString;
