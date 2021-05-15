@@ -16,6 +16,9 @@ extern "C" int FMXmain()
 {
     try
     {
+#if defined(_WINDOWS_)
+        TThread::CurrentThread->NameThreadForDebugging(System::UnicodeString("Main Thread"), TThread::CurrentThread->ThreadID);
+#endif
         UpdateStyle();
         Application->Initialize();
         Application->CreateForm(__classid(TForm2), &Form2);

@@ -119,19 +119,21 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
             e.ErrorCode == 500)
         {
             // Get the repository name we wanted to create
-            TRepository LRepoInfo;
+            TRepository* LRepoInfo = new TRepository();
             JsonToRepo(AJson, LRepoInfo);
 
             LUrl = DestinationApplication->ApiUrl + "/repos/" +
-                DestinationApplication->User + "/" + LRepoInfo.Name;
+                DestinationApplication->User + "/" + LRepoInfo->Name;
 
             try
             {
-                LAnswer = IdHTTP1->Get(LUrl);
+                LAnswer = FHTTPClient->Get(LUrl);
             }
             catch(...)
             {
             }
+
+            delete LRepoInfo;
         }
 #endif
         const String LLog = "Repository creation HTTP protocol exception: " + e.Message;
@@ -789,8 +791,9 @@ void __fastcall TForm2::ActionCreateRepo()
 
             if(LSourceRepository->OpenIssueCount > 0)
             {
-                const String LLog = String().sprintf(L"%d open issue(s) not created!", LSourceRepository->OpenIssueCount);
-                memoLog->Lines->Add(LLog);
+                const String LIssueLog =
+                    String().sprintf(L"%d open issue(s) not created!", LSourceRepository->OpenIssueCount);
+                memoLog->Lines->Add(LIssueLog);
                 PrintIssues(SourceApplication, LSourceRepository);
             }
 
