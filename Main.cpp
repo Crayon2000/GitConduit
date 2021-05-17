@@ -616,13 +616,17 @@ void __fastcall TForm2::ActionRepositories()
                     }
                     else
                     {
-                        if(LSourceRepository->Fork == false)
-                        {   // Public
-                            LListBoxItem->ImageIndex = 1;
+                        if(LSourceRepository->MirrorUrl.IsEmpty() == false)
+                        {   // Mirror
+                            LListBoxItem->ImageIndex = 3;
                         }
-                        else
+                        else if(LSourceRepository->Fork == true)
                         {   // Fork
                             LListBoxItem->ImageIndex = 2;
+                        }
+                        else
+                        {   // Public
+                            LListBoxItem->ImageIndex = 1;
                         }
                     }
                     if(LSourceRepository->Description.IsEmpty() == false)

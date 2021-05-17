@@ -31,6 +31,7 @@ public:
     String Description;
     bool Fork;
     String CloneUrl;
+    String MirrorUrl;
     int OpenIssueCount;
     bool HasWiki;
 };

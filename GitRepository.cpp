@@ -159,6 +159,16 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     }
 #endif
 
+    if((Pair = LRepo->Get("mirror_url")) != NULL &&
+        dynamic_cast<TJSONNull*>(Pair->JsonValue) == NULL)
+    {
+        ARepository->MirrorUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+    }
+    else
+    {
+        ARepository->MirrorUrl = "";
+    }
+
     if((Pair = LRepo->Get("open_issues_count")) != NULL)
     {
         TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
