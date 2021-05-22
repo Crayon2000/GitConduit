@@ -34,6 +34,10 @@ public:
     String MirrorUrl;
     int OpenIssueCount;
     bool HasWiki;
+    bool HasIssues;
+    bool HasProjects;
+    bool HasDownloads;
+    String Homepage;
 };
 
 class TIssue : public System::TObject
@@ -73,5 +77,7 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue);
 
 void __fastcall JsonToOrganization(const String AJson, TOrganization* AOrganization);
 void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrganization);
+
+void __fastcall RepoToJson(const TRepository* ARepository, String& AJson);
 //---------------------------------------------------------------------------
 #endif

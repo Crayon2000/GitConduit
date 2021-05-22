@@ -2,6 +2,7 @@
 #pragma hdrstop
 
 #include "GitRepository.h"
+#include <System.JSON.Writers.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
@@ -188,6 +189,46 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     {   // Default value is true, let's presume there is a Wiki
         ARepository->HasWiki = true;
     }
+
+    if((Pair = LRepo->Get("has_issues")) != NULL &&
+        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+    {
+        ARepository->HasIssues = false;
+    }
+    else
+    {   // Default value is true, let's presume issues are enabled
+        ARepository->HasIssues = true;
+    }
+
+    if((Pair = LRepo->Get("has_projects")) != NULL &&
+        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+    {
+        ARepository->HasProjects = false;
+    }
+    else
+    {   // Default value is true, let's presume projects are enabled
+        ARepository->HasProjects = true;
+    }
+
+    if((Pair = LRepo->Get("has_downloads")) != NULL &&
+        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+    {
+        ARepository->HasDownloads = false;
+    }
+    else
+    {   // Default value is true, let's presume downloads are enabled
+        ARepository->HasDownloads = true;
+    }
+
+    if((Pair = LRepo->Get("homepage")) != NULL &&
+        dynamic_cast<TJSONNull*>(Pair->JsonValue) == NULL)
+    {
+        ARepository->Homepage = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+    }
+    else
+    {
+        ARepository->Homepage = "";
+    }
 }
 
 __fastcall TIssue::TIssue() :
@@ -299,5 +340,48 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
             AOrganization->Description = LJsonString->Value();
         }
     }
+}
+
+void __fastcall RepoToJson(const TRepository* ARepository, String& AJson)
+{
+    TStringWriter* LStringWriter =  new TStringWriter();
+    TJsonTextWriter* LJsonTextWriter = new TJsonTextWriter(LStringWriter, false);
+
+#ifdef _DEBUG
+    LJsonTextWriter->Formatting = TJsonFormatting::Indented;
+#endif
+
+    LJsonTextWriter->WriteStartObject();
+
+    LJsonTextWriter->WritePropertyName("name");
+    LJsonTextWriter->WriteValue(ARepository->Name);
+
+    LJsonTextWriter->WritePropertyName("description");
+    LJsonTextWriter->WriteValue(ARepository->Description);
+
+    LJsonTextWriter->WritePropertyName("homepage");
+    LJsonTextWriter->WriteValue(ARepository->Homepage);
+
+    LJsonTextWriter->WritePropertyName("private");
+    LJsonTextWriter->WriteValue(ARepository->Private);
+
+    LJsonTextWriter->WritePropertyName("has_issues");
+    LJsonTextWriter->WriteValue(ARepository->HasIssues);
+
+    LJsonTextWriter->WritePropertyName("has_projects");
+    LJsonTextWriter->WriteValue(ARepository->HasProjects);
+
+    LJsonTextWriter->WritePropertyName("has_wiki");
+    LJsonTextWriter->WriteValue(ARepository->HasWiki);
+
+    LJsonTextWriter->WritePropertyName("has_downloads");
+    LJsonTextWriter->WriteValue(ARepository->HasDownloads);
+
+    LJsonTextWriter->WriteEndObject();
+
+    AJson = LStringWriter->ToString();
+
+    delete LJsonTextWriter;
+    delete LStringWriter;
 }
 

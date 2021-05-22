@@ -84,7 +84,7 @@ __fastcall TForm2::~TForm2()
 }
 //---------------------------------------------------------------------------
 
-bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
+bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TRepository* ADestinationRepository)
 {
     bool Result = false;
 
@@ -99,13 +99,16 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
         LUrl += "/user/repos";
     }
 
+    String LJson;
+    RepoToJson(ASourceRepository, LJson);
+
     String LAnswer;
     System::Classes::TMemoryStream* SourceFile = NULL;
     try
     {
         PrepareRequest(DestinationApplication);
         SourceFile = new System::Classes::TMemoryStream();
-        WriteStringToStream(SourceFile, AJson, enUTF8);
+        WriteStringToStream(SourceFile, LJson, enUTF8);
         SourceFile->Position = 0;
         FHTTPClient->Request->ContentType = "application/json";
         LAnswer = FHTTPClient->Post(LUrl, SourceFile);
@@ -119,11 +122,8 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
             e.ErrorCode == 500)
         {
             // Get the repository name we wanted to create
-            TRepository* LRepoInfo = new TRepository();
-            JsonToRepo(AJson, LRepoInfo);
-
             LUrl = DestinationApplication->ApiUrl + "/repos/" +
-                DestinationApplication->User + "/" + LRepoInfo->Name;
+                DestinationApplication->User + "/" + ASourceRepository->Name;
 
             try
             {
@@ -132,8 +132,6 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
             catch(...)
             {
             }
-
-            delete LRepoInfo;
         }
 #endif
         const String LLog = "Repository creation HTTP protocol exception: " + e.Message;
@@ -152,9 +150,9 @@ bool __fastcall TForm2::CreateRepo(const String AJson, TRepository* ARepository)
         TJSONPair* Pair;
         if((Pair = LObject->Get("full_name")) != NULL)
         {
-            JsonToRepo(LAnswer, ARepository);
+            JsonToRepo(LAnswer, ADestinationRepository);
 
-            const String LLog = "Created repository " + ARepository->FullName +
+            const String LLog = "Created repository " + ADestinationRepository->FullName +
                 " on " + DestinationApplication->ApplicationName;
             memoLog->Lines->Add(LLog);
             Result = true;
@@ -784,7 +782,7 @@ void __fastcall TForm2::ActionCreateRepo()
                 LSourceRepository->FullName.c_str());
             memoLog->Lines->Add(LLog);
 
-            bool LIsCreated = CreateRepo(LSourceJson, LDestinationRepository);
+            bool LIsCreated = CreateRepo(LSourceRepository, LDestinationRepository);
 
             if(LIsCreated == false)
             {   // Don't do the rest if the issue was not created

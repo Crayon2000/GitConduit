@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fix HTTP protocol exceptions with repository creation on Gogs.
 - Add icon for mirror repositories.
 
 ## [0.2.1] - 2018-08-25

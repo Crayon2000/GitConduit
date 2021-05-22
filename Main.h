@@ -120,7 +120,7 @@ private:    // User declarations
     void __fastcall ActionDestinationOwner();
     void __fastcall ActionCreateRepo();
 protected:
-    bool __fastcall CreateRepo(const String AJson, TRepository* ARepository);
+    bool __fastcall CreateRepo(const TRepository* ASourceRepository, TRepository* ADestinationRepository);
     String __fastcall GetAuthenticatedUser(TGitApplication* AGitApplication);
     void __fastcall GetOrganizations(TGitApplication* AGitApplication, System::Classes::TStrings* AItems);
     void __fastcall PrepareRequest(TGitApplication* AGitApplication);
