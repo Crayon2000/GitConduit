@@ -27,6 +27,21 @@ class TDataModule1;
 class TGitApplication;
 class TRepository;
 
+class TListBoxDataItem : public TListBoxItem
+{
+    typedef TListBoxItem inherited;
+
+protected:
+    virtual void __fastcall DoApplyStyleLookup();
+
+public:     // User declarations
+    inline __fastcall virtual TListBoxDataItem(System::Classes::TComponent* AOwner) : TListBoxItem(AOwner) { }
+    __fastcall virtual ~TListBoxDataItem()
+    {
+        delete Data;
+    }
+};
+
 class TForm2 : public TForm
 {
 __published:    // IDE-managed Components
@@ -123,7 +138,7 @@ protected:
     bool __fastcall CreateRepo(const TRepository* ASourceRepository, TRepository* ADestinationRepository);
     String __fastcall GetAuthenticatedUser(TGitApplication* AGitApplication);
     void __fastcall GetOrganizations(TGitApplication* AGitApplication, System::Classes::TStrings* AItems);
-    void __fastcall PrepareRequest(TGitApplication* AGitApplication);
+    void __fastcall PrepareRequest(const TGitApplication* AGitApplication);
     HANDLE __fastcall ExecuteProgramEx(const String ACmd, const String ADirectory = ".");
     DWORD __fastcall Wait(HANDLE AHandle);
     void __fastcall Clone(const String ADirectory, const String AGitRepo, bool AIsBare = false);

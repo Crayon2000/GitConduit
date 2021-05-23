@@ -240,7 +240,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::PrepareRequest(TGitApplication* AGitApplication)
+void __fastcall TForm2::PrepareRequest(const TGitApplication* AGitApplication)
 {
     // Set authorization token
     FHTTPClient->Request->CustomHeaders->Values["Authorization"] =
@@ -602,12 +602,11 @@ void __fastcall TForm2::ActionRepositories()
                         continue;
                     }
 
-                    TListBoxItem* LListBoxItem = new TListBoxItem(this);
+                    TListBoxItem* LListBoxItem = new TListBoxDataItem(this);
                     LListBoxItem->Parent = ListBoxRepo;
                     LListBoxItem->IsChecked = true;
                     LListBoxItem->Text = LSourceRepository->FullName;
-                    LListBoxItem->TagString = LSourceJson;
-                    LListBoxItem->OnApplyStyleLookup = ListBoxItemApplyStyleLookup;
+                    LListBoxItem->Data = LSourceRepository; // List box is owner of memory
                     if(LSourceRepository->Private == true)
                     {   // Private
                         LListBoxItem->ImageIndex = 0;
@@ -638,8 +637,6 @@ void __fastcall TForm2::ActionRepositories()
                         LListBoxItem->Height = 40.0f;
                         LListBoxItem->StyleLookup = "listboxitemnodetail";
                     }
-
-                    delete LSourceRepository;
 
                     Application->ProcessMessages();
                 }
@@ -767,16 +764,11 @@ void __fastcall TForm2::ActionCreateRepo()
             continue;
         }
 
-        TRepository *LSourceRepository = NULL;
         TRepository* LDestinationRepository = NULL;
         try
         {
-            const String LSourceJson = LItem->TagString;
-
             LDestinationRepository = new TRepository();
-
-            LSourceRepository = new TRepository();
-            JsonToRepo(LSourceJson, LSourceRepository);
+            TRepository *LSourceRepository = static_cast<TRepository*>(LItem->Data);
 
             const String LLog = String().sprintf(L"====== %s ======",
                 LSourceRepository->FullName.c_str());
@@ -787,7 +779,6 @@ void __fastcall TForm2::ActionCreateRepo()
             if(LIsCreated == false)
             {   // Don't do the rest if the issue was not created
                 delete LDestinationRepository;
-                delete LSourceRepository;
                 continue;
             }
 
@@ -883,7 +874,6 @@ void __fastcall TForm2::ActionCreateRepo()
         }
 
         delete LDestinationRepository;
-        delete LSourceRepository;
     }
 
     memoLog->Lines->Add("");
@@ -907,33 +897,27 @@ void __fastcall TForm2::btnCreateRepoCloseClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::ListBoxItemApplyStyleLookup(TObject *Sender)
+void __fastcall TListBoxDataItem::DoApplyStyleLookup()
 {
-    TListBoxItem* LListBoxItem = dynamic_cast<TListBoxItem*>(Sender);
-    if(LListBoxItem == NULL)
-    {
-        return;
-    }
-
     try
     {
-        LListBoxItem->BeginUpdate();
+        BeginUpdate();
 
-        Fmx::Types::TFmxObject* GlyphStyleResource = LListBoxItem->FindStyleResource("glyphstyle");
+        Fmx::Types::TFmxObject* GlyphStyleResource = FindStyleResource("glyphstyle");
         if(GlyphStyleResource != NULL && GlyphStyleResource->ClassNameIs("TGlyph") == true)
         {
             TGlyph* LGlyph = static_cast<TGlyph*>(GlyphStyleResource);
             LGlyph->Position->X = 20.0f; // Make sure checkbox is really MostLeft
         }
 
-        Fmx::Types::TFmxObject* IconStyleResource = LListBoxItem->FindStyleResource("icon");
+        Fmx::Types::TFmxObject* IconStyleResource = FindStyleResource("icon");
         if(IconStyleResource != NULL && IconStyleResource->ClassNameIs("TImage") == true)
         {
             TImage* LImage = static_cast<TImage*>(IconStyleResource);
             LImage->Position->X = 20.0f; // Make sure checkbox is really MostLeft
         }
 
-        Fmx::Types::TFmxObject* CheckStyleResource = LListBoxItem->FindStyleResource("check");
+        Fmx::Types::TFmxObject* CheckStyleResource = FindStyleResource("check");
         if(CheckStyleResource != NULL && CheckStyleResource->ClassNameIs("TCheckBox") == true)
         {
             TCheckBox* LCheckBox = static_cast<TCheckBox*>(CheckStyleResource);
@@ -942,8 +926,10 @@ void __fastcall TForm2::ListBoxItemApplyStyleLookup(TObject *Sender)
     }
     __finally
     {
-        LListBoxItem->EndUpdate();
+        EndUpdate();
     }
+
+    inherited::DoApplyStyleLookup();
 }
 //---------------------------------------------------------------------------
 
