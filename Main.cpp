@@ -184,15 +184,15 @@ String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
         return "";
     }
 
-    TJSONObject* LUser = dynamic_cast<TJSONObject*>(TJSONObject::ParseJSONValue(LJson));
-    if(LUser != NULL)
+    TUser* LUser = new TUser();
+    try
     {
-        TJSONPair* Pair;
-        if((Pair = LUser->Get("login")) != NULL)
-        {
-            TJSONString* Answer = static_cast<TJSONString*>(Pair->JsonValue);
-            Result = Answer->Value();
-        }
+        JsonToUser(LJson, LUser);
+        Result = LUser->Login;
+    }
+    __finally
+    {
+        delete LUser;
     }
 
     return Result;

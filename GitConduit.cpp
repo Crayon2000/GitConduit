@@ -85,6 +85,16 @@ void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const Stri
             LCheckBox->Margins->Left = 8.0f;
             LCheckBox->Margins->Right = 0.0f;
         }
+
+        Fmx::Types::TFmxObject* TextStyleResource = StyleResource->FindStyleResource("detail");
+        if(TextStyleResource != NULL)
+        {
+            TText* LText = dynamic_cast<TText*>(TextStyleResource);
+            if(LText != NULL)
+            {
+                LText->Height = 21; // Adjust height to fit font size
+            }
+        }
     }
     else
     {
