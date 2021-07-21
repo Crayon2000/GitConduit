@@ -18,6 +18,7 @@
 #include <FMX.ImgList.hpp>
 #include <System.ImageList.hpp>
 #include <FMX.ComboEdit.hpp>
+#include <FMX.Memo.Types.hpp>
 //---------------------------------------------------------------------------
 namespace Idhttp
 {
