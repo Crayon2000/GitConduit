@@ -3,6 +3,7 @@
 #pragma hdrstop
 
 #include "Main.h"
+#include "Git.h"
 #include "GitApplication.h"
 #include "GitRepository.h"
 #include "HttpModule.h"
@@ -356,17 +357,6 @@ void __fastcall TForm2::Push(const String ADirectory)
 }
 //---------------------------------------------------------------------------
 
-bool __fastcall TForm2::CheckGitExe()
-{
-    const String LCmd = "git --version";
-    if(ExecuteProgramEx(LCmd) == NULL)
-    {
-        return false;
-    }
-    return true;
-}
-//---------------------------------------------------------------------------
-
 void __fastcall TForm2::TabControl1Change(TObject *Sender)
 {
     HideMessage();
@@ -475,11 +465,11 @@ void __fastcall TForm2::OnApplicationIdle(System::TObject* Sender, bool &Done)
 
 void __fastcall TForm2::ActionSource()
 {
-    if(CheckGitExe() == false)
-    {
-        ShowMessage("git.exe not found in path!\n\nCorrect the problem and try again.");
-        return;
-    }
+//    if(CheckGitExe() == false)
+//    {
+//        ShowMessage("git.exe not found in path!\n\nCorrect the problem and try again.");
+//        return;
+//    }
 
     btnSourceNext->Enabled = true;
 }

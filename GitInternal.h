@@ -52,6 +52,8 @@ public:
     static TRemoteHandle* git_remote_create_anonymous(TRepositoryHandle* ARepo, const String AUrl);
     static TRemoteHandle* git_remote_lookup(TRepositoryHandle* ARepo, const String AName);
 
+    static String git_remote_name(TRemoteHandle* ARemote);
+
     static String git_repository_path(TRepositoryHandle* ARepo);
 };
 //---------------------------------------------------------------------------

@@ -145,7 +145,6 @@ protected:
     void __fastcall Clone(const String ADirectory, const String AGitRepo, bool AIsBare = false);
     void __fastcall AddRemote(const String AGitRepo, const String ADirectory);
     void __fastcall Push(const String ADirectory);
-    bool __fastcall CheckGitExe();
     void __fastcall ShowMessage(const String AMessage);
     void __fastcall HideMessage();
     void __fastcall OnApplicationIdle(System::TObject* Sender, bool &Done);

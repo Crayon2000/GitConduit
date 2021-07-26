@@ -46,6 +46,7 @@ public:
     void __fastcall AddRemote(const String AUrl, const String AName, const String AFetch = "");
     void __fastcall AddAnonymousRemote(const String AUrl);
     void __fastcall SetRemote(const String AName);
+    String __fastcall GetRemoteName();
     void __fastcall Push();
 
     __property String Username = {read = GetUsername, write = SetUsername}; /**< Username. */

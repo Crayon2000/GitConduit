@@ -5,10 +5,7 @@
 
 #include "GitInternal.h"
 #define _MSC_VER 1600
-#define STATIC_IMAXDIV
-#pragma warn -8105 // Remove warning W8105 Constant member ' ::id' in class without constructors
 #include <git2.h>
-#pragma warn .8105
 //---------------------------------------------------------------------------
 #pragma comment(lib, "libgit2") // Include the libgit2 library
 //---------------------------------------------------------------------------
@@ -18,8 +15,8 @@
  * Constructor.
  */
 __fastcall TGit::TGit() :
-    FRepository(NULL),
-    FRemote(NULL)
+    FRepository(nullptr),
+    FRemote(nullptr)
 {
     git_libgit2_init();
 }
@@ -39,7 +36,7 @@ __fastcall TGit::~TGit()
  * Credential callback.
  * @param ACred The newly created credential object.
  * @param AUrl The resource for which we are demanding a credential.
- * @param AUsernameFromUrl The username that was embedded in a "user\@host" remote url, or NULL if not included.
+ * @param AUsernameFromUrl The username that was embedded in a "user\@host" remote url, or nullptr if not included.
  * @param AAllowedTypes A bitmask stating which cred types are OK to return.
  * @param APayload The payload provided when specifying this callback.
  */
@@ -47,7 +44,7 @@ int TGit::CredentialCB(git_credential **ACred, const char *AUrl, const char *AUs
     unsigned int AAllowedTypes, void *APayload)
 {
     TGit* LClass = static_cast<TGit*>(APayload);
-    if(LClass != NULL)
+    if(LClass != nullptr)
     {
         return LClass->DoFetchCredentials(ACred, AUrl, AUsernameFromUrl, AAllowedTypes);
     }
@@ -61,7 +58,7 @@ int TGit::CredentialCB(git_credential **ACred, const char *AUrl, const char *AUs
  * Fetch credentials.
  * @param ACred The newly created credential object.
  * @param AUrl The resource for which we are demanding a credential.
- * @param AUsernameFromUrl The username that was embedded in a "user\@host" remote url, or NULL if not included.
+ * @param AUsernameFromUrl The username that was embedded in a "user\@host" remote url, or nullptr if not included.
  * @param AAllowedTypes A bitmask stating which cred types are OK to return.
  */
 int __fastcall TGit::DoFetchCredentials(git_credential **ACred, const RawByteString AUrl,
@@ -96,7 +93,7 @@ String __fastcall TGit::Clone(const String AUrl, const String ADirectory)
 String __fastcall TGit::Clone(const String AUrl, const String ADirectory, TCloneOptions AOptions)
 {
     String LClonedRepoPath;
-    TRepositoryHandle* LRepository = NULL;
+    TRepositoryHandle* LRepository = nullptr;
 
     git_clone_options LGitCloneOptions = GIT_CLONE_OPTIONS_INIT;
     LGitCloneOptions.fetch_opts.callbacks.credentials = CredentialCB;
@@ -123,9 +120,9 @@ String __fastcall TGit::Clone(const String AUrl, const String ADirectory, TClone
 void __fastcall TGit::OpenRepository(const String ADirectory)
 {
     delete FRemote;
-    FRemote = NULL;
+    FRemote = nullptr;
     delete FRepository;
-    FRepository = NULL;
+    FRepository = nullptr;
 
     FRepository = TProxy::git_repository_open(ADirectory);
 }
@@ -140,7 +137,7 @@ void __fastcall TGit::OpenRepository(const String ADirectory)
 String __fastcall TGit::Init(const String ADirectory, bool AIsBare)
 {
     String LInitRepoPath;
-    TRepositoryHandle* LRepository = NULL;
+    TRepositoryHandle* LRepository = nullptr;
 
     try
     {
@@ -164,11 +161,11 @@ String __fastcall TGit::Init(const String ADirectory, bool AIsBare)
 void __fastcall TGit::AddRemote(const String AUrl, const String AName, const String AFetch)
 {
     delete FRemote;
-    FRemote = NULL;
+    FRemote = nullptr;
 
-    if(FRepository == NULL)
+    if(FRepository == nullptr)
     {
-        throw Exception("Repository cannot be NULL");
+        throw Exception("Repository cannot be nullptr");
     }
 
     if(AFetch.IsEmpty() == true)
@@ -190,11 +187,11 @@ void __fastcall TGit::AddRemote(const String AUrl, const String AName, const Str
 void __fastcall TGit::AddAnonymousRemote(const String AUrl)
 {
     delete FRemote;
-    FRemote = NULL;
+    FRemote = nullptr;
 
-    if(FRepository == NULL)
+    if(FRepository == nullptr)
     {
-        throw Exception("Repository cannot be NULL");
+        throw Exception("Repository cannot be nullptr");
     }
 
     FRemote = TProxy::git_remote_create_anonymous(FRepository, AUrl);
@@ -207,14 +204,27 @@ void __fastcall TGit::AddAnonymousRemote(const String AUrl)
 void __fastcall TGit::SetRemote(const String AName)
 {
     delete FRemote;
-    FRemote = NULL;
+    FRemote = nullptr;
 
-    if(FRepository == NULL)
+    if(FRepository == nullptr)
     {
-        throw Exception("Repository cannot be NULL");
+        throw Exception("Repository cannot be nullptr");
     }
 
     FRemote = TProxy::git_remote_lookup(FRepository, AName);
+}
+
+/**
+ * Get the remote name.
+ */
+String __fastcall TGit::GetRemoteName()
+{
+    if(FRemote == nullptr)
+    {
+        throw Exception("Remote cannot be nullptr");
+    }
+
+    return TProxy::git_remote_name(FRemote);
 }
 
 /**
@@ -222,13 +232,13 @@ void __fastcall TGit::SetRemote(const String AName)
  */
 void __fastcall TGit::Push()
 {
-    if(FRemote == NULL)
+    if(FRemote == nullptr)
     {
-        throw Exception("Remote cannot be NULL");
+        throw Exception("Remote cannot be nullptr");
     }
-/*
+
 git_strarray LRefspecs;
-git_remote_get_fetch_refspecs(&LRefspecs, FRemote);
+::git_remote_get_fetch_refspecs(&LRefspecs, FRemote->Handle);
 
 
 const int refcount = LRefspecs.count;
@@ -237,7 +247,7 @@ for(int i = 0; i < refcount; ++i)
     String ss = LRefspecs.strings[i];
     ss=ss;
 }
-*/
+
 
 /*
     git_push_options LPushOptions = GIT_PUSH_OPTIONS_INIT;

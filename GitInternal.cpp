@@ -4,10 +4,7 @@
 #include "GitInternal.h"
 #include <System.RTLConsts.hpp>
 #define _MSC_VER 1600
-#define STATIC_IMAXDIV
-#pragma warn -8105 // Remove warning W8105 Constant member ' ::id' in class without constructors
 #include <git2.h>
-#pragma warn .8105
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
@@ -47,12 +44,13 @@ __fastcall TRemoteHandle::~TRemoteHandle()
 
 /**
  * Raise an exception.
+ * @param AResult The result to examine.
  */
 void TEnsure::HandleError(int AResult)
 {
     String LErrorMessage;
     const git_error* LError = giterr_last();
-    if(LError == NULL)
+    if(LError == nullptr)
     {
         LErrorMessage = "No error message has been provided by the native library";
     }
@@ -78,7 +76,7 @@ void TEnsure::ZeroResult(int AResult)
 
 void TEnsure::ArgumentNotNull(void* ArgumentValue, const String AArgumentName)
 {
-    if(ArgumentValue == NULL)
+    if(ArgumentValue == nullptr)
     {
         throw EArgumentNilException(Sysutils::Format(System_Rtlconsts_SParamIsNil, ARRAYOFCONST((AArgumentName))));
     }
@@ -92,6 +90,13 @@ void TEnsure::ArgumentEmptyString(const String ArgumentValue, const String AArgu
     }
 }
 
+/**
+ * Clone a remote repository.
+ * @param AUrl The remote repository to clone.
+ * @param AWorkDir The local directory to clone to.
+ * @param AOptions Controls the clone behavior.
+ * @return Returns a TRepositoryHandle.
+ */
 TRepositoryHandle* TProxy::git_clone(const String AUrl, const String AWorkDir, git_clone_options AOptions)
 {
     const RawByteString LUtf8Url = System::UTF8Encode(AUrl);
@@ -103,6 +108,11 @@ TRepositoryHandle* TProxy::git_clone(const String AUrl, const String AWorkDir, g
     return new TRepositoryHandle(LRepo);
 }
 
+/**
+ * Open a git repository.
+ * @param Apath The path to the repository.
+ * @return Returns a TRepositoryHandle.
+ */
 TRepositoryHandle* TProxy::git_repository_open(const String Apath)
 {
     git_repository *LRepo;
@@ -116,6 +126,7 @@ TRepositoryHandle* TProxy::git_repository_open(const String Apath)
  * @param Apath The path to the repository.
  * @param AIsBare If true, a Git repository without a working directory is created at the pointed path.
  *                If false, provided path will be considered as the working directory into which the .git directory will be created.
+ * @return Returns a TRepositoryHandle.
  */
 TRepositoryHandle* TProxy::git_repository_init(const String Apath, unsigned int AIsBare)
 {
@@ -158,6 +169,11 @@ TRemoteHandle* TProxy::git_remote_lookup(TRepositoryHandle* ARepo, const String 
     int LRes = ::git_remote_lookup(&LHandle, ARepo->Handle, System::UTF8Encode(AName).c_str());
     TEnsure::ZeroResult(LRes);
     return new TRemoteHandle(LHandle);
+}
+
+String TProxy::git_remote_name(TRemoteHandle* ARemote)
+{
+    return UTF8ToUnicodeString(::git_remote_name(ARemote->Handle));
 }
 
 String TProxy::git_repository_path(TRepositoryHandle* ARepo)
