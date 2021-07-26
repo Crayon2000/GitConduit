@@ -6,7 +6,7 @@
         <MainSource>GitConduit.cpp</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>1043</TargetedPlatforms>
         <AppType>Application</AppType>
     </PropertyGroup>
@@ -41,6 +41,12 @@
     <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
         <Cfg_1>true</Cfg_1>
         <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Android' and '$(Cfg_1)'=='true') or '$(Cfg_1_Android)'!=''">
+        <Cfg_1_Android>true</Cfg_1_Android>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='iOSDevice64' and '$(Cfg_1)'=='true') or '$(Cfg_1_iOSDevice64)'!=''">
@@ -90,6 +96,12 @@
         <Cfg_2>true</Cfg_2>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win64)'!=''">
         <Cfg_2_Win64>true</Cfg_2_Win64>
         <CfgParent>Cfg_2</CfgParent>
@@ -124,6 +136,8 @@
         <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
         <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\release\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
+        <IncludePath>libgit2\include\git2\;libgit2\include\;$(IncludePath)</IncludePath>
+        <ILINK_LibraryPath>libgit2;libgit2\include\;libgit2\include\git2\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <Android_SplashTileMode>disabled</Android_SplashTileMode>
@@ -152,6 +166,7 @@
         <Android_NotificationIcon72>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_72x72.png</Android_NotificationIcon72>
         <Android_NotificationIcon96>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_96x96.png</Android_NotificationIcon96>
         <Android_LauncherIcon192>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
+        <Android_NotificationAccentColor>#000000</Android_NotificationAccentColor>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
         <iPhone_AppIcon180>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png</iPhone_AppIcon180>
@@ -255,8 +270,14 @@
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\debug\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Android)'!=''">
+        <VerInfo_Build>1</VerInfo_Build>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_iOSDevice64)'!=''">
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
+        <VerInfo_BundleId>$(MSBuildProjectName)</VerInfo_BundleId>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_iOSSimulator)'!=''">
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
@@ -264,9 +285,16 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <BT_BuildType>Debug</BT_BuildType>
         <LinkPackageStatics>rtl.lib;fmx.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib</LinkPackageStatics>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Icon_MainIcon>images\app.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <BT_BuildType>Debug</BT_BuildType>
+        <LinkPackageStatics>rtl.lib;fmx.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib</LinkPackageStatics>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Icon_MainIcon>images\app.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DynamicRTL>false</DynamicRTL>
@@ -275,23 +303,36 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Android)'!=''">
         <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
+        <VerInfo_Build>1</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_iOSDevice64)'!=''">
         <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
-        <iPhone_Notification60>$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png</iPhone_Notification60>
-        <iPhone_Setting87>$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_87x87.png</iPhone_Setting87>
-        <iPhone_Notification40>$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png</iPhone_Notification40>
-        <iPhone_Setting58>$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_58x58.png</iPhone_Setting58>
-        <iPad_Notification40>$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png</iPad_Notification40>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
+        <VerInfo_BundleId>$(MSBuildProjectName)</VerInfo_BundleId>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_iOSSimulator)'!=''">
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <LinkPackageStatics>rtl.lib;fmx.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib</LinkPackageStatics>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Icon_MainIcon>images\app.ico</Icon_MainIcon>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <BCC_PCHName_Clang>GitConduitPCH.h</BCC_PCHName_Clang>
+        <LinkPackageStatics>rtl.lib;fmx.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib</LinkPackageStatics>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Icon_MainIcon>images\app.ico</Icon_MainIcon>
     </PropertyGroup>
     <ItemGroup>
+        <CppCompile Include="Git.cpp">
+            <DependentOn>Git.h</DependentOn>
+            <BuildOrder>7</BuildOrder>
+        </CppCompile>
         <CppCompile Include="GitApplication.cpp">
             <DependentOn>GitApplication.h</DependentOn>
             <BuildOrder>3</BuildOrder>
@@ -303,6 +344,10 @@
             <BuildOrder>2</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>
+        <CppCompile Include="GitInternal.cpp">
+            <DependentOn>GitInternal.h</DependentOn>
+            <BuildOrder>8</BuildOrder>
+        </CppCompile>
         <CppCompile Include="GitRepository.cpp">
             <DependentOn>GitRepository.h</DependentOn>
             <BuildOrder>4</BuildOrder>
@@ -314,6 +359,207 @@
             <DependentOn>HttpModule.h</DependentOn>
             <BuildOrder>6</BuildOrder>
         </CppCompile>
+        <None Include="libgit2\include\git2.h">
+            <BuildOrder>9</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\annotated_commit.h">
+            <BuildOrder>10</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\apply.h">
+            <BuildOrder>11</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\attr.h">
+            <BuildOrder>12</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\blame.h">
+            <BuildOrder>13</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\blob.h">
+            <BuildOrder>14</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\branch.h">
+            <BuildOrder>15</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\buffer.h">
+            <BuildOrder>16</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\cert.h">
+            <BuildOrder>17</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\checkout.h">
+            <BuildOrder>18</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\cherrypick.h">
+            <BuildOrder>19</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\clone.h">
+            <BuildOrder>20</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\commit.h">
+            <BuildOrder>21</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\common.h">
+            <BuildOrder>22</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\config.h">
+            <BuildOrder>23</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\credential.h">
+            <BuildOrder>25</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\credential_helpers.h">
+            <BuildOrder>26</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\cred_helpers.h">
+            <BuildOrder>24</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\deprecated.h">
+            <BuildOrder>27</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\describe.h">
+            <BuildOrder>28</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\diff.h">
+            <BuildOrder>29</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\errors.h">
+            <BuildOrder>30</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\filter.h">
+            <BuildOrder>31</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\global.h">
+            <BuildOrder>32</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\graph.h">
+            <BuildOrder>33</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\ignore.h">
+            <BuildOrder>34</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\index.h">
+            <BuildOrder>35</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\indexer.h">
+            <BuildOrder>36</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\mailmap.h">
+            <BuildOrder>37</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\merge.h">
+            <BuildOrder>38</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\message.h">
+            <BuildOrder>39</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\net.h">
+            <BuildOrder>40</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\notes.h">
+            <BuildOrder>41</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\object.h">
+            <BuildOrder>42</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\odb.h">
+            <BuildOrder>43</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\odb_backend.h">
+            <BuildOrder>44</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\oid.h">
+            <BuildOrder>45</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\oidarray.h">
+            <BuildOrder>46</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\pack.h">
+            <BuildOrder>47</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\patch.h">
+            <BuildOrder>48</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\pathspec.h">
+            <BuildOrder>49</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\proxy.h">
+            <BuildOrder>50</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\rebase.h">
+            <BuildOrder>51</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\refdb.h">
+            <BuildOrder>52</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\reflog.h">
+            <BuildOrder>53</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\refs.h">
+            <BuildOrder>54</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\refspec.h">
+            <BuildOrder>55</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\remote.h">
+            <BuildOrder>56</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\repository.h">
+            <BuildOrder>57</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\reset.h">
+            <BuildOrder>58</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\revert.h">
+            <BuildOrder>59</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\revparse.h">
+            <BuildOrder>60</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\revwalk.h">
+            <BuildOrder>61</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\signature.h">
+            <BuildOrder>62</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\stash.h">
+            <BuildOrder>63</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\status.h">
+            <BuildOrder>64</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\stdint.h">
+            <BuildOrder>65</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\strarray.h">
+            <BuildOrder>66</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\submodule.h">
+            <BuildOrder>67</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\tag.h">
+            <BuildOrder>68</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\trace.h">
+            <BuildOrder>69</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\transaction.h">
+            <BuildOrder>70</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\transport.h">
+            <BuildOrder>71</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\tree.h">
+            <BuildOrder>72</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\types.h">
+            <BuildOrder>73</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\version.h">
+            <BuildOrder>74</BuildOrder>
+        </None>
+        <None Include="libgit2\include\git2\worktree.h">
+            <BuildOrder>75</BuildOrder>
+        </None>
         <CppCompile Include="Main.cpp">
             <Form>Form2</Form>
             <FormType>fmx</FormType>
@@ -352,6 +598,10 @@
                 <Source>
                     <Source Name="MainSource">GitConduit.cpp</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k270.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp270.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+                </Excluded_Packages>
             </CPlusPlusBuilder.Personality>
             <Deployment Version="3">
                 <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32270mt.dll" Class="DependencyModule">
@@ -364,8 +614,10 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx64\libcgcrtl.dylib" Class="DependencyModule">
-                    <Platform Name="OSX64">
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32220mt.dll" Class="DependencyModule"/>
+                <DeployFile LocalName=".\Win64\Release\GitConduit.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>GitConduit.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -388,7 +640,6 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName=".\Win32\Debug\GitConduit.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName=".\Win32\Debug\GitConduit.tds" Configuration="Debug" Class="DebugSymbols"/>
                 <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin64\cc64270mt.dll" Class="DependencyModule">
                     <Platform Name="Win64">
                         <Overwrite>true</Overwrite>
@@ -460,12 +711,16 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx64\libcgcrtl.dylib" Class="DependencyModule">
+                    <Platform Name="OSX64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32c270mt.dll" Class="DependencyModule">
                     <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32220mt.dll" Class="DependencyModule"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

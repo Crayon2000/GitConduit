@@ -1,0 +1,167 @@
+//---------------------------------------------------------------------------
+#pragma hdrstop
+
+#include "GitInternal.h"
+#include <System.RTLConsts.hpp>
+#define _MSC_VER 1600
+#define STATIC_IMAXDIV
+#pragma warn -8105 // Remove warning W8105 Constant member ' ::id' in class without constructors
+#include <git2.h>
+#pragma warn .8105
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+/**
+ * Constructor.
+ */
+__fastcall TRepositoryHandle::TRepositoryHandle(git_repository* APointer) :
+    System::TObject(),
+    FPointer(APointer)
+{
+}
+
+/**
+ * Destructor.
+ */
+__fastcall TRepositoryHandle::~TRepositoryHandle()
+{
+    git_repository_free(FPointer);
+}
+
+/**
+ * Constructor.
+ */
+__fastcall TRemoteHandle::TRemoteHandle(git_remote* APointer) :
+    System::TObject(),
+    FPointer(APointer)
+{
+}
+
+/**
+ * Destructor.
+ */
+__fastcall TRemoteHandle::~TRemoteHandle()
+{
+    git_remote_free(FPointer);
+}
+
+/**
+ * Raise an exception.
+ */
+void TEnsure::HandleError(int AResult)
+{
+    String LErrorMessage;
+    const git_error* LError = giterr_last();
+    if(LError == NULL)
+    {
+        LErrorMessage = "No error message has been provided by the native library";
+    }
+    else
+    {
+        LErrorMessage = UTF8ToString(LError->message);
+    }
+    throw Exception("Error " + String(AResult) + ": " + LErrorMessage);
+}
+
+/**
+ * Check that the result of a C call was successful.
+ * @param AResult The result to examine.
+ */
+void TEnsure::ZeroResult(int AResult)
+{
+    if(AResult == GIT_OK)
+    {
+        return;
+    }
+    HandleError(AResult);
+}
+
+void TEnsure::ArgumentNotNull(void* ArgumentValue, const String AArgumentName)
+{
+    if(ArgumentValue == NULL)
+    {
+        throw EArgumentNilException(Sysutils::Format(System_Rtlconsts_SParamIsNil, ARRAYOFCONST((AArgumentName))));
+    }
+}
+
+void TEnsure::ArgumentEmptyString(const String ArgumentValue, const String AArgumentName)
+{
+    if(ArgumentValue.IsEmpty() == true)
+    {
+        throw EArgumentException(String("Parameter ") + AArgumentName + " is empty!");
+    }
+}
+
+TRepositoryHandle* TProxy::git_clone(const String AUrl, const String AWorkDir, git_clone_options AOptions)
+{
+    const RawByteString LUtf8Url = System::UTF8Encode(AUrl);
+    const RawByteString LUtf8Directory = System::UTF8Encode(AWorkDir);
+
+    git_repository *LRepo;
+    int LRes = ::git_clone(&LRepo, LUtf8Url.c_str(), LUtf8Directory.c_str(), &AOptions);
+    TEnsure::ZeroResult(LRes);
+    return new TRepositoryHandle(LRepo);
+}
+
+TRepositoryHandle* TProxy::git_repository_open(const String Apath)
+{
+    git_repository *LRepo;
+    int LRes = ::git_repository_open(&LRepo, System::UTF8Encode(Apath).c_str());
+    TEnsure::ZeroResult(LRes);
+    return new TRepositoryHandle(LRepo);
+}
+
+/**
+ * Creates a new Git repository in the given folder.
+ * @param Apath The path to the repository.
+ * @param AIsBare If true, a Git repository without a working directory is created at the pointed path.
+ *                If false, provided path will be considered as the working directory into which the .git directory will be created.
+ */
+TRepositoryHandle* TProxy::git_repository_init(const String Apath, unsigned int AIsBare)
+{
+    git_repository *LRepo;
+    int LRes = ::git_repository_init(&LRepo, System::UTF8Encode(Apath).c_str(), AIsBare);
+    TEnsure::ZeroResult(LRes);
+    return new TRepositoryHandle(LRepo);
+}
+
+TRemoteHandle* TProxy::git_remote_create(TRepositoryHandle* ARepo, const String AName, const String AUrl)
+{
+    git_remote* LHandle;
+    int LRes = ::git_remote_create(&LHandle, ARepo->Handle,
+        System::UTF8Encode(AName).c_str(), System::UTF8Encode(AUrl).c_str());
+    TEnsure::ZeroResult(LRes);
+    return new TRemoteHandle(LHandle);
+}
+
+TRemoteHandle* TProxy::git_remote_create_with_fetchspec(TRepositoryHandle* ARepo, const String AName, const String AUrl, const String ARefSpec)
+{
+    git_remote* LHandle;
+    int LRes = ::git_remote_create_with_fetchspec(&LHandle, ARepo->Handle,
+        System::UTF8Encode(AName).c_str(), System::UTF8Encode(AUrl).c_str(),
+        System::UTF8Encode(ARefSpec).c_str());
+    TEnsure::ZeroResult(LRes);
+    return new TRemoteHandle(LHandle);
+}
+
+TRemoteHandle* TProxy::git_remote_create_anonymous(TRepositoryHandle* ARepo, const String AUrl)
+{
+    git_remote* LHandle;
+    int LRes = ::git_remote_create_anonymous(&LHandle, ARepo->Handle, System::UTF8Encode(AUrl).c_str());
+    TEnsure::ZeroResult(LRes);
+    return new TRemoteHandle(LHandle);
+}
+
+TRemoteHandle* TProxy::git_remote_lookup(TRepositoryHandle* ARepo, const String AName)
+{
+    git_remote* LHandle;
+    int LRes = ::git_remote_lookup(&LHandle, ARepo->Handle, System::UTF8Encode(AName).c_str());
+    TEnsure::ZeroResult(LRes);
+    return new TRemoteHandle(LHandle);
+}
+
+String TProxy::git_repository_path(TRepositoryHandle* ARepo)
+{
+    return UTF8ToUnicodeString(::git_repository_path(ARepo->Handle));
+}
+

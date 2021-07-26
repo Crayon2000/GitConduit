@@ -6,8 +6,8 @@
 #pragma hdrstop
 #include <System.StartUpCopy.hpp>
 //---------------------------------------------------------------------------
-USEFORM("Main.cpp", Form2);
 USEFORM("HttpModule.cpp", DataModule1); /* TDataModule: File Type */
+USEFORM("Main.cpp", Form2);
 //---------------------------------------------------------------------------
 void __fastcall UpdateStyle();
 void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const String AStyleLookup);
