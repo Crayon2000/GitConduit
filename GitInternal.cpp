@@ -56,7 +56,7 @@ void TEnsure::HandleError(int AResult)
     }
     else
     {
-        LErrorMessage = UTF8ToString(LError->message);
+        LErrorMessage = UTF8ToString(LError->message).Trim();
     }
     throw Exception("Error " + String(AResult) + ": " + LErrorMessage);
 }
@@ -176,8 +176,28 @@ String TProxy::git_remote_name(TRemoteHandle* ARemote)
     return UTF8ToUnicodeString(::git_remote_name(ARemote->Handle));
 }
 
+void TProxy::git_remote_set_pushurl(TRepositoryHandle* ARepo, const String AName, const String AUrl)
+{
+    int LRes = ::git_remote_set_pushurl(ARepo->Handle,
+        System::UTF8Encode(AName).c_str(),
+        System::UTF8Encode(AUrl).c_str());
+    TEnsure::ZeroResult(LRes);
+}
+
 String TProxy::git_repository_path(TRepositoryHandle* ARepo)
 {
     return UTF8ToUnicodeString(::git_repository_path(ARepo->Handle));
+}
+
+/**
+ * Perform a push.
+ * @param ARemote The remote to push to.
+ * @param ARefSpecs The refspecs to use for pushing. If nullptr or an empty array, the configured refspecs will be used.
+ * @param AOptions Options to use for this push.
+ */
+void TProxy::git_remote_push(TRemoteHandle* ARemote, const git_strarray* ARefSpecs, const git_push_options* AOptions)
+{
+    int LRes = ::git_remote_push(ARemote->Handle, ARefSpecs, AOptions);
+    TEnsure::ZeroResult(LRes);
 }
 

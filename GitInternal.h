@@ -8,6 +8,8 @@ struct git_repository;
 struct git_remote;
 struct git_credential;
 struct git_clone_options;
+struct git_strarray;
+class git_push_options;
 
 class TRepositoryHandle : public System::TObject
 {
@@ -51,10 +53,13 @@ public:
     static TRemoteHandle* git_remote_create_with_fetchspec(TRepositoryHandle* ARepo, const String AName, const String AUrl, const String ARefSpec);
     static TRemoteHandle* git_remote_create_anonymous(TRepositoryHandle* ARepo, const String AUrl);
     static TRemoteHandle* git_remote_lookup(TRepositoryHandle* ARepo, const String AName);
+    static void git_remote_set_pushurl(TRepositoryHandle* ARepo, const String AName, const String AUrl);
 
     static String git_remote_name(TRemoteHandle* ARemote);
 
     static String git_repository_path(TRepositoryHandle* ARepo);
+
+    static void git_remote_push(TRemoteHandle* ARemote, const git_strarray* ARefSpecs, const git_push_options* AOptions);
 };
 //---------------------------------------------------------------------------
 #endif

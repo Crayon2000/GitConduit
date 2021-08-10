@@ -7,6 +7,8 @@
 class TRepositoryHandle;
 class TRemoteHandle;
 struct git_credential;
+struct git_remote;
+struct git_repository;
 
 class TCloneOptions
 {
@@ -19,14 +21,14 @@ class TGit : public System::TObject
 {
     typedef System::TObject inherited;
 
-private:	// User declarations
+private:    // User declarations
     TRepositoryHandle* FRepository;
     TRemoteHandle* FRemote;
     RawByteString FUsername;
     RawByteString FPassword;
 
-    static int CredentialCB(git_credential **ACred, const char *AUrl, const char *AUsernameFromUrl, unsigned int AAllowedTypes, void *APayload);
-
+    static int CredentialCallback(git_credential **ACred, const char *AUrl, const char *AUsernameFromUrl, unsigned int AAllowedTypes, void *APayload);
+    static int RemoteCallback(git_remote **AOut, git_repository *ARepo, const char *AName, const char *AUrl, void *APayload);
 
 protected:
     void __fastcall SetUsername(String AUsername);
@@ -46,6 +48,7 @@ public:
     void __fastcall AddRemote(const String AUrl, const String AName, const String AFetch = "");
     void __fastcall AddAnonymousRemote(const String AUrl);
     void __fastcall SetRemote(const String AName);
+    void __fastcall SetRemotePushUrl(const String AName, const String AUrl);
     String __fastcall GetRemoteName();
     void __fastcall Push();
 

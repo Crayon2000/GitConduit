@@ -39,19 +39,60 @@ __fastcall TGit::~TGit()
  * @param AUsernameFromUrl The username that was embedded in a "user\@host" remote url, or nullptr if not included.
  * @param AAllowedTypes A bitmask stating which cred types are OK to return.
  * @param APayload The payload provided when specifying this callback.
+ * @return 0 for success or an error code for failure.
  */
-int TGit::CredentialCB(git_credential **ACred, const char *AUrl, const char *AUsernameFromUrl,
+int TGit::CredentialCallback(git_credential **ACred, const char *AUrl, const char *AUsernameFromUrl,
     unsigned int AAllowedTypes, void *APayload)
 {
+    int LResult = GIT_EUSER;
     TGit* LClass = static_cast<TGit*>(APayload);
     if(LClass != nullptr)
     {
-        return LClass->DoFetchCredentials(ACred, AUrl, AUsernameFromUrl, AAllowedTypes);
+        if(GIT_CREDENTIAL_USERPASS_PLAINTEXT & AAllowedTypes)
+        {
+            LResult = LClass->DoFetchCredentials(ACred, AUrl, AUsernameFromUrl, AAllowedTypes);
+        }
     }
-    else
+    return LResult;
+}
+
+/**
+ * Remote creation callback.
+ * @param AOut the resulting remote.
+ * @param ARepo the repository in which to create the remote.
+ * @param AName the remote's name.
+ * @param AUrl the remote's URL.
+ * @param APayload an opaque payload.
+ * @return 0, GIT_EINVALIDSPEC, GIT_EEXISTS or an error code.
+ */
+int TGit::RemoteCallback(git_remote **AOut, git_repository *ARepo, const char *AName, const char *AUrl, void *APayload)
+{
+/*
+    TGit* LClass = static_cast<TGit*>(APayload);
+    if(LClass == nullptr)
     {
-        return GIT_EUSER;
+        return GIT_ERROR;
     }
+
+    LClass->AddRemote(AUrl, AName, "");
+
+    AOut = &LClass->FRemote->Handle;
+*/
+
+    // Default:
+    // int error = git_remote_create(&remote, ARepo, AName, AUrl);
+
+    git_remote *LRemote;
+
+    int LError = git_remote_create_with_fetchspec(&LRemote, ARepo, AName, AUrl, "+refs/*:refs/*");
+    if (LError < 0)
+    {
+        return LError;
+    }
+
+    *AOut = LRemote;
+
+    return GIT_OK;
 }
 
 /**
@@ -64,8 +105,11 @@ int TGit::CredentialCB(git_credential **ACred, const char *AUrl, const char *AUs
 int __fastcall TGit::DoFetchCredentials(git_credential **ACred, const RawByteString AUrl,
     const RawByteString AUsernameFromUrl, unsigned int AAllowedTypes)
 {
-    int Result = git_cred_userpass_plaintext_new(ACred,
-        FUsername.c_str(), FPassword.c_str());
+    const RawByteString LUsername = System::UTF8Encode(FUsername);
+    const RawByteString LPassword = System::UTF8Encode(FPassword);
+
+    int Result = ::git_credential_userpass_plaintext_new(ACred,
+        LUsername.c_str(), LPassword.c_str());
 
     return Result;
 }
@@ -96,9 +140,11 @@ String __fastcall TGit::Clone(const String AUrl, const String ADirectory, TClone
     TRepositoryHandle* LRepository = nullptr;
 
     git_clone_options LGitCloneOptions = GIT_CLONE_OPTIONS_INIT;
-    LGitCloneOptions.fetch_opts.callbacks.credentials = CredentialCB;
+    LGitCloneOptions.fetch_opts.callbacks.credentials = CredentialCallback;
     LGitCloneOptions.fetch_opts.callbacks.payload = this;
     LGitCloneOptions.bare = AOptions.IsBare;
+    LGitCloneOptions.remote_cb = RemoteCallback;
+    LGitCloneOptions.remote_cb_payload = this;
 
     try
     {
@@ -214,6 +260,11 @@ void __fastcall TGit::SetRemote(const String AName)
     FRemote = TProxy::git_remote_lookup(FRepository, AName);
 }
 
+void __fastcall TGit::SetRemotePushUrl(const String AName, const String AUrl)
+{
+    TProxy::git_remote_set_pushurl(FRepository, AName, AUrl);
+}
+
 /**
  * Get the remote name.
  */
@@ -237,33 +288,44 @@ void __fastcall TGit::Push()
         throw Exception("Remote cannot be nullptr");
     }
 
-git_strarray LRefspecs;
-::git_remote_get_fetch_refspecs(&LRefspecs, FRemote->Handle);
+
+    git_strarray LRefspecs;
+    ::git_reference_list(&LRefspecs, FRepository->Handle);
+
+    int refcount = LRefspecs.count;
+    for(int i = 0; i < refcount; ++i)
+    {
+        String ss = LRefspecs.strings[i];
+        ss=ss;
+    }
 
 
-const int refcount = LRefspecs.count;
-for(int i = 0; i < refcount; ++i)
-{
-    String ss = LRefspecs.strings[i];
-    ss=ss;
-}
+//	char *refspec = "refs/heads/master";
+//	const git_strarray refspecs = {
+//		&refspec,
+//		1
+//	};
 
 
-/*
-    git_push_options LPushOptions = GIT_PUSH_OPTIONS_INIT;
-    LPushOptions.callbacks.credentials = CredentialCB;
+    git_push_options LPushOptions;
+    ::git_push_options_init(&LPushOptions, GIT_PUSH_OPTIONS_VERSION);
+    LPushOptions.pb_parallelism = 1;
+    LPushOptions.callbacks.credentials = CredentialCallback;
     LPushOptions.callbacks.payload = this;
 
-    int LRet = git_remote_push(FRemote, &LRefspecs, &LPushOptions);
-    Ensure::ZeroResult(LRet);
-*/
+    /**
+     * If the transport being used to push to the remote requires the creation
+     * of a pack file, this controls the number of worker threads used by
+     * the packbuilder when creating that pack file to be sent to the remote.
+     *
+     * If set to 0, the packbuilder will auto-detect the number of threads
+     * to create. The default value is 1.
+     */
 
-//git_strarray_free(&LRefspecs);
-/*
-GIT_EXTERN(int) git_remote_push(git_remote *remote,
-                const git_strarray *refspecs,
-                const git_push_options *opts);
-*/
+    TProxy::git_remote_push(FRemote, &LRefspecs, &LPushOptions);
+
+
+    ::git_strarray_dispose(&LRefspecs);
 }
 
 /**

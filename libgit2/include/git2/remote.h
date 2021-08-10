@@ -712,7 +712,7 @@ GIT_EXTERN(int) git_fetch_options_init(
 /**
  * Controls the behavior of a git_push object.
  */
-typedef struct {
+typedef struct git_push_options {
 	unsigned int version;
 
 	/**
