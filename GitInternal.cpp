@@ -49,8 +49,8 @@ __fastcall TRemoteHandle::~TRemoteHandle()
 void TEnsure::HandleError(int AResult)
 {
     String LErrorMessage;
-    const git_error* LError = giterr_last();
-    if(LError == nullptr)
+    const git_error* LError = git_error_last();
+    if(LError == nullptr || LError->message == nullptr)
     {
         LErrorMessage = "No error message has been provided by the native library";
     }
@@ -136,6 +136,9 @@ TRepositoryHandle* TProxy::git_repository_init(const String Apath, unsigned int 
     return new TRepositoryHandle(LRepo);
 }
 
+/**
+ * TBD
+ */
 TRemoteHandle* TProxy::git_remote_create(TRepositoryHandle* ARepo, const String AName, const String AUrl)
 {
     git_remote* LHandle;
@@ -145,6 +148,9 @@ TRemoteHandle* TProxy::git_remote_create(TRepositoryHandle* ARepo, const String 
     return new TRemoteHandle(LHandle);
 }
 
+/**
+ * TBD
+ */
 TRemoteHandle* TProxy::git_remote_create_with_fetchspec(TRepositoryHandle* ARepo, const String AName, const String AUrl, const String ARefSpec)
 {
     git_remote* LHandle;
@@ -155,6 +161,9 @@ TRemoteHandle* TProxy::git_remote_create_with_fetchspec(TRepositoryHandle* ARepo
     return new TRemoteHandle(LHandle);
 }
 
+/**
+ * TBD
+ */
 TRemoteHandle* TProxy::git_remote_create_anonymous(TRepositoryHandle* ARepo, const String AUrl)
 {
     git_remote* LHandle;
@@ -163,6 +172,9 @@ TRemoteHandle* TProxy::git_remote_create_anonymous(TRepositoryHandle* ARepo, con
     return new TRemoteHandle(LHandle);
 }
 
+/**
+ * TBD
+ */
 TRemoteHandle* TProxy::git_remote_lookup(TRepositoryHandle* ARepo, const String AName)
 {
     git_remote* LHandle;
@@ -171,11 +183,22 @@ TRemoteHandle* TProxy::git_remote_lookup(TRepositoryHandle* ARepo, const String 
     return new TRemoteHandle(LHandle);
 }
 
+/**
+ * Get the remote's name.
+ * @param ARemote The remote handle.
+ * @return The remote's name.
+ */
 String TProxy::git_remote_name(TRemoteHandle* ARemote)
 {
     return UTF8ToUnicodeString(::git_remote_name(ARemote->Handle));
 }
 
+/**
+ * Set the remote's URL for pushing in the configuration.
+ * @param ARepo The repository in which to perform the change.
+ * @param AName The remote's name.
+ * @param AUrl The url to set.
+ */
 void TProxy::git_remote_set_pushurl(TRepositoryHandle* ARepo, const String AName, const String AUrl)
 {
     int LRes = ::git_remote_set_pushurl(ARepo->Handle,
@@ -184,6 +207,11 @@ void TProxy::git_remote_set_pushurl(TRepositoryHandle* ARepo, const String AName
     TEnsure::ZeroResult(LRes);
 }
 
+/**
+ * Get the path of the repository.
+ * @param ARepo A repository handle.
+ * @return The path to the repository.
+ */
 String TProxy::git_repository_path(TRepositoryHandle* ARepo)
 {
     return UTF8ToUnicodeString(::git_repository_path(ARepo->Handle));

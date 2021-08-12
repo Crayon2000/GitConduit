@@ -260,6 +260,11 @@ void __fastcall TGit::SetRemote(const String AName)
     FRemote = TProxy::git_remote_lookup(FRepository, AName);
 }
 
+/**
+ * Set the remote's URL for pushing in the configuration.
+ * @param AName The remote's name.
+ * @param AUrl The url to set.
+ */
 void __fastcall TGit::SetRemotePushUrl(const String AName, const String AUrl)
 {
     TProxy::git_remote_set_pushurl(FRepository, AName, AUrl);
@@ -267,6 +272,7 @@ void __fastcall TGit::SetRemotePushUrl(const String AName, const String AUrl)
 
 /**
  * Get the remote name.
+ * @return The remote's name.
  */
 String __fastcall TGit::GetRemoteName()
 {
