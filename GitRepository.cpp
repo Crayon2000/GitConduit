@@ -22,12 +22,12 @@ void __fastcall JsonToUser(TJSONObject* AJsonObject, TUser* AUser)
     TJSONPair* Pair;
     TJSONObject* LUser = AJsonObject;
 
-    if(LUser == NULL)
+    if(LUser == nullptr)
     {
         throw Exception("Invalid JSON input!");
     }
 
-    if((Pair = LUser->Get("login")) != NULL)
+    if((Pair = LUser->Get("login")) != nullptr)
     {
         AUser->Login = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
@@ -63,12 +63,12 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     TJSONPair* Pair;
     TJSONObject* LRepo = AJsonObject;
 
-    if(LRepo == NULL)
+    if(LRepo == nullptr)
     {
         throw Exception("Invalid JSON input!");
     }
 
-    if((Pair = LRepo->Get("owner")) != NULL)
+    if((Pair = LRepo->Get("owner")) != nullptr)
     {
         TJSONObject* LOwner = static_cast<TJSONObject*>(Pair->JsonValue);
         JsonToUser(LOwner, ARepository->Owner);
@@ -80,7 +80,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     }
 #endif
 
-    if((Pair = LRepo->Get("name")) != NULL)
+    if((Pair = LRepo->Get("name")) != nullptr)
     {
         ARepository->Name = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
@@ -91,7 +91,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     }
 #endif
 
-    if((Pair = LRepo->Get("full_name")) != NULL)
+    if((Pair = LRepo->Get("full_name")) != nullptr)
     {
         ARepository->FullName = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
@@ -102,9 +102,9 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     }
 #endif
 
-    if((Pair = LRepo->Get("private")) != NULL)
+    if((Pair = LRepo->Get("private")) != nullptr)
     {
-        if(dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+        if(dynamic_cast<TJSONFalse*>(Pair->JsonValue) != nullptr)
         {
             ARepository->Private = false;
         }
@@ -120,7 +120,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     }
 #endif
 
-    if((Pair = LRepo->Get("description")) != NULL)
+    if((Pair = LRepo->Get("description")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
@@ -139,8 +139,8 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     }
 #endif
 
-    if((Pair = LRepo->Get("fork")) != NULL &&
-        dynamic_cast<TJSONTrue*>(Pair->JsonValue) != NULL)
+    if((Pair = LRepo->Get("fork")) != nullptr &&
+        dynamic_cast<TJSONTrue*>(Pair->JsonValue) != nullptr)
     {
         ARepository->Fork = true;
     }
@@ -149,7 +149,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
         ARepository->Fork = false;
     }
 
-    if((Pair = LRepo->Get("clone_url")) != NULL)
+    if((Pair = LRepo->Get("clone_url")) != nullptr)
     {
         ARepository->CloneUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
@@ -160,8 +160,8 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     }
 #endif
 
-    if((Pair = LRepo->Get("mirror_url")) != NULL &&
-        dynamic_cast<TJSONNull*>(Pair->JsonValue) == NULL)
+    if((Pair = LRepo->Get("mirror_url")) != nullptr &&
+        dynamic_cast<TJSONNull*>(Pair->JsonValue) == nullptr)
     {
         ARepository->MirrorUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
@@ -170,7 +170,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
         ARepository->MirrorUrl = "";
     }
 
-    if((Pair = LRepo->Get("open_issues_count")) != NULL)
+    if((Pair = LRepo->Get("open_issues_count")) != nullptr)
     {
         TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
         ARepository->OpenIssueCount = LIssueNumber->AsInt;
@@ -180,8 +180,8 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
         ARepository->OpenIssueCount = 0;
     }
 
-    if((Pair = LRepo->Get("has_wiki")) != NULL &&
-        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+    if((Pair = LRepo->Get("has_wiki")) != nullptr &&
+        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != nullptr)
     {
         ARepository->HasWiki = false;
     }
@@ -190,8 +190,8 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
         ARepository->HasWiki = true;
     }
 
-    if((Pair = LRepo->Get("has_issues")) != NULL &&
-        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+    if((Pair = LRepo->Get("has_issues")) != nullptr &&
+        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != nullptr)
     {
         ARepository->HasIssues = false;
     }
@@ -200,8 +200,8 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
         ARepository->HasIssues = true;
     }
 
-    if((Pair = LRepo->Get("has_projects")) != NULL &&
-        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+    if((Pair = LRepo->Get("has_projects")) != nullptr &&
+        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != nullptr)
     {
         ARepository->HasProjects = false;
     }
@@ -210,8 +210,8 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
         ARepository->HasProjects = true;
     }
 
-    if((Pair = LRepo->Get("has_downloads")) != NULL &&
-        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != NULL)
+    if((Pair = LRepo->Get("has_downloads")) != nullptr &&
+        dynamic_cast<TJSONFalse*>(Pair->JsonValue) != nullptr)
     {
         ARepository->HasDownloads = false;
     }
@@ -220,8 +220,8 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
         ARepository->HasDownloads = true;
     }
 
-    if((Pair = LRepo->Get("homepage")) != NULL &&
-        dynamic_cast<TJSONNull*>(Pair->JsonValue) == NULL)
+    if((Pair = LRepo->Get("homepage")) != nullptr &&
+        dynamic_cast<TJSONNull*>(Pair->JsonValue) == nullptr)
     {
         ARepository->Homepage = static_cast<TJSONString*>(Pair->JsonValue)->Value();
     }
@@ -248,13 +248,13 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue)
     TJSONPair* Pair;
     TJSONObject* LIssue = AJsonObject;
 
-    if(LIssue == NULL)
+    if(LIssue == nullptr)
     {
         throw Exception("Invalid JSON input!");
     }
 
     AIssue->Title = "";
-    if((Pair = LIssue->Get("title")) != NULL)
+    if((Pair = LIssue->Get("title")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
@@ -264,7 +264,7 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue)
     }
 
     AIssue->Body = "";
-    if((Pair = LIssue->Get("body")) != NULL)
+    if((Pair = LIssue->Get("body")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
@@ -274,7 +274,7 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue)
     }
 
     AIssue->State = "";
-    if((Pair = LIssue->Get("state")) != NULL)
+    if((Pair = LIssue->Get("state")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
@@ -283,7 +283,7 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue)
         }
     }
 
-    if((Pair = LIssue->Get("number")) != NULL)
+    if((Pair = LIssue->Get("number")) != nullptr)
     {
         TJSONNumber* LIssueNumber = static_cast<TJSONNumber*>(Pair->JsonValue);
         AIssue->Number = LIssueNumber->AsInt;
@@ -310,12 +310,12 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
     TJSONObject* LOrg = AJsonObject;
     TJSONPair* Pair;
 
-    if(LOrg == NULL)
+    if(LOrg == nullptr)
     {
         throw Exception("Invalid JSON input!");
     }
 
-    if((Pair = LOrg->Get("login")) != NULL)
+    if((Pair = LOrg->Get("login")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
@@ -323,7 +323,7 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
             AOrganization->Login = LJsonString->Value();
         }
     }
-    else if((Pair = LOrg->Get("username")) != NULL)
+    else if((Pair = LOrg->Get("username")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
@@ -332,7 +332,7 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
         }
     }
 
-    if((Pair = LOrg->Get("description")) != NULL)
+    if((Pair = LOrg->Get("description")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)

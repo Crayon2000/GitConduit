@@ -23,8 +23,8 @@ TForm2 *Form2;
 //---------------------------------------------------------------------------
 __fastcall TForm2::TForm2(TComponent* Owner)
     : TForm(Owner)
-    , SourceApplication(NULL)
-    , DestinationApplication(NULL)
+    , SourceApplication(nullptr)
+    , DestinationApplication(nullptr)
 {
     Caption = "GitConduit";
 
@@ -71,7 +71,7 @@ __fastcall TForm2::TForm2(TComponent* Owner)
     SourceApplication = new TGitApplication();
     DestinationApplication = new TGitApplication();
 
-    FHTTPModule = new TDataModule1(NULL);
+    FHTTPModule = new TDataModule1(nullptr);
     FHTTPClient = FHTTPModule->IdHTTP1;
 }
 //---------------------------------------------------------------------------
@@ -103,7 +103,7 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
     RepoToJson(ASourceRepository, LJson);
 
     String LAnswer;
-    System::Classes::TMemoryStream* SourceFile = NULL;
+    System::Classes::TMemoryStream* SourceFile = nullptr;
     try
     {
         PrepareRequest(DestinationApplication);
@@ -145,10 +145,10 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
     delete SourceFile;
 
     TJSONObject* LObject = dynamic_cast<TJSONObject*>(TJSONObject::ParseJSONValue(LAnswer));
-    if(LObject != NULL)
+    if(LObject != nullptr)
     {
         TJSONPair* Pair;
-        if((Pair = LObject->Get("full_name")) != NULL)
+        if((Pair = LObject->Get("full_name")) != nullptr)
         {
             JsonToRepo(LAnswer, ADestinationRepository);
 
@@ -157,7 +157,7 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
             memoLog->Lines->Add(LLog);
             Result = true;
         }
-        else if((Pair = LObject->Get("message")) != NULL)
+        else if((Pair = LObject->Get("message")) != nullptr)
         {
             TJSONString* Answer = static_cast<TJSONString*>(Pair->JsonValue);
             const String LLog = "Repository creation message: " + Answer->Value();
@@ -222,7 +222,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
     }
 
     TJSONArray* LOrgs = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LJson));
-    if(LOrgs != NULL)
+    if(LOrgs != nullptr)
     {
         TJSONArray::TEnumerator* LOrgsEnumerator = LOrgs->GetEnumerator();
         while(LOrgsEnumerator->MoveNext() == true)
@@ -232,7 +232,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
             TOrganization* Org = new TOrganization();
             JsonToOrganization(LOrg, Org);
 
-            AItems->AddObject(Org->Login, NULL);
+            AItems->AddObject(Org->Login, nullptr);
 
             delete Org;
         }
@@ -255,23 +255,23 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     SECURITY_ATTRIBUTES sa;
 
     si.cb = sizeof(si);
-    si.lpReserved = NULL;
-    si.lpDesktop = NULL;
+    si.lpReserved = nullptr;
+    si.lpDesktop = nullptr;
     si.lpTitle = const_cast<LPWSTR>(L"Git");
     si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
     si.wShowWindow = SW_HIDE;
     si.cbReserved2 = 0;
-    si.lpReserved2 = NULL;
-    si.hStdInput = NULL;
-    si.hStdOutput = NULL;
-    si.hStdError = NULL;
+    si.lpReserved2 = nullptr;
+    si.hStdInput = nullptr;
+    si.hStdOutput = nullptr;
+    si.hStdError = nullptr;
 
     sa.nLength = sizeof(sa);
-    sa.lpSecurityDescriptor = NULL;
+    sa.lpSecurityDescriptor = nullptr;
     sa.bInheritHandle = true;
 
-    bool ProcResult = CreateProcess(NULL, ACmd.c_str(), NULL, NULL, true, 0,
-        NULL, ADirectory.c_str(), &si, &pi);
+    bool ProcResult = CreateProcess(nullptr, ACmd.c_str(), nullptr, nullptr, true, 0,
+        nullptr, ADirectory.c_str(), &si, &pi);
     if(ProcResult == true)
     {
         return pi.hProcess;
@@ -280,7 +280,7 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
     CloseHandle(si.hStdOutput);
-    return NULL;
+    return nullptr;
 }
 //---------------------------------------------------------------------------
 
@@ -288,7 +288,7 @@ DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 {
     DWORD Result;
 
-    if(AHandle == NULL || AHandle == INVALID_HANDLE_VALUE)
+    if(AHandle == nullptr || AHandle == INVALID_HANDLE_VALUE)
     {
         return 1;
     }
@@ -359,7 +359,7 @@ void __fastcall TForm2::Push(const String ADirectory)
 bool __fastcall TForm2::CheckGitExe()
 {
     const String LCmd = "git --version";
-    if(ExecuteProgramEx(LCmd) == NULL)
+    if(ExecuteProgramEx(LCmd) == nullptr)
     {
         return false;
     }
@@ -520,7 +520,7 @@ void __fastcall TForm2::ActionSourceOwner()
     }
 
     cboeSourceUser->Items->Clear();
-    cboeSourceUser->Items->AddObject(LUser, NULL);
+    cboeSourceUser->Items->AddObject(LUser, nullptr);
     cboeSourceUser->ItemIndex = 0;
     cboeSourceUser->StyleLookup = "comboeditstyle";
 
@@ -584,7 +584,7 @@ void __fastcall TForm2::ActionRepositories()
             const String LContent = FHTTPClient->Get(LUrl);
 
             TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
-            if(LRepos != NULL)
+            if(LRepos != nullptr)
             {
                 TJSONArray::TEnumerator* LRepoEnumerator = LRepos->GetEnumerator();
                 while(LRepoEnumerator->MoveNext() == true)
@@ -764,7 +764,7 @@ void __fastcall TForm2::ActionCreateRepo()
             continue;
         }
 
-        TRepository* LDestinationRepository = NULL;
+        TRepository* LDestinationRepository = nullptr;
         try
         {
             LDestinationRepository = new TRepository();
@@ -904,21 +904,21 @@ void __fastcall TListBoxDataItem::DoApplyStyleLookup()
         BeginUpdate();
 
         Fmx::Types::TFmxObject* GlyphStyleResource = FindStyleResource("glyphstyle");
-        if(GlyphStyleResource != NULL && GlyphStyleResource->ClassNameIs("TGlyph") == true)
+        if(GlyphStyleResource != nullptr && GlyphStyleResource->ClassNameIs("TGlyph") == true)
         {
             TGlyph* LGlyph = static_cast<TGlyph*>(GlyphStyleResource);
             LGlyph->Position->X = 20.0f; // Make sure checkbox is really MostLeft
         }
 
         Fmx::Types::TFmxObject* IconStyleResource = FindStyleResource("icon");
-        if(IconStyleResource != NULL && IconStyleResource->ClassNameIs("TImage") == true)
+        if(IconStyleResource != nullptr && IconStyleResource->ClassNameIs("TImage") == true)
         {
             TImage* LImage = static_cast<TImage*>(IconStyleResource);
             LImage->Position->X = 20.0f; // Make sure checkbox is really MostLeft
         }
 
         Fmx::Types::TFmxObject* CheckStyleResource = FindStyleResource("check");
-        if(CheckStyleResource != NULL && CheckStyleResource->ClassNameIs("TCheckBox") == true)
+        if(CheckStyleResource != nullptr && CheckStyleResource->ClassNameIs("TCheckBox") == true)
         {
             TCheckBox* LCheckBox = static_cast<TCheckBox*>(CheckStyleResource);
             LCheckBox->Position->X = 0.0f;
@@ -943,7 +943,7 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
         const String LContent = FHTTPClient->Get(LUrl);
 
         TJSONArray* LIssues = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
-        if(LIssues != NULL)
+        if(LIssues != nullptr)
         {
             TJSONArray::TEnumerator* LIssueEnumerator = LIssues->GetEnumerator();
             while(LIssueEnumerator->MoveNext() == true)

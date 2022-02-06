@@ -60,10 +60,10 @@ void __fastcall UpdateStyle()
 void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const String AStyleLookup)
 {
     Fmx::Types::TFmxObject* StyleResource = AStyle->FindStyleResource(AStyleLookup);
-    if(StyleResource != NULL && StyleResource->ClassNameIs("TLayout") == true)
+    if(StyleResource != nullptr && StyleResource->ClassNameIs("TLayout") == true)
     {
         Fmx::Types::TFmxObject* GlyphStyleResource = StyleResource->FindStyleResource("glyphstyle");
-        if(GlyphStyleResource != NULL && GlyphStyleResource->ClassNameIs("TGlyph") == true)
+        if(GlyphStyleResource != nullptr && GlyphStyleResource->ClassNameIs("TGlyph") == true)
         {
             TGlyph* LGlyph = static_cast<TGlyph*>(GlyphStyleResource);
             LGlyph->Margins->Top = 4.0f;
@@ -71,7 +71,7 @@ void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const Stri
         }
 
         Fmx::Types::TFmxObject* IconStyleResource = StyleResource->FindStyleResource("icon");
-        if(IconStyleResource != NULL && IconStyleResource->ClassNameIs("TImage") == true)
+        if(IconStyleResource != nullptr && IconStyleResource->ClassNameIs("TImage") == true)
         {
             TImage* LImage = static_cast<TImage*>(IconStyleResource);
             LImage->Margins->Top = 4.0f;
@@ -79,7 +79,7 @@ void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const Stri
         }
 
         Fmx::Types::TFmxObject* CheckStyleResource = StyleResource->FindStyleResource("check");
-        if(CheckStyleResource != NULL && CheckStyleResource->ClassNameIs("TCheckBox") == true)
+        if(CheckStyleResource != nullptr && CheckStyleResource->ClassNameIs("TCheckBox") == true)
         {
             TCheckBox* LCheckBox = static_cast<TCheckBox*>(CheckStyleResource);
             LCheckBox->Margins->Left = 8.0f;
@@ -87,10 +87,10 @@ void __fastcall SetListBoxItemMargins(Fmx::Types::TFmxObject* AStyle, const Stri
         }
 
         Fmx::Types::TFmxObject* TextStyleResource = StyleResource->FindStyleResource("detail");
-        if(TextStyleResource != NULL)
+        if(TextStyleResource != nullptr)
         {
             TText* LText = dynamic_cast<TText*>(TextStyleResource);
-            if(LText != NULL)
+            if(LText != nullptr)
             {
                 LText->Height = 21; // Adjust height to fit font size
             }
