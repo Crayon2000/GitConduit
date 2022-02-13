@@ -10,8 +10,8 @@ TDataModule1 *DataModule1;
 //---------------------------------------------------------------------------
 __fastcall TDataModule1::TDataModule1(TComponent* Owner)
     : TDataModule(Owner)
+    , IdHTTP1(new TIdHTTP(this))
 {
-    IdHTTP1 = new TIdHTTP(this);
     IdHTTP1->HTTPOptions = TIdHTTPOptions() << TIdHTTPOption::hoForceEncodeParams;
     IdHTTP1->HandleRedirects = true;
     IdHTTP1->IOHandler = IdSSLIOHandlerSocketOpenSSL1;

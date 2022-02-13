@@ -124,6 +124,11 @@
         <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
         <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\release\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
+        <BCC_ShowLSPMessages>true</BCC_ShowLSPMessages>
+        <BCC_EnableLSPIndexing>true</BCC_EnableLSPIndexing>
+        <BCC_GenerateLSPLog>true</BCC_GenerateLSPLog>
+        <BCC_GenerateInOutFiles>true</BCC_GenerateInOutFiles>
+        <BCC_EnableLSPIndexingOnChange>true</BCC_EnableLSPIndexingOnChange>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <Android_SplashTileMode>disabled</Android_SplashTileMode>
