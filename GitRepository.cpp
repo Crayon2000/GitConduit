@@ -3,6 +3,7 @@
 
 #include "GitRepository.h"
 #include <System.JSON.Writers.hpp>
+#include <memory>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
@@ -342,10 +343,10 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
     }
 }
 
-void __fastcall RepoToJson(const TRepository* ARepository, String& AJson)
+void __fastcall RepoToJson(const TRepository& ARepository, String& AJson)
 {
-    TStringWriter* LStringWriter =  new TStringWriter();
-    TJsonTextWriter* LJsonTextWriter = new TJsonTextWriter(LStringWriter, false);
+    auto LStringWriter =  std::make_unique<TStringWriter>();
+    auto LJsonTextWriter = std::make_unique<TJsonTextWriter>(LStringWriter.get(), false);
 
 #ifdef _DEBUG
     LJsonTextWriter->Formatting = TJsonFormatting::Indented;
@@ -354,34 +355,31 @@ void __fastcall RepoToJson(const TRepository* ARepository, String& AJson)
     LJsonTextWriter->WriteStartObject();
 
     LJsonTextWriter->WritePropertyName("name");
-    LJsonTextWriter->WriteValue(ARepository->Name);
+    LJsonTextWriter->WriteValue(ARepository.Name);
 
     LJsonTextWriter->WritePropertyName("description");
-    LJsonTextWriter->WriteValue(ARepository->Description);
+    LJsonTextWriter->WriteValue(ARepository.Description);
 
     LJsonTextWriter->WritePropertyName("homepage");
-    LJsonTextWriter->WriteValue(ARepository->Homepage);
+    LJsonTextWriter->WriteValue(ARepository.Homepage);
 
     LJsonTextWriter->WritePropertyName("private");
-    LJsonTextWriter->WriteValue(ARepository->Private);
+    LJsonTextWriter->WriteValue(ARepository.Private);
 
     LJsonTextWriter->WritePropertyName("has_issues");
-    LJsonTextWriter->WriteValue(ARepository->HasIssues);
+    LJsonTextWriter->WriteValue(ARepository.HasIssues);
 
     LJsonTextWriter->WritePropertyName("has_projects");
-    LJsonTextWriter->WriteValue(ARepository->HasProjects);
+    LJsonTextWriter->WriteValue(ARepository.HasProjects);
 
     LJsonTextWriter->WritePropertyName("has_wiki");
-    LJsonTextWriter->WriteValue(ARepository->HasWiki);
+    LJsonTextWriter->WriteValue(ARepository.HasWiki);
 
     LJsonTextWriter->WritePropertyName("has_downloads");
-    LJsonTextWriter->WriteValue(ARepository->HasDownloads);
+    LJsonTextWriter->WriteValue(ARepository.HasDownloads);
 
     LJsonTextWriter->WriteEndObject();
 
     AJson = LStringWriter->ToString();
-
-    delete LJsonTextWriter;
-    delete LStringWriter;
 }
 

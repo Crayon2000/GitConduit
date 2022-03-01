@@ -137,9 +137,9 @@ private:    // User declarations
     void __fastcall ActionCreateRepo();
 protected:
     bool __fastcall CreateRepo(const TRepository* ASourceRepository, TRepository* ADestinationRepository);
-    String __fastcall GetAuthenticatedUser(TGitApplication* AGitApplication);
+    String __fastcall GetAuthenticatedUser(const TGitApplication& AGitApplication);
     void __fastcall GetOrganizations(TGitApplication* AGitApplication, System::Classes::TStrings* AItems);
-    void __fastcall PrepareRequest(const TGitApplication* AGitApplication);
+    void __fastcall PrepareRequest(const TGitApplication& AGitApplication);
     HANDLE __fastcall ExecuteProgramEx(const String ACmd, const String ADirectory = ".");
     DWORD __fastcall Wait(HANDLE AHandle);
     void __fastcall Clone(const String ADirectory, const String AGitRepo, bool AIsBare = false);
@@ -150,7 +150,7 @@ protected:
     void __fastcall HideMessage();
     void __fastcall OnApplicationIdle(System::TObject* Sender, bool &Done);
     void __fastcall ListBoxItemApplyStyleLookup(TObject *Sender);
-    void __fastcall PrintIssues(TGitApplication* AGitApplication, TRepository* ARepository);
+    void __fastcall PrintIssues(const TGitApplication& AGitApplication, const TRepository& ARepository);
     String __fastcall GetNextUrl();
 public:     // User declarations
     __fastcall TForm2(TComponent* Owner);

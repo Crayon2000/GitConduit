@@ -9,17 +9,18 @@
 #include <System.JSON.hpp>
 #include <System.IOUtils.hpp>
 #include <System.RegularExpressions.hpp>
+#include <memory>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.fmx"
 TForm2 *Form2;
 
-#define TABIDSOURCE             0
-#define TABIDSOURCEOWNER        1
-#define TABIDREPOSITORIES       2
-#define TABIDDESTINATION        3
-#define TABIDDESTINATIONOWNER   4
-#define TABIDCREATE             5
+static constexpr int TABIDSOURCE =           0;
+static constexpr int TABIDSOURCEOWNER =      1;
+static constexpr int TABIDREPOSITORIES =     2;
+static constexpr int TABIDDESTINATION =      3;
+static constexpr int TABIDDESTINATIONOWNER = 4;
+static constexpr int TABIDCREATE =           5;
 //---------------------------------------------------------------------------
 __fastcall TForm2::TForm2(TComponent* Owner)
     : TForm(Owner)
@@ -100,13 +101,13 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
     }
 
     String LJson;
-    RepoToJson(ASourceRepository, LJson);
+    RepoToJson(*ASourceRepository, LJson);
 
     String LAnswer;
     System::Classes::TMemoryStream* SourceFile = nullptr;
     try
     {
-        PrepareRequest(DestinationApplication);
+        PrepareRequest(*DestinationApplication);
         SourceFile = new System::Classes::TMemoryStream();
         WriteStringToStream(SourceFile, LJson, enUTF8);
         SourceFile->Position = 0;
@@ -169,12 +170,12 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
 }
 //---------------------------------------------------------------------------
 
-String __fastcall TForm2::GetAuthenticatedUser(TGitApplication* AGitApplication)
+String __fastcall TForm2::GetAuthenticatedUser(const TGitApplication& AGitApplication)
 {
     String Result;
 
     String LJson;
-    const String LUrl = AGitApplication->ApiUrl + "/user";
+    const String LUrl = AGitApplication.ApiUrl + "/user";
 
     PrepareRequest(AGitApplication);
     LJson = FHTTPClient->Get(LUrl); // May throw exception
@@ -207,7 +208,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
 
     AItems->Clear();
 
-    PrepareRequest(AGitApplication);
+    PrepareRequest(*AGitApplication);
     try
     {
         LJson = FHTTPClient->Get(LUrl); // May throw exception
@@ -240,11 +241,11 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::PrepareRequest(const TGitApplication* AGitApplication)
+void __fastcall TForm2::PrepareRequest(const TGitApplication& AGitApplication)
 {
     // Set authorization token
     FHTTPClient->Request->CustomHeaders->Values["Authorization"] =
-        "token " + AGitApplication->Token;
+        "token " + AGitApplication.Token;
 }
 //---------------------------------------------------------------------------
 
@@ -499,7 +500,7 @@ void __fastcall TForm2::ActionSourceOwner()
     String LExceptionMsg;
     try
     {
-        LUser = GetAuthenticatedUser(SourceApplication);
+        LUser = GetAuthenticatedUser(*SourceApplication);
     }
     catch(const Exception& e)
     {
@@ -580,7 +581,7 @@ void __fastcall TForm2::ActionRepositories()
     {
         while(LUrl.IsEmpty() == false)
         {
-            PrepareRequest(SourceApplication);
+            PrepareRequest(*SourceApplication);
             const String LContent = FHTTPClient->Get(LUrl);
 
             TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
@@ -694,7 +695,7 @@ void __fastcall TForm2::ActionDestinationOwner()
     String LExceptionMsg;
     try
     {
-        LUser = GetAuthenticatedUser(DestinationApplication);
+        LUser = GetAuthenticatedUser(*DestinationApplication);
     }
     catch(const Exception& e)
     {
@@ -787,7 +788,7 @@ void __fastcall TForm2::ActionCreateRepo()
                 const String LIssueLog =
                     String().sprintf(L"%d open issue(s) not created!", LSourceRepository->OpenIssueCount);
                 memoLog->Lines->Add(LIssueLog);
-                PrintIssues(SourceApplication, LSourceRepository);
+                PrintIssues(*SourceApplication, *LSourceRepository);
             }
 
             try
@@ -933,10 +934,10 @@ void __fastcall TListBoxDataItem::DoApplyStyleLookup()
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepository* ARepository)
+void __fastcall TForm2::PrintIssues(const TGitApplication& AGitApplication, const TRepository& ARepository)
 {
-    const String LUrl = AGitApplication->ApiUrl + "/repos/" +
-        AGitApplication->User + "/" + ARepository->Name + "/issues";
+    const String LUrl = AGitApplication.ApiUrl + "/repos/" +
+        AGitApplication.User + "/" + ARepository.Name + "/issues";
     try
     {
         PrepareRequest(AGitApplication);
@@ -950,13 +951,11 @@ void __fastcall TForm2::PrintIssues(TGitApplication* AGitApplication, TRepositor
             {
                 TJSONObject* LIssue = static_cast<TJSONObject*>(LIssueEnumerator->Current);
 
-                TIssue* LIssueToPrint = new TIssue();
-                JsonToIssue(LIssue, LIssueToPrint);
+                auto LIssueToPrint = std::make_unique<TIssue>();
+                JsonToIssue(LIssue, LIssueToPrint.get());
 
                 const String LLog = String().sprintf(L"    Issue #%d: %s", LIssueToPrint->Number, LIssueToPrint->Title.c_str());
                 memoLog->Lines->Add(LLog);
-
-                delete LIssueToPrint;
             }
         }
     }

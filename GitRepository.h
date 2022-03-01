@@ -78,6 +78,6 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue);
 void __fastcall JsonToOrganization(const String AJson, TOrganization* AOrganization);
 void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrganization);
 
-void __fastcall RepoToJson(const TRepository* ARepository, String& AJson);
+void __fastcall RepoToJson(const TRepository& ARepository, String& AJson);
 //---------------------------------------------------------------------------
 #endif
