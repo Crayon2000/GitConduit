@@ -104,15 +104,14 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
     RepoToJson(*ASourceRepository, LJson);
 
     String LAnswer;
-    System::Classes::TMemoryStream* SourceFile = nullptr;
     try
     {
         PrepareRequest(*DestinationApplication);
-        SourceFile = new System::Classes::TMemoryStream();
-        WriteStringToStream(SourceFile, LJson, enUTF8);
+        auto SourceFile = std::make_unique<System::Classes::TMemoryStream>();
+        WriteStringToStream(SourceFile.get(), LJson, enUTF8);
         SourceFile->Position = 0;
         FHTTPClient->Request->ContentType = "application/json";
-        LAnswer = FHTTPClient->Post(LUrl, SourceFile);
+        LAnswer = FHTTPClient->Post(LUrl, SourceFile.get());
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
@@ -143,7 +142,6 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
         const String LLog = "Repository creation exception: " + e.Message;
         memoLog->Lines->Add(LLog);
     }
-    delete SourceFile;
 
     TJSONObject* LObject = dynamic_cast<TJSONObject*>(TJSONObject::ParseJSONValue(LAnswer));
     if(LObject != nullptr)
@@ -172,8 +170,6 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
 
 String __fastcall TForm2::GetAuthenticatedUser(const TGitApplication& AGitApplication)
 {
-    String Result;
-
     String LJson;
     const String LUrl = AGitApplication.ApiUrl + "/user";
 
@@ -185,18 +181,10 @@ String __fastcall TForm2::GetAuthenticatedUser(const TGitApplication& AGitApplic
         return "";
     }
 
-    TUser* LUser = new TUser();
-    try
-    {
-        JsonToUser(LJson, LUser);
-        Result = LUser->Login;
-    }
-    __finally
-    {
-        delete LUser;
-    }
+    auto LUser = std::make_unique<TUser>();
+    JsonToUser(LJson, LUser.get());
 
-    return Result;
+    return LUser->Login;
 }
 //---------------------------------------------------------------------------
 
@@ -230,12 +218,10 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
         {
             TJSONObject* LOrg = static_cast<TJSONObject*>(LOrgsEnumerator->Current);
 
-            TOrganization* Org = new TOrganization();
-            JsonToOrganization(LOrg, Org);
+            auto Org = std::make_unique<TOrganization>();
+            JsonToOrganization(LOrg, Org.get());
 
             AItems->AddObject(Org->Login, nullptr);
-
-            delete Org;
         }
     }
 }
@@ -765,21 +751,19 @@ void __fastcall TForm2::ActionCreateRepo()
             continue;
         }
 
-        TRepository* LDestinationRepository = nullptr;
         try
         {
-            LDestinationRepository = new TRepository();
+            auto LDestinationRepository = std::make_unique<TRepository>();
             TRepository *LSourceRepository = static_cast<TRepository*>(LItem->Data);
 
             const String LLog = String().sprintf(L"====== %s ======",
                 LSourceRepository->FullName.c_str());
             memoLog->Lines->Add(LLog);
 
-            bool LIsCreated = CreateRepo(LSourceRepository, LDestinationRepository);
+            bool LIsCreated = CreateRepo(LSourceRepository, LDestinationRepository.get());
 
             if(LIsCreated == false)
             {   // Don't do the rest if the issue was not created
-                delete LDestinationRepository;
                 continue;
             }
 
@@ -873,8 +857,6 @@ void __fastcall TForm2::ActionCreateRepo()
         {
 
         }
-
-        delete LDestinationRepository;
     }
 
     memoLog->Lines->Add("");
