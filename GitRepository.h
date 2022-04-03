@@ -5,6 +5,9 @@
 #include <System.hpp>
 #include <System.JSON.hpp>
 //---------------------------------------------------------------------------
+/**
+ * User.
+ */
 class TUser : public System::TObject
 {
     typedef System::TObject inherited;
@@ -16,6 +19,9 @@ public:
     String Login;
 };
 
+/**
+ * Repository.
+ */
 class TRepository : public System::TObject
 {
     typedef System::TObject inherited;
@@ -40,6 +46,9 @@ public:
     String Homepage;
 };
 
+/**
+ * Issue.
+ */
 class TIssue : public System::TObject
 {
     typedef System::TObject inherited;
@@ -54,6 +63,9 @@ public:
     int Number;
 };
 
+/**
+ * Organization.
+ */
 class TOrganization : public System::TObject
 {
     typedef System::TObject inherited;

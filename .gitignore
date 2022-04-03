@@ -17,6 +17,7 @@
 # History and backup files
 __history/
 __recovery/
+__astcache/
 *.~*
 
 # Castalia statistics file
