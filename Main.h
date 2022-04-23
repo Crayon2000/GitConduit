@@ -151,7 +151,7 @@ protected:
     void __fastcall OnApplicationIdle(System::TObject* Sender, bool &Done);
     void __fastcall ListBoxItemApplyStyleLookup(TObject *Sender);
     void __fastcall PrintIssues(const TGitApplication& AGitApplication, const TRepository& ARepository);
-    String __fastcall GetNextUrl();
+    std::wstring __fastcall GetNextUrl();
 public:     // User declarations
     __fastcall TForm2(TComponent* Owner);
     __fastcall virtual ~TForm2();

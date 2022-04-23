@@ -8,7 +8,7 @@
 #include "HttpModule.h"
 #include <System.JSON.hpp>
 #include <System.IOUtils.hpp>
-#include <System.RegularExpressions.hpp>
+#include <regex>
 #include <memory>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -629,7 +629,7 @@ void __fastcall TForm2::ActionRepositories()
                 }
             }
 
-            LUrl = GetNextUrl();
+            LUrl = GetNextUrl().c_str();
         }
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
@@ -947,17 +947,18 @@ void __fastcall TForm2::PrintIssues(const TGitApplication& AGitApplication, cons
 }
 //---------------------------------------------------------------------------
 
-String __fastcall TForm2::GetNextUrl()
+std::wstring __fastcall TForm2::GetNextUrl()
 {
-    String Result;
-    const String LLink = FHTTPClient->Response->RawHeaders->Values["Link"];
-    if(LLink.IsEmpty() == false)
+    std::wstring Result;
+    const std::wstring LLink = FHTTPClient->Response->RawHeaders->Values["Link"].c_str();
+    if(LLink.empty() == false)
     {
-        const String LExpression = "<(\\S+)>; rel=\"next\"";
-        TMatch LMatch = TRegEx::Match(LLink, LExpression, TRegExOptions() << TRegExOption::roSingleLine);
-        if(LMatch.Success == true && LMatch.Groups.Count >= 1)
+        std::wcmatch LMatchResults;
+        const auto LExpression = std::wregex(L"<([^ ]+)>; rel=\"next\"", std::regex_constants::extended);
+        if(std::regex_search(LLink.c_str(), LMatchResults, LExpression,
+            std::regex_constants::match_default) == true)
         {
-            Result = LMatch.Groups[1].Value;
+            Result = LMatchResults[1];
         }
     }
     return Result;
