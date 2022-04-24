@@ -235,11 +235,10 @@ void __fastcall TForm2::PrepareRequest(const TGitApplication& AGitApplication)
 }
 //---------------------------------------------------------------------------
 
-HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADirectory)
+HANDLE __fastcall TForm2::ExecuteProgramEx(const std::wstring ACmd, const std::wstring ADirectory)
 {
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
-    SECURITY_ATTRIBUTES sa;
 
     si.cb = sizeof(si);
     si.lpReserved = nullptr;
@@ -253,20 +252,29 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     si.hStdOutput = nullptr;
     si.hStdError = nullptr;
 
-    sa.nLength = sizeof(sa);
-    sa.lpSecurityDescriptor = nullptr;
-    sa.bInheritHandle = true;
+    ZeroMemory(&pi, sizeof(pi));
 
-    bool ProcResult = CreateProcess(nullptr, ACmd.c_str(), nullptr, nullptr, true, 0,
+    std::vector<wchar_t> LCmd(ACmd.c_str(), ACmd.c_str() + ACmd.size() + 1);
+
+    bool ProcResult = CreateProcess(nullptr, &LCmd[0], nullptr, nullptr, true, 0,
         nullptr, ADirectory.c_str(), &si, &pi);
     if(ProcResult == true)
     {
         return pi.hProcess;
     }
 
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
-    CloseHandle(si.hStdOutput);
+    if(pi.hProcess != nullptr)
+    {
+        CloseHandle(pi.hProcess);
+    }
+    if(pi.hThread != nullptr)
+    {
+        CloseHandle(pi.hThread);
+    }
+    if(si.hStdOutput != nullptr)
+    {
+        CloseHandle(si.hStdOutput);
+    }
     return nullptr;
 }
 //---------------------------------------------------------------------------
@@ -310,7 +318,7 @@ void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, bo
     {
         LCmd += " --bare";
     }
-    HANDLE LHandle = ExecuteProgramEx(LCmd);
+    HANDLE LHandle = ExecuteProgramEx(LCmd.c_str());
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
     {
@@ -322,7 +330,7 @@ void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, bo
 void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory)
 {
     const String LCmd = String().sprintf(L"git remote add origin2 %s", AGitRepo.c_str());
-    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
+    HANDLE LHandle = ExecuteProgramEx(LCmd.c_str(), ADirectory.c_str());
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
     {
@@ -333,8 +341,8 @@ void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory
 
 void __fastcall TForm2::Push(const String ADirectory)
 {
-    const String LCmd = "git push origin2 --mirror";
-    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
+    const std::wstring LCmd = L"git push origin2 --mirror";
+    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory.c_str());
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
     {
@@ -345,12 +353,7 @@ void __fastcall TForm2::Push(const String ADirectory)
 
 bool __fastcall TForm2::CheckGitExe()
 {
-    const String LCmd = "git --version";
-    if(ExecuteProgramEx(LCmd) == nullptr)
-    {
-        return false;
-    }
-    return true;
+    return (ExecuteProgramEx(L"git --version") != nullptr);
 }
 //---------------------------------------------------------------------------
 
