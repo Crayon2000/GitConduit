@@ -19,6 +19,7 @@
 #include <System.ImageList.hpp>
 #include <FMX.ComboEdit.hpp>
 #include <FMX.Memo.Types.hpp>
+#include <string>
 //---------------------------------------------------------------------------
 namespace Idhttp
 {
@@ -142,9 +143,9 @@ protected:
     void __fastcall PrepareRequest(const TGitApplication& AGitApplication);
     HANDLE __fastcall ExecuteProgramEx(const std::wstring ACmd, const std::wstring ADirectory = L".");
     DWORD __fastcall Wait(HANDLE AHandle);
-    void __fastcall Clone(const String ADirectory, const String AGitRepo, bool AIsBare = false);
-    void __fastcall AddRemote(const String AGitRepo, const String ADirectory);
-    void __fastcall Push(const String ADirectory);
+    void __fastcall Clone(const std::wstring ADirectory, const std::wstring AGitRepo, bool AIsBare = false);
+    void __fastcall AddRemote(const std::wstring AGitRepo, const std::wstring ADirectory);
+    void __fastcall Push(const std::wstring ADirectory);
     bool __fastcall CheckGitExe();
     void __fastcall ShowMessage(const String AMessage);
     void __fastcall HideMessage();

@@ -10,6 +10,8 @@
 #include <System.IOUtils.hpp>
 #include <regex>
 #include <memory>
+#include <vector>
+#include <fmt/format.h>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.fmx"
@@ -256,7 +258,7 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const std::wstring ACmd, const std::w
 
     std::vector<wchar_t> LCmd(ACmd.c_str(), ACmd.c_str() + ACmd.size() + 1);
 
-    bool ProcResult = CreateProcess(nullptr, &LCmd[0], nullptr, nullptr, true, 0,
+    bool ProcResult = ::CreateProcess(nullptr, &LCmd[0], nullptr, nullptr, true, 0,
         nullptr, ADirectory.c_str(), &si, &pi);
     if(ProcResult == true)
     {
@@ -311,14 +313,11 @@ DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, bool AIsBare)
+void __fastcall TForm2::Clone(const std::wstring ADirectory, const std::wstring AGitRepo, bool AIsBare)
 {
-    String LCmd = String().sprintf(L"git clone %s %s", AGitRepo.c_str(), ADirectory.c_str());
-    if(AIsBare == true)
-    {
-        LCmd += " --bare";
-    }
-    HANDLE LHandle = ExecuteProgramEx(LCmd.c_str());
+    std::wstring LCmd = fmt::format(L"git clone {} {}{}",
+        AGitRepo, ADirectory, (AIsBare == true) ? L" --bare" : L"");
+    HANDLE LHandle = ExecuteProgramEx(LCmd);
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
     {
@@ -327,10 +326,10 @@ void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, bo
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory)
+void __fastcall TForm2::AddRemote(const std::wstring AGitRepo, const std::wstring ADirectory)
 {
-    const String LCmd = String().sprintf(L"git remote add origin2 %s", AGitRepo.c_str());
-    HANDLE LHandle = ExecuteProgramEx(LCmd.c_str(), ADirectory.c_str());
+    const std::wstring LCmd = fmt::format(L"git remote add origin2 {}", AGitRepo);
+    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
     {
@@ -339,10 +338,10 @@ void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::Push(const String ADirectory)
+void __fastcall TForm2::Push(const std::wstring ADirectory)
 {
     const std::wstring LCmd = L"git push origin2 --mirror";
-    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory.c_str());
+    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
     {
@@ -797,7 +796,7 @@ void __fastcall TForm2::ActionCreateRepo()
                         TReplaceFlags() << rfIgnoreCase);
                 }
 
-                Clone("temp.git", LSourceUrl, true);
+                Clone(L"temp.git", LSourceUrl.c_str(), true);
 
                 String LDestinationUrl = LDestinationRepository->CloneUrl;
                 if(DestinationApplication->Username.IsEmpty() == false &&
@@ -816,8 +815,8 @@ void __fastcall TForm2::ActionCreateRepo()
                         TReplaceFlags() << rfIgnoreCase);
                 }
 
-                AddRemote(LDestinationUrl, "temp.git");
-                Push("temp.git");
+                AddRemote(LDestinationUrl.c_str(), L"temp.git");
+                Push(L"temp.git");
 
                 memoLog->Lines->Add("Pushed repository");
 
@@ -832,9 +831,9 @@ void __fastcall TForm2::ActionCreateRepo()
 
                         Ioutils::TDirectory::Delete("temp.git", true);
 
-                        Clone("temp.git", LSourceWikiUrl, true);
-                        AddRemote(LCDestinationWikiUrl, "temp.git");
-                        Push("temp.git");
+                        Clone(L"temp.git", LSourceWikiUrl.c_str(), true);
+                        AddRemote(LCDestinationWikiUrl.c_str(), L"temp.git");
+                        Push(L"temp.git");
                         memoLog->Lines->Add("Pushed Wiki repository");
                     }
                     catch(...)
