@@ -7,8 +7,7 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
-__fastcall TUser::TUser() :
-    System::TObject()
+__fastcall TUser::TUser()
 {
 }
 
@@ -39,7 +38,6 @@ void __fastcall JsonToUser(TJSONObject* AJsonObject, TUser* AUser)
 }
 
 __fastcall TRepository::TRepository() :
-    System::TObject(),
     Owner(new TUser()),
     Private(true),
     Fork(false),
@@ -233,7 +231,6 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
 }
 
 __fastcall TIssue::TIssue() :
-    System::TObject(),
     Number(0)
 {
 }
@@ -295,8 +292,7 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue)
     }
 }
 
-__fastcall TOrganization::TOrganization() :
-    System::TObject()
+__fastcall TOrganization::TOrganization()
 {
 }
 

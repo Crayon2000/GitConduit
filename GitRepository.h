@@ -8,10 +8,8 @@
 /**
  * User.
  */
-class TUser : public System::TObject
+class TUser
 {
-    typedef System::TObject inherited;
-
 public:
     __fastcall TUser();
     inline __fastcall virtual ~TUser() { }
@@ -22,10 +20,8 @@ public:
 /**
  * Repository.
  */
-class TRepository : public System::TObject
+class TRepository
 {
-    typedef System::TObject inherited;
-
 public:
     __fastcall TRepository();
     __fastcall virtual ~TRepository();
@@ -49,10 +45,8 @@ public:
 /**
  * Issue.
  */
-class TIssue : public System::TObject
+class TIssue
 {
-    typedef System::TObject inherited;
-
 public:
     __fastcall TIssue();
     inline __fastcall virtual ~TIssue() { }
@@ -66,10 +60,8 @@ public:
 /**
  * Organization.
  */
-class TOrganization : public System::TObject
+class TOrganization
 {
-    typedef System::TObject inherited;
-
 public:
     __fastcall TOrganization();
     inline __fastcall virtual ~TOrganization() { }

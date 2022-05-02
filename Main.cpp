@@ -591,11 +591,11 @@ void __fastcall TForm2::ActionRepositories()
                         continue;
                     }
 
-                    TListBoxItem* LListBoxItem = new TListBoxDataItem(this);
+                    TListBoxRepositoryItem* LListBoxItem = new TListBoxRepositoryItem(this);
                     LListBoxItem->Parent = ListBoxRepo;
                     LListBoxItem->IsChecked = true;
                     LListBoxItem->Text = LSourceRepository->FullName;
-                    LListBoxItem->Data = LSourceRepository; // List box is owner of memory
+                    LListBoxItem->Repository = LSourceRepository; // List box is owner of memory
                     if(LSourceRepository->Private == true)
                     {   // Private
                         LListBoxItem->ImageIndex = 0;
@@ -747,7 +747,7 @@ void __fastcall TForm2::ActionCreateRepo()
     const int LCount = ListBoxRepo->Items->Count;
     for(int i = 0; i < LCount; ++i)
     {
-        TListBoxItem *LItem = ListBoxRepo->ItemByIndex(i);
+        TListBoxRepositoryItem* LItem = static_cast<TListBoxRepositoryItem*>(ListBoxRepo->ItemByIndex(i));
         if(LItem->IsChecked == false)
         {
             continue;
@@ -756,7 +756,7 @@ void __fastcall TForm2::ActionCreateRepo()
         try
         {
             auto LDestinationRepository = std::make_unique<TRepository>();
-            TRepository *LSourceRepository = static_cast<TRepository*>(LItem->Data);
+            TRepository *LSourceRepository = LItem->Repository;
 
             const String LLog = String().sprintf(L"====== %s ======",
                 LSourceRepository->FullName.c_str());
@@ -915,6 +915,12 @@ void __fastcall TListBoxDataItem::DoApplyStyleLookup()
     }
 
     inherited::DoApplyStyleLookup();
+}
+//---------------------------------------------------------------------------
+
+__fastcall TListBoxRepositoryItem::~TListBoxRepositoryItem()
+{
+    delete Repository;
 }
 //---------------------------------------------------------------------------
 

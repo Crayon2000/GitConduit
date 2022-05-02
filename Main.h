@@ -38,10 +38,19 @@ protected:
 
 public:     // User declarations
     inline __fastcall virtual TListBoxDataItem(System::Classes::TComponent* AOwner) : TListBoxItem(AOwner) { }
-    __fastcall virtual ~TListBoxDataItem()
-    {
-        delete Data;
-    }
+    inline __fastcall virtual ~TListBoxDataItem() { }
+};
+
+class TListBoxRepositoryItem : public TListBoxDataItem
+{
+    typedef TListBoxDataItem inherited;
+
+public:     // User declarations
+    TRepository* Repository;
+
+    inline __fastcall virtual TListBoxRepositoryItem(System::Classes::TComponent* AOwner) :
+        TListBoxDataItem(AOwner), Repository(nullptr) { }
+    __fastcall virtual ~TListBoxRepositoryItem();
 };
 
 class TForm2 : public TForm
