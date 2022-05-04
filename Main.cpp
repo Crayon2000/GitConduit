@@ -417,11 +417,11 @@ void __fastcall TForm2::FormShow(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::ShowMessage(const String AMessage)
+void __fastcall TForm2::ShowMessage(const std::wstring AMessage)
 {
     Rectangle1->Visible = true;
     Rectangle1->Align = TAlignLayout::Contents;
-    lblErrorMessage->Text = AMessage;
+    lblErrorMessage->Text = AMessage.c_str();
 }
 //---------------------------------------------------------------------------
 
@@ -466,7 +466,7 @@ void __fastcall TForm2::ActionSource()
 {
     if(CheckGitExe() == false)
     {
-        ShowMessage("git.exe not found in path!\n\nCorrect the problem and try again.");
+        ShowMessage(L"git.exe not found in path!\n\nCorrect the problem and try again.");
         return;
     }
 
@@ -484,32 +484,32 @@ void __fastcall TForm2::ActionSourceOwner()
     SourceApplication->Username = txtSourceUsername->Text;
     SourceApplication->Password = txtSourcePassword->Text;
 
-    String LUser;
-    String LExceptionMsg;
+    std::wstring LUser;
+    std::wstring LExceptionMsg;
     try
     {
-        LUser = GetAuthenticatedUser(*SourceApplication);
+        LUser = GetAuthenticatedUser(*SourceApplication).c_str();
     }
     catch(const Exception& e)
     {
-        LExceptionMsg = e.Message;
+        LExceptionMsg = e.Message.c_str();
     }
-    if(LUser.IsEmpty() == true)
+    if(LUser.empty() == true)
     {
         btnSourceOwnerBack->Enabled = true;
-        String LMessage = "Cannot get authenticated user!";
-        if(LExceptionMsg.IsEmpty() == false)
+        std::wstring LMessage = L"Cannot get authenticated user!";
+        if(LExceptionMsg.empty() == false)
         {
-            LMessage += String(EOL) + String(EOL) + LExceptionMsg;
+            LMessage += std::wstring(EOL) + std::wstring(EOL) + LExceptionMsg;
         }
-        LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+        LMessage += std::wstring(EOL) + std::wstring(EOL) + std::wstring(L"Go Back, change the settings and try again.");
         ShowMessage(LMessage);
 
         return;
     }
 
     cboeSourceUser->Items->Clear();
-    cboeSourceUser->Items->AddObject(LUser, nullptr);
+    cboeSourceUser->Items->AddObject(LUser.c_str(), nullptr);
     cboeSourceUser->ItemIndex = 0;
     cboeSourceUser->StyleLookup = "comboeditstyle";
 
@@ -520,9 +520,11 @@ void __fastcall TForm2::ActionSourceOwner()
     catch(const Exception& e)
     {
         btnSourceOwnerBack->Enabled = true;
-        String LMessage = "Cannot get organizations list!";
-        LMessage += String(EOL) + String(EOL) + e.Message;
-        LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+        const std::wstring LMessage = fmt::format(
+            L"Cannot get organizations list!\r\n\r\n"
+            L"{}\r\n\r\n"
+            L"Go Back, change the settings and try again.",
+            e.Message.c_str());
         ShowMessage(LMessage);
 
         return;
@@ -564,7 +566,7 @@ void __fastcall TForm2::ActionRepositories()
         }
     }
 
-    String LExceptionMsg;
+    std::wstring LExceptionMsg;
     try
     {
         while(LUrl.IsEmpty() == false)
@@ -636,22 +638,22 @@ void __fastcall TForm2::ActionRepositories()
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
-        LExceptionMsg = "Get repository HTTP protocol exception: " + e.Message;
+        LExceptionMsg = std::wstring(L"Get repository HTTP protocol exception: ") + e.Message.c_str();
     }
     catch(const Idstack::EIdSocketError& e)
     {
-        LExceptionMsg = "Get repository socket exception: " + e.Message;
+        LExceptionMsg = std::wstring(L"Get repository socket exception: ") + e.Message.c_str();
     }
     catch(const Exception& e)
     {
-        LExceptionMsg = "Get repository exception: " + e.Message;
+        LExceptionMsg = std::wstring(L"Get repository exception: ") + e.Message.c_str();
     }
 
     btnRepoBack->Enabled = true;
 
-    if(LExceptionMsg.IsEmpty() == false)
+    if(LExceptionMsg.empty() == false)
     {
-        ShowMessage(LExceptionMsg + "\n\nGo Back, change the settings and try again.");
+        ShowMessage(LExceptionMsg + L"\n\nGo Back, change the settings and try again.");
         return;
     }
 
@@ -679,32 +681,32 @@ void __fastcall TForm2::ActionDestinationOwner()
     DestinationApplication->Username = txtDestinationUsername->Text;
     DestinationApplication->Password = txtDestinationPassword->Text;
 
-    String LUser;
-    String LExceptionMsg;
+    std::wstring LUser;
+    std::wstring LExceptionMsg;
     try
     {
-        LUser = GetAuthenticatedUser(*DestinationApplication);
+        LUser = GetAuthenticatedUser(*DestinationApplication).c_str();
     }
     catch(const Exception& e)
     {
-        LExceptionMsg = e.Message;
+        LExceptionMsg = e.Message.c_str();
     }
-    if(LUser.IsEmpty() == true)
+    if(LUser.empty() == true)
     {
         btnDestinationOwnerBack->Enabled = true;
-        String LMessage = "Cannot get authenticated user!";
-        if(LExceptionMsg.IsEmpty() == false)
+        std::wstring LMessage = L"Cannot get authenticated user!";
+        if(LExceptionMsg.empty() == false)
         {
-            LMessage += String(EOL) + String(EOL) + LExceptionMsg;
+            LMessage += std::wstring(EOL) + std::wstring(EOL) + LExceptionMsg;
         }
-        LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+        LMessage += std::wstring(EOL) + std::wstring(EOL) + L"Go Back, change the settings and try again.";
         ShowMessage(LMessage);
 
         return;
     }
 
-    chkDestinationTypeUser->Text = fmt::format(L"User (%s)", LUser.c_str()).c_str();
-    chkDestinationTypeUser->TagString = LUser;
+    chkDestinationTypeUser->Text = fmt::format(L"User ({})", LUser.c_str()).c_str();
+    chkDestinationTypeUser->TagString = LUser.c_str();
 
     try
     {
@@ -713,9 +715,11 @@ void __fastcall TForm2::ActionDestinationOwner()
     catch(const Exception& e)
     {
         btnDestinationOwnerBack->Enabled = true;
-        String LMessage = "Cannot get organizations list!";
-        LMessage += String(EOL) + String(EOL) + e.Message;
-        LMessage += String(EOL) + String(EOL) + "Go Back, change the settings and try again.";
+        const std::wstring LMessage = fmt::format(
+            L"Cannot get organizations list!\r\n\r\n"
+            L"{}\r\n\r\n"
+            L"Go Back, change the settings and try again.",
+            e.Message.c_str());
         ShowMessage(LMessage);
 
         return;
@@ -758,7 +762,7 @@ void __fastcall TForm2::ActionCreateRepo()
             auto LDestinationRepository = std::make_unique<TRepository>();
             TRepository *LSourceRepository = LItem->Repository;
 
-            const std::wstring LLog = fmt::format(L"====== %s ======",
+            const std::wstring LLog = fmt::format(L"====== {} ======",
                 LSourceRepository->FullName.c_str());
             memoLog->Lines->Add(LLog.c_str());
 
@@ -772,7 +776,7 @@ void __fastcall TForm2::ActionCreateRepo()
             if(LSourceRepository->OpenIssueCount > 0)
             {
                 const std::wstring LIssueLog =
-                    fmt::format(L"%d open issue(s) not created!", LSourceRepository->OpenIssueCount);
+                    fmt::format(L"{} open issue(s) not created!", LSourceRepository->OpenIssueCount);
                 memoLog->Lines->Add(LIssueLog.c_str());
                 PrintIssues(*SourceApplication, *LSourceRepository);
             }
@@ -920,12 +924,12 @@ __fastcall TListBoxRepositoryItem::~TListBoxRepositoryItem()
 
 void __fastcall TForm2::PrintIssues(const TGitApplication& AGitApplication, const TRepository& ARepository)
 {
-    const String LUrl = AGitApplication.ApiUrl + "/repos/" +
-        AGitApplication.User + "/" + ARepository.Name + "/issues";
+    const std::wstring LUrl = fmt::format(L"{}/repos/{}/{}/issues",
+        AGitApplication.ApiUrl.c_str(), AGitApplication.User.c_str(), ARepository.Name.c_str());
     try
     {
         PrepareRequest(AGitApplication);
-        const String LContent = FHTTPClient->Get(LUrl);
+        const String LContent = FHTTPClient->Get(LUrl.c_str());
 
         TJSONArray* LIssues = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
         if(LIssues != nullptr)
@@ -938,7 +942,7 @@ void __fastcall TForm2::PrintIssues(const TGitApplication& AGitApplication, cons
                 auto LIssueToPrint = std::make_unique<TIssue>();
                 JsonToIssue(LIssue, LIssueToPrint.get());
 
-                const std::wstring LLog = fmt::format(L"    Issue #%d: %s", LIssueToPrint->Number, LIssueToPrint->Title.c_str());
+                const std::wstring LLog = fmt::format(L"    Issue #{}: {}", LIssueToPrint->Number, LIssueToPrint->Title.c_str());
                 memoLog->Lines->Add(LLog.c_str());
             }
         }
