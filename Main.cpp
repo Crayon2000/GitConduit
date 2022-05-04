@@ -703,7 +703,7 @@ void __fastcall TForm2::ActionDestinationOwner()
         return;
     }
 
-    chkDestinationTypeUser->Text = String().sprintf(L"User (%s)", LUser.c_str());
+    chkDestinationTypeUser->Text = fmt::format(L"User (%s)", LUser.c_str()).c_str();
     chkDestinationTypeUser->TagString = LUser;
 
     try
@@ -758,9 +758,9 @@ void __fastcall TForm2::ActionCreateRepo()
             auto LDestinationRepository = std::make_unique<TRepository>();
             TRepository *LSourceRepository = LItem->Repository;
 
-            const String LLog = String().sprintf(L"====== %s ======",
+            const std::wstring LLog = fmt::format(L"====== %s ======",
                 LSourceRepository->FullName.c_str());
-            memoLog->Lines->Add(LLog);
+            memoLog->Lines->Add(LLog.c_str());
 
             bool LIsCreated = CreateRepo(LSourceRepository, LDestinationRepository.get());
 
@@ -771,51 +771,41 @@ void __fastcall TForm2::ActionCreateRepo()
 
             if(LSourceRepository->OpenIssueCount > 0)
             {
-                const String LIssueLog =
-                    String().sprintf(L"%d open issue(s) not created!", LSourceRepository->OpenIssueCount);
-                memoLog->Lines->Add(LIssueLog);
+                const std::wstring LIssueLog =
+                    fmt::format(L"%d open issue(s) not created!", LSourceRepository->OpenIssueCount);
+                memoLog->Lines->Add(LIssueLog.c_str());
                 PrintIssues(*SourceApplication, *LSourceRepository);
             }
 
             try
             {
-                String LSourceUrl = LSourceRepository->CloneUrl;
+                std::wstring LSourceUrl = LSourceRepository->CloneUrl.c_str();
                 if(SourceApplication->Username.IsEmpty() == false &&
                     SourceApplication->Password.IsEmpty() == false)
                 {
-                    const String LSourceCredential =
-                        SourceApplication->Username + ":" +
-                        SourceApplication->Password + "@";
-                    LSourceUrl = StringReplace(
-                        LSourceUrl, "https://",
-                        "https://" + LSourceCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                    LSourceUrl = StringReplace(
-                        LSourceUrl, "http://",
-                        "http://" + LSourceCredential,
-                        TReplaceFlags() << rfIgnoreCase);
+                    const std::wstring LSourceCredential = fmt::format(L"$1://{}:{}@",
+                        SourceApplication->Username.c_str(),
+                        SourceApplication->Password.c_str());
+                    LSourceUrl = std::regex_replace(LSourceUrl,
+                        std::wregex(L"(http|https)://", std::regex_constants::icase),
+                        LSourceCredential);
                 }
 
-                Clone(L"temp.git", LSourceUrl.c_str(), true);
+                Clone(L"temp.git", LSourceUrl, true);
 
-                String LDestinationUrl = LDestinationRepository->CloneUrl;
+                std::wstring LDestinationUrl = LDestinationRepository->CloneUrl.c_str();
                 if(DestinationApplication->Username.IsEmpty() == false &&
                     DestinationApplication->Password.IsEmpty() == false)
                 {
-                    const String LDestinationCredential =
-                        DestinationApplication->Username + ":" +
-                        DestinationApplication->Password + "@";
-                    LDestinationUrl = StringReplace(
-                        LDestinationUrl, "https://",
-                        "https://" + LDestinationCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                    LDestinationUrl = StringReplace(
-                        LDestinationUrl, "http://",
-                        "http://" + LDestinationCredential,
-                        TReplaceFlags() << rfIgnoreCase);
+                    const std::wstring LDestinationCredential = fmt::format(L"$1://{}:{}@",
+                        DestinationApplication->Username.c_str(),
+                        DestinationApplication->Password.c_str());
+                    LDestinationUrl = std::regex_replace(LDestinationUrl,
+                        std::wregex(L"(http|https)://", std::regex_constants::icase),
+                        LDestinationCredential);
                 }
 
-                AddRemote(LDestinationUrl.c_str(), L"temp.git");
+                AddRemote(LDestinationUrl, L"temp.git");
                 Push(L"temp.git");
 
                 memoLog->Lines->Add("Pushed repository");
@@ -824,15 +814,19 @@ void __fastcall TForm2::ActionCreateRepo()
                 {
                     try
                     {
-                        const String LSourceWikiUrl = StringReplace(
-                            LSourceUrl, ".git", ".wiki.git", TReplaceFlags());
-                        const String LCDestinationWikiUrl = StringReplace(
-                            LDestinationUrl, ".git", ".wiki.git", TReplaceFlags());
+                        const std::wstring LSourceWikiUrl = std::regex_replace(
+                            LSourceUrl.c_str(),
+                            std::wregex(L".git", std::regex_constants::icase),
+                            L".wiki.git");
+                        const std::wstring LCDestinationWikiUrl = std::regex_replace(
+                            LDestinationUrl.c_str(),
+                            std::wregex(L".git", std::regex_constants::icase),
+                            L".wiki.git");
 
                         Ioutils::TDirectory::Delete("temp.git", true);
 
-                        Clone(L"temp.git", LSourceWikiUrl.c_str(), true);
-                        AddRemote(LCDestinationWikiUrl.c_str(), L"temp.git");
+                        Clone(L"temp.git", LSourceWikiUrl, true);
+                        AddRemote(LCDestinationWikiUrl, L"temp.git");
                         Push(L"temp.git");
                         memoLog->Lines->Add("Pushed Wiki repository");
                     }
@@ -944,8 +938,8 @@ void __fastcall TForm2::PrintIssues(const TGitApplication& AGitApplication, cons
                 auto LIssueToPrint = std::make_unique<TIssue>();
                 JsonToIssue(LIssue, LIssueToPrint.get());
 
-                const String LLog = String().sprintf(L"    Issue #%d: %s", LIssueToPrint->Number, LIssueToPrint->Title.c_str());
-                memoLog->Lines->Add(LLog);
+                const std::wstring LLog = fmt::format(L"    Issue #%d: %s", LIssueToPrint->Number, LIssueToPrint->Title.c_str());
+                memoLog->Lines->Add(LLog.c_str());
             }
         }
     }
