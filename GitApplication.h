@@ -2,7 +2,7 @@
 #ifndef GitApplicationH
 #define GitApplicationH
 //---------------------------------------------------------------------------
-#include <System.hpp>
+#include <string>
 //---------------------------------------------------------------------------
 enum class TGitApplicationType : unsigned char
 {

@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #include "GitApplication.h"
-#include <System.SysUtils.hpp>
+#include <exception>
 #include <IdURI.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -30,7 +30,7 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
             FApplicationName = L"GitLab";
             break;
         default:
-            throw Exception("Invalid application type!");
+            throw std::exception("Invalid application type!");
     }
     FApplicationType = AApplicationType;
 }

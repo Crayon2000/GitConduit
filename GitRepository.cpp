@@ -4,6 +4,7 @@
 #include "GitRepository.h"
 #include <System.JSON.Writers.hpp>
 #include <memory>
+#include <exception>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
@@ -11,9 +12,9 @@ __fastcall TUser::TUser()
 {
 }
 
-void __fastcall JsonToUser(const String AJson, TUser* AUser)
+void __fastcall JsonToUser(const std::wstring AJson, TUser* AUser)
 {
-    TJSONObject* LUser = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+    TJSONObject* LUser = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(String(AJson.c_str())));
     JsonToUser(LUser, AUser);
 }
 
@@ -24,16 +25,16 @@ void __fastcall JsonToUser(TJSONObject* AJsonObject, TUser* AUser)
 
     if(LUser == nullptr)
     {
-        throw Exception("Invalid JSON input!");
+        throw std::exception("Invalid JSON input!");
     }
 
     if((Pair = LUser->Get("login")) != nullptr)
     {
-        AUser->Login = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        AUser->Login = static_cast<TJSONString*>(Pair->JsonValue)->Value().c_str();
     }
     else
     {
-        throw Exception("login not found");
+        throw std::exception("login not found");
     }
 }
 
@@ -51,9 +52,9 @@ __fastcall TRepository::~TRepository()
     delete Owner;
 }
 
-void __fastcall JsonToRepo(const String AJson, TRepository* ARepository)
+void __fastcall JsonToRepo(const std::wstring AJson, TRepository* ARepository)
 {
-    TJSONObject* LRepo = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+    TJSONObject* LRepo = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(String(AJson.c_str())));
     JsonToRepo(LRepo, ARepository);
 }
 
@@ -64,7 +65,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
 
     if(LRepo == nullptr)
     {
-        throw Exception("Invalid JSON input!");
+        throw std::exception("Invalid JSON input!");
     }
 
     if((Pair = LRepo->Get("owner")) != nullptr)
@@ -75,29 +76,29 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
 #ifdef _DEBUG
     else
     {
-        throw Exception("owner not found");
+        throw std::exception("owner not found");
     }
 #endif
 
     if((Pair = LRepo->Get("name")) != nullptr)
     {
-        ARepository->Name = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        ARepository->Name = static_cast<TJSONString*>(Pair->JsonValue)->Value().c_str();
     }
 #ifdef _DEBUG
     else
     {
-        throw Exception("name not found");
+        throw std::exception("name not found");
     }
 #endif
 
     if((Pair = LRepo->Get("full_name")) != nullptr)
     {
-        ARepository->FullName = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        ARepository->FullName = static_cast<TJSONString*>(Pair->JsonValue)->Value().c_str();
     }
 #ifdef _DEBUG
     else
     {
-        throw Exception("full_name not found");
+        throw std::exception("full_name not found");
     }
 #endif
 
@@ -115,7 +116,7 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
 #ifdef _DEBUG
     else
     {
-        throw Exception("private not found");
+        throw std::exception("private not found");
     }
 #endif
 
@@ -124,17 +125,17 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            ARepository->Description = LJsonString->Value();
+            ARepository->Description = LJsonString->Value().c_str();
         }
         else
         {
-            ARepository->Description = "";
+            ARepository->Description = L"";
         }
     }
 #ifdef _DEBUG
     else
     {
-        throw Exception("description not found");
+        throw std::exception("description not found");
     }
 #endif
 
@@ -150,23 +151,23 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
 
     if((Pair = LRepo->Get("clone_url")) != nullptr)
     {
-        ARepository->CloneUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        ARepository->CloneUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value().c_str();
     }
 #ifdef _DEBUG
     else
     {
-        throw Exception("clone_url not found");
+        throw std::exception("clone_url not found");
     }
 #endif
 
     if((Pair = LRepo->Get("mirror_url")) != nullptr &&
         dynamic_cast<TJSONNull*>(Pair->JsonValue) == nullptr)
     {
-        ARepository->MirrorUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        ARepository->MirrorUrl = static_cast<TJSONString*>(Pair->JsonValue)->Value().c_str();
     }
     else
     {
-        ARepository->MirrorUrl = "";
+        ARepository->MirrorUrl = L"";
     }
 
     if((Pair = LRepo->Get("open_issues_count")) != nullptr)
@@ -222,11 +223,11 @@ void __fastcall JsonToRepo(TJSONObject* AJsonObject, TRepository* ARepository)
     if((Pair = LRepo->Get("homepage")) != nullptr &&
         dynamic_cast<TJSONNull*>(Pair->JsonValue) == nullptr)
     {
-        ARepository->Homepage = static_cast<TJSONString*>(Pair->JsonValue)->Value();
+        ARepository->Homepage = static_cast<TJSONString*>(Pair->JsonValue)->Value().c_str();
     }
     else
     {
-        ARepository->Homepage = "";
+        ARepository->Homepage = L"";
     }
 }
 
@@ -235,9 +236,9 @@ __fastcall TIssue::TIssue() :
 {
 }
 
-void __fastcall JsonToIssue(const String AJson, TIssue* AIssue)
+void __fastcall JsonToIssue(const std::wstring AJson, TIssue* AIssue)
 {
-    TJSONObject* LIssue = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+    TJSONObject* LIssue = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(String(AJson.c_str())));
     JsonToIssue(LIssue, AIssue);
 }
 
@@ -248,36 +249,36 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue)
 
     if(LIssue == nullptr)
     {
-        throw Exception("Invalid JSON input!");
+        throw std::exception("Invalid JSON input!");
     }
 
-    AIssue->Title = "";
+    AIssue->Title = L"";
     if((Pair = LIssue->Get("title")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AIssue->Title = LJsonString->Value();
+            AIssue->Title = LJsonString->Value().c_str();
         }
     }
 
-    AIssue->Body = "";
+    AIssue->Body = L"";
     if((Pair = LIssue->Get("body")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AIssue->Body = LJsonString->Value();
+            AIssue->Body = LJsonString->Value().c_str();
         }
     }
 
-    AIssue->State = "";
+    AIssue->State = L"";
     if((Pair = LIssue->Get("state")) != nullptr)
     {
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AIssue->State = LJsonString->Value();
+            AIssue->State = LJsonString->Value().c_str();
         }
     }
 
@@ -296,9 +297,9 @@ __fastcall TOrganization::TOrganization()
 {
 }
 
-void __fastcall JsonToOrganization(const String AJson, TOrganization* AOrganization)
+void __fastcall JsonToOrganization(const std::wstring AJson, TOrganization* AOrganization)
 {
-    TJSONObject* LOrg = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(AJson));
+    TJSONObject* LOrg = static_cast<TJSONObject*>(TJSONObject::ParseJSONValue(String(AJson.c_str())));
     JsonToOrganization(LOrg, AOrganization);
 }
 
@@ -309,7 +310,7 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
 
     if(LOrg == nullptr)
     {
-        throw Exception("Invalid JSON input!");
+        throw std::exception("Invalid JSON input!");
     }
 
     if((Pair = LOrg->Get("login")) != nullptr)
@@ -317,7 +318,7 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AOrganization->Login = LJsonString->Value();
+            AOrganization->Login = LJsonString->Value().c_str();
         }
     }
     else if((Pair = LOrg->Get("username")) != nullptr)
@@ -325,7 +326,7 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AOrganization->Login = LJsonString->Value();
+            AOrganization->Login = LJsonString->Value().c_str();
         }
     }
 
@@ -334,12 +335,12 @@ void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrg
         TJSONString* LJsonString = static_cast<TJSONString*>(Pair->JsonValue);
         if(LJsonString->Null == false)
         {
-            AOrganization->Description = LJsonString->Value();
+            AOrganization->Description = LJsonString->Value().c_str();
         }
     }
 }
 
-void __fastcall RepoToJson(const TRepository& ARepository, String& AJson)
+void __fastcall RepoToJson(const TRepository& ARepository, std::wstring& AJson)
 {
     auto LStringWriter =  std::make_unique<TStringWriter>();
     auto LJsonTextWriter = std::make_unique<TJsonTextWriter>(LStringWriter.get(), false);
@@ -351,13 +352,13 @@ void __fastcall RepoToJson(const TRepository& ARepository, String& AJson)
     LJsonTextWriter->WriteStartObject();
 
     LJsonTextWriter->WritePropertyName("name");
-    LJsonTextWriter->WriteValue(ARepository.Name);
+    LJsonTextWriter->WriteValue(ARepository.Name.c_str());
 
     LJsonTextWriter->WritePropertyName("description");
-    LJsonTextWriter->WriteValue(ARepository.Description);
+    LJsonTextWriter->WriteValue(ARepository.Description.c_str());
 
     LJsonTextWriter->WritePropertyName("homepage");
-    LJsonTextWriter->WriteValue(ARepository.Homepage);
+    LJsonTextWriter->WriteValue(ARepository.Homepage.c_str());
 
     LJsonTextWriter->WritePropertyName("private");
     LJsonTextWriter->WriteValue(ARepository.Private);
@@ -376,6 +377,6 @@ void __fastcall RepoToJson(const TRepository& ARepository, String& AJson)
 
     LJsonTextWriter->WriteEndObject();
 
-    AJson = LStringWriter->ToString();
+    AJson = LStringWriter->ToString().c_str();
 }
 

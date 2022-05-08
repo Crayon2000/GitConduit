@@ -102,18 +102,18 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
         LUrl += L"/user/repos";
     }
 
-    String LJson;
+    std::wstring LJson;
     RepoToJson(*ASourceRepository, LJson);
 
-    String LAnswer;
+    std::wstring LAnswer;
     try
     {
         PrepareRequest(*DestinationApplication);
         auto SourceFile = std::make_unique<System::Classes::TMemoryStream>();
-        WriteStringToStream(SourceFile.get(), LJson, enUTF8);
+        Idglobal::WriteStringToStream(SourceFile.get(), LJson.c_str(), IndyTextEncoding_UTF8());
         SourceFile->Position = 0;
         FHTTPClient->Request->ContentType = "application/json";
-        LAnswer = FHTTPClient->Post(LUrl.c_str(), SourceFile.get());
+        LAnswer = FHTTPClient->Post(LUrl.c_str(), SourceFile.get()).c_str();
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
@@ -128,7 +128,7 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
                 DestinationApplication->User, ASourceRepository->Name);
             try
             {
-                LAnswer = FHTTPClient->Get(LUrl.c_str());
+                LAnswer = FHTTPClient->Get(LUrl.c_str()).c_str();
             }
             catch(...)
             {
@@ -144,7 +144,7 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
         memoLog->Lines->Add(LLog);
     }
 
-    TJSONObject* LObject = dynamic_cast<TJSONObject*>(TJSONObject::ParseJSONValue(LAnswer));
+    TJSONObject* LObject = dynamic_cast<TJSONObject*>(TJSONObject::ParseJSONValue(String(LAnswer.c_str())));
     if(LObject != nullptr)
     {
         TJSONPair* Pair;
@@ -153,7 +153,7 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
             JsonToRepo(LAnswer, ADestinationRepository);
 
             const std::wstring LLog = fmt::format(L"Created repository {} on {}",
-                ADestinationRepository->FullName.c_str(), DestinationApplication->ApplicationName);
+                ADestinationRepository->FullName, DestinationApplication->ApplicationName);
             memoLog->Lines->Add(LLog.c_str());
             Result = true;
         }
@@ -169,17 +169,17 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
 }
 //---------------------------------------------------------------------------
 
-String __fastcall TForm2::GetAuthenticatedUser(const TGitApplication& AGitApplication)
+std::wstring __fastcall TForm2::GetAuthenticatedUser(const TGitApplication& AGitApplication)
 {
-    String LJson;
+    std::wstring LJson;
     const std::wstring LUrl = AGitApplication.ApiUrl + L"/user";
 
     PrepareRequest(AGitApplication);
-    LJson = FHTTPClient->Get(LUrl.c_str()); // May throw exception
+    LJson = FHTTPClient->Get(LUrl.c_str()).c_str(); // May throw exception
 
-    if(LJson.IsEmpty() == true)
+    if(LJson.empty() == true)
     {
-        return "";
+        return L"";
     }
 
     auto LUser = std::make_unique<TUser>();
@@ -192,7 +192,7 @@ String __fastcall TForm2::GetAuthenticatedUser(const TGitApplication& AGitApplic
 void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
     System::Classes::TStrings* AItems)
 {
-    String LJson;
+    std::wstring LJson;
     const std::wstring LUrl = AGitApplication->ApiUrl + L"/user/orgs";
 
     AItems->Clear();
@@ -200,7 +200,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
     PrepareRequest(*AGitApplication);
     try
     {
-        LJson = FHTTPClient->Get(LUrl.c_str()); // May throw exception
+        LJson = FHTTPClient->Get(LUrl.c_str()).c_str(); // May throw exception
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
@@ -211,7 +211,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
         }
     }
 
-    TJSONArray* LOrgs = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LJson));
+    TJSONArray* LOrgs = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(String(LJson.c_str())));
     if(LOrgs != nullptr)
     {
         TJSONArray::TEnumerator* LOrgsEnumerator = LOrgs->GetEnumerator();
@@ -222,7 +222,7 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
             auto Org = std::make_unique<TOrganization>();
             JsonToOrganization(LOrg, Org.get());
 
-            AItems->AddObject(Org->Login, nullptr);
+            AItems->AddObject(Org->Login.c_str(), nullptr);
         }
     }
 }
@@ -487,7 +487,7 @@ void __fastcall TForm2::ActionSourceOwner()
     std::wstring LExceptionMsg;
     try
     {
-        LUser = GetAuthenticatedUser(*SourceApplication).c_str();
+        LUser = GetAuthenticatedUser(*SourceApplication);
     }
     catch(const Exception& e)
     {
@@ -581,12 +581,12 @@ void __fastcall TForm2::ActionRepositories()
                 {
                     TJSONObject* LRepo = static_cast<TJSONObject*>(LRepoEnumerator->Current);
 
-                    const String LSourceJson = LRepo->ToString();
+                    const std::wstring LSourceJson = LRepo->ToString().c_str();
                     TRepository* LSourceRepository = new TRepository();
                     JsonToRepo(LSourceJson, LSourceRepository);
 
                     if(SourceApplication->Endpoint == TApiEndpoint::User &&
-                        SourceApplication->User.compare(LSourceRepository->Owner->Login.c_str()) != 0)
+                        LSourceRepository->Owner->Login != SourceApplication->User)
                     {
                         delete LSourceRepository;
                         continue;
@@ -595,7 +595,7 @@ void __fastcall TForm2::ActionRepositories()
                     TListBoxRepositoryItem* LListBoxItem = new TListBoxRepositoryItem(this);
                     LListBoxItem->Parent = ListBoxRepo;
                     LListBoxItem->IsChecked = true;
-                    LListBoxItem->Text = LSourceRepository->FullName;
+                    LListBoxItem->Text = LSourceRepository->FullName.c_str();
                     LListBoxItem->Repository = LSourceRepository; // List box is owner of memory
                     if(LSourceRepository->Private == true)
                     {   // Private
@@ -603,7 +603,7 @@ void __fastcall TForm2::ActionRepositories()
                     }
                     else
                     {
-                        if(LSourceRepository->MirrorUrl.IsEmpty() == false)
+                        if(LSourceRepository->MirrorUrl.empty() == false)
                         {   // Mirror
                             LListBoxItem->ImageIndex = 3;
                         }
@@ -616,9 +616,9 @@ void __fastcall TForm2::ActionRepositories()
                             LListBoxItem->ImageIndex = 1;
                         }
                     }
-                    if(LSourceRepository->Description.IsEmpty() == false)
+                    if(LSourceRepository->Description.empty() == false)
                     {
-                        LListBoxItem->ItemData->Detail = LSourceRepository->Description;
+                        LListBoxItem->ItemData->Detail = LSourceRepository->Description.c_str();
                         LListBoxItem->Height = 50.0f;
                         LListBoxItem->StyleLookup = "listboxitembottomdetail";
                     }
@@ -684,7 +684,7 @@ void __fastcall TForm2::ActionDestinationOwner()
     std::wstring LExceptionMsg;
     try
     {
-        LUser = GetAuthenticatedUser(*DestinationApplication).c_str();
+        LUser = GetAuthenticatedUser(*DestinationApplication);
     }
     catch(const Exception& e)
     {
@@ -762,7 +762,7 @@ void __fastcall TForm2::ActionCreateRepo()
             TRepository *LSourceRepository = LItem->Repository;
 
             const std::wstring LLog = fmt::format(L"====== {} ======",
-                LSourceRepository->FullName.c_str());
+                LSourceRepository->FullName);
             memoLog->Lines->Add(LLog.c_str());
 
             bool LIsCreated = CreateRepo(LSourceRepository, LDestinationRepository.get());
@@ -782,7 +782,7 @@ void __fastcall TForm2::ActionCreateRepo()
 
             try
             {
-                std::wstring LSourceUrl = LSourceRepository->CloneUrl.c_str();
+                std::wstring LSourceUrl = LSourceRepository->CloneUrl;
                 if(SourceApplication->Username.empty() == false &&
                     SourceApplication->Password.empty() == false)
                 {
@@ -795,7 +795,7 @@ void __fastcall TForm2::ActionCreateRepo()
 
                 Clone(L"temp.git", LSourceUrl, true);
 
-                std::wstring LDestinationUrl = LDestinationRepository->CloneUrl.c_str();
+                std::wstring LDestinationUrl = LDestinationRepository->CloneUrl;
                 if(DestinationApplication->Username.empty() == false &&
                     DestinationApplication->Password.empty() == false)
                 {
@@ -922,7 +922,7 @@ __fastcall TListBoxRepositoryItem::~TListBoxRepositoryItem()
 void __fastcall TForm2::PrintIssues(const TGitApplication& AGitApplication, const TRepository& ARepository)
 {
     const std::wstring LUrl = fmt::format(L"{}/repos/{}/{}/issues",
-        AGitApplication.ApiUrl.c_str(), AGitApplication.User.c_str(), ARepository.Name.c_str());
+        AGitApplication.ApiUrl, AGitApplication.User, ARepository.Name);
     try
     {
         PrepareRequest(AGitApplication);
@@ -939,7 +939,7 @@ void __fastcall TForm2::PrintIssues(const TGitApplication& AGitApplication, cons
                 auto LIssueToPrint = std::make_unique<TIssue>();
                 JsonToIssue(LIssue, LIssueToPrint.get());
 
-                const std::wstring LLog = fmt::format(L"    Issue #{}: {}", LIssueToPrint->Number, LIssueToPrint->Title.c_str());
+                const std::wstring LLog = fmt::format(L"    Issue #{}: {}", LIssueToPrint->Number, LIssueToPrint->Title);
                 memoLog->Lines->Add(LLog.c_str());
             }
         }

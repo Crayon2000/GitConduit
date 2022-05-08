@@ -147,7 +147,7 @@ private:    // User declarations
     void __fastcall ActionCreateRepo();
 protected:
     bool __fastcall CreateRepo(const TRepository* ASourceRepository, TRepository* ADestinationRepository);
-    String __fastcall GetAuthenticatedUser(const TGitApplication& AGitApplication);
+    std::wstring __fastcall GetAuthenticatedUser(const TGitApplication& AGitApplication);
     void __fastcall GetOrganizations(TGitApplication* AGitApplication, System::Classes::TStrings* AItems);
     void __fastcall PrepareRequest(const TGitApplication& AGitApplication);
     HANDLE __fastcall ExecuteProgramEx(const std::wstring ACmd, const std::wstring ADirectory = L".");
