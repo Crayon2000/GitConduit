@@ -91,15 +91,15 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
 {
     bool Result = false;
 
-    String LUrl = DestinationApplication->ApiUrl;
+    std::wstring LUrl = DestinationApplication->ApiUrl.c_str();
 
     if(DestinationApplication->Endpoint == TApiEndpoint::Organization)
     {
-        LUrl += "/orgs/" + DestinationApplication->User + "/repos";
+        LUrl += fmt::format(L"/orgs/{}/repos", DestinationApplication->User);
     }
     else
     {
-        LUrl += "/user/repos";
+        LUrl += L"/user/repos";
     }
 
     String LJson;
@@ -113,7 +113,7 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
         WriteStringToStream(SourceFile.get(), LJson, enUTF8);
         SourceFile->Position = 0;
         FHTTPClient->Request->ContentType = "application/json";
-        LAnswer = FHTTPClient->Post(LUrl, SourceFile.get());
+        LAnswer = FHTTPClient->Post(LUrl.c_str(), SourceFile.get());
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
@@ -124,12 +124,11 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
             e.ErrorCode == 500)
         {
             // Get the repository name we wanted to create
-            LUrl = DestinationApplication->ApiUrl + "/repos/" +
-                DestinationApplication->User + "/" + ASourceRepository->Name;
-
+            LUrl = fmt::format(L"{}/repos/{}/{}", DestinationApplication->ApiUrl,
+                DestinationApplication->User, ASourceRepository->Name);
             try
             {
-                LAnswer = FHTTPClient->Get(LUrl);
+                LAnswer = FHTTPClient->Get(LUrl.c_str());
             }
             catch(...)
             {
@@ -153,9 +152,9 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
         {
             JsonToRepo(LAnswer, ADestinationRepository);
 
-            const String LLog = "Created repository " + ADestinationRepository->FullName +
-                " on " + DestinationApplication->ApplicationName;
-            memoLog->Lines->Add(LLog);
+            const std::wstring LLog = fmt::format(L"Created repository {} on {}",
+                ADestinationRepository->FullName.c_str(), DestinationApplication->ApplicationName);
+            memoLog->Lines->Add(LLog.c_str());
             Result = true;
         }
         else if((Pair = LObject->Get("message")) != nullptr)
@@ -173,10 +172,10 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
 String __fastcall TForm2::GetAuthenticatedUser(const TGitApplication& AGitApplication)
 {
     String LJson;
-    const String LUrl = AGitApplication.ApiUrl + "/user";
+    const std::wstring LUrl = AGitApplication.ApiUrl + L"/user";
 
     PrepareRequest(AGitApplication);
-    LJson = FHTTPClient->Get(LUrl); // May throw exception
+    LJson = FHTTPClient->Get(LUrl.c_str()); // May throw exception
 
     if(LJson.IsEmpty() == true)
     {
@@ -194,14 +193,14 @@ void __fastcall TForm2::GetOrganizations(TGitApplication* AGitApplication,
     System::Classes::TStrings* AItems)
 {
     String LJson;
-    const String LUrl = AGitApplication->ApiUrl + "/user/orgs";
+    const std::wstring LUrl = AGitApplication->ApiUrl + L"/user/orgs";
 
     AItems->Clear();
 
     PrepareRequest(*AGitApplication);
     try
     {
-        LJson = FHTTPClient->Get(LUrl); // May throw exception
+        LJson = FHTTPClient->Get(LUrl.c_str()); // May throw exception
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
     {
@@ -233,7 +232,7 @@ void __fastcall TForm2::PrepareRequest(const TGitApplication& AGitApplication)
 {
     // Set authorization token
     FHTTPClient->Request->CustomHeaders->Values["Authorization"] =
-        "token " + AGitApplication.Token;
+        fmt::format(L"token {}", AGitApplication.Token).c_str();
 }
 //---------------------------------------------------------------------------
 
@@ -479,10 +478,10 @@ void __fastcall TForm2::ActionSourceOwner()
     const TGitApplicationType LSourceType =
         static_cast<TGitApplicationType>((unsigned char)cboSourceApp->Selected->Data);
     SourceApplication->ApplicationType = LSourceType;
-    SourceApplication->ApiUrl = txtSourceUrl->Text;
-    SourceApplication->Token = txtSourceToken->Text;
-    SourceApplication->Username = txtSourceUsername->Text;
-    SourceApplication->Password = txtSourcePassword->Text;
+    SourceApplication->ApiUrl = txtSourceUrl->Text.c_str();
+    SourceApplication->Token = txtSourceToken->Text.c_str();
+    SourceApplication->Username = txtSourceUsername->Text.c_str();
+    SourceApplication->Password = txtSourcePassword->Text.c_str();
 
     std::wstring LUser;
     std::wstring LExceptionMsg;
@@ -542,37 +541,37 @@ void __fastcall TForm2::ActionSourceOwner()
 
 void __fastcall TForm2::ActionRepositories()
 {
-    String LUrl = SourceApplication->ApiUrl;
+    std::wstring LUrl = SourceApplication->ApiUrl;
     if(chkSourceTypeOrg->IsChecked == true)
     {
         SourceApplication->Endpoint = TApiEndpoint::Organization;
-        SourceApplication->User = cboeSourceName->Text;
+        SourceApplication->User = cboeSourceName->Text.c_str();
 
-        LUrl += "/orgs/" + cboeSourceName->Text + "/repos";
+        LUrl += fmt::format(L"/orgs/{}/repos", cboeSourceName->Text.c_str());
     }
     else
     {
         SourceApplication->Endpoint = TApiEndpoint::User;
-        SourceApplication->User = cboeSourceUser->Text;
+        SourceApplication->User = cboeSourceUser->Text.c_str();
 
         if(cboeSourceUser->Items->Count > 0 &&
             cboeSourceUser->Items->Strings[0] == cboeSourceUser->Text)
         {
-            LUrl += "/user/repos";
+            LUrl += L"/user/repos";
         }
         else
         {
-            LUrl += "/users/" + cboeSourceUser->Text + "/repos";
+            LUrl += fmt::format(L"/users/{}/repos", cboeSourceUser->Text.c_str());
         }
     }
 
     std::wstring LExceptionMsg;
     try
     {
-        while(LUrl.IsEmpty() == false)
+        while(LUrl.empty() == false)
         {
             PrepareRequest(*SourceApplication);
-            const String LContent = FHTTPClient->Get(LUrl);
+            const String LContent = FHTTPClient->Get(LUrl.c_str());
 
             TJSONArray* LRepos = static_cast<TJSONArray*>(TJSONObject::ParseJSONValue(LContent));
             if(LRepos != nullptr)
@@ -587,7 +586,7 @@ void __fastcall TForm2::ActionRepositories()
                     JsonToRepo(LSourceJson, LSourceRepository);
 
                     if(SourceApplication->Endpoint == TApiEndpoint::User &&
-                        LSourceRepository->Owner->Login != SourceApplication->User)
+                        SourceApplication->User.compare(LSourceRepository->Owner->Login.c_str()) != 0)
                     {
                         delete LSourceRepository;
                         continue;
@@ -633,7 +632,7 @@ void __fastcall TForm2::ActionRepositories()
                 }
             }
 
-            LUrl = GetNextUrl().c_str();
+            LUrl = GetNextUrl();
         }
     }
     catch(const Idhttp::EIdHTTPProtocolException& e)
@@ -676,10 +675,10 @@ void __fastcall TForm2::ActionDestinationOwner()
     const TGitApplicationType LDestinationype =
         static_cast<TGitApplicationType>((unsigned char)cboDestinationApp->Selected->Data);
     DestinationApplication->ApplicationType = LDestinationype;
-    DestinationApplication->ApiUrl = txtDestinationUrl->Text;
-    DestinationApplication->Token = txtDestinationToken->Text;
-    DestinationApplication->Username = txtDestinationUsername->Text;
-    DestinationApplication->Password = txtDestinationPassword->Text;
+    DestinationApplication->ApiUrl = txtDestinationUrl->Text.c_str();
+    DestinationApplication->Token = txtDestinationToken->Text.c_str();
+    DestinationApplication->Username = txtDestinationUsername->Text.c_str();
+    DestinationApplication->Password = txtDestinationPassword->Text.c_str();
 
     std::wstring LUser;
     std::wstring LExceptionMsg;
@@ -740,12 +739,12 @@ void __fastcall TForm2::ActionCreateRepo()
     if(chkDestinationTypeOrg->IsChecked == true)
     {
         DestinationApplication->Endpoint = TApiEndpoint::Organization;
-        DestinationApplication->User = cboeDestinationName->Text;
+        DestinationApplication->User = cboeDestinationName->Text.c_str();
     }
     else
     {
         DestinationApplication->Endpoint = TApiEndpoint::User;
-        DestinationApplication->User = chkDestinationTypeUser->TagString;
+        DestinationApplication->User = chkDestinationTypeUser->TagString.c_str();
     }
 
     const int LCount = ListBoxRepo->Items->Count;
@@ -784,12 +783,11 @@ void __fastcall TForm2::ActionCreateRepo()
             try
             {
                 std::wstring LSourceUrl = LSourceRepository->CloneUrl.c_str();
-                if(SourceApplication->Username.IsEmpty() == false &&
-                    SourceApplication->Password.IsEmpty() == false)
+                if(SourceApplication->Username.empty() == false &&
+                    SourceApplication->Password.empty() == false)
                 {
                     const std::wstring LSourceCredential = fmt::format(L"$1://{}:{}@",
-                        SourceApplication->Username.c_str(),
-                        SourceApplication->Password.c_str());
+                        SourceApplication->Username, SourceApplication->Password);
                     LSourceUrl = std::regex_replace(LSourceUrl,
                         std::wregex(L"(http|https)://", std::regex_constants::icase),
                         LSourceCredential);
@@ -798,12 +796,11 @@ void __fastcall TForm2::ActionCreateRepo()
                 Clone(L"temp.git", LSourceUrl, true);
 
                 std::wstring LDestinationUrl = LDestinationRepository->CloneUrl.c_str();
-                if(DestinationApplication->Username.IsEmpty() == false &&
-                    DestinationApplication->Password.IsEmpty() == false)
+                if(DestinationApplication->Username.empty() == false &&
+                    DestinationApplication->Password.empty() == false)
                 {
                     const std::wstring LDestinationCredential = fmt::format(L"$1://{}:{}@",
-                        DestinationApplication->Username.c_str(),
-                        DestinationApplication->Password.c_str());
+                        DestinationApplication->Username, DestinationApplication->Password);
                     LDestinationUrl = std::regex_replace(LDestinationUrl,
                         std::wregex(L"(http|https)://", std::regex_constants::icase),
                         LDestinationCredential);

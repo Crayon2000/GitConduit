@@ -8,7 +8,6 @@
 #pragma package(smart_init)
 
 __fastcall TGitApplication::TGitApplication() :
-    System::TObject(),
     FEndpoint(TApiEndpoint::User)
 {
     SetApplicationType(TGitApplicationType::Gogs);
@@ -19,16 +18,16 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
     switch(AApplicationType)
     {
         case TGitApplicationType::Gogs:
-            FApplicationName = "Gogs";
+            FApplicationName = L"Gogs";
             break;
         case TGitApplicationType::GitBucket:
-            FApplicationName = "GitBucket";
+            FApplicationName = L"GitBucket";
             break;
         case TGitApplicationType::GitHub:
-            FApplicationName = "GitHub";
+            FApplicationName = L"GitHub";
             break;
         case TGitApplicationType::GitLab:
-            FApplicationName = "GitLab";
+            FApplicationName = L"GitLab";
             break;
         default:
             throw Exception("Invalid application type!");
@@ -36,21 +35,24 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
     FApplicationType = AApplicationType;
 }
 
-void __fastcall TGitApplication::SetApiUrl(const String AApiUrl)
+void __fastcall TGitApplication::SetApiUrl(const std::wstring AApiUrl)
 {
+    String LApiUrl = AApiUrl.c_str();
+
     try
     {
         // URLEncode may throw an exception
-        FApiUrl = TIdURI::URLEncode(AApiUrl.Trim());
+        LApiUrl = TIdURI::URLEncode(LApiUrl.Trim());
     }
     catch(...)
     {
-        FApiUrl = AApiUrl;
     }
 
-    if(FApiUrl.Length() > 0 && *FApiUrl.LastChar() == L'/')
+    if(LApiUrl.Length() > 0 && *LApiUrl.LastChar() == L'/')
     {
-        FApiUrl = FApiUrl.SubString(0, FApiUrl.Length() - 1);
+        LApiUrl = LApiUrl.SubString(0, LApiUrl.Length() - 1);
     }
+
+    FApiUrl = LApiUrl.c_str();
 }
 

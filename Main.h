@@ -156,7 +156,7 @@ protected:
     void __fastcall AddRemote(const std::wstring AGitRepo, const std::wstring ADirectory);
     void __fastcall Push(const std::wstring ADirectory);
     bool __fastcall CheckGitExe();
-    void __fastcall ShowMessage(const String AMessage);
+    void __fastcall ShowMessage(const std::wstring AMessage);
     void __fastcall HideMessage();
     void __fastcall OnApplicationIdle(System::TObject* Sender, bool &Done);
     void __fastcall ListBoxItemApplyStyleLookup(TObject *Sender);

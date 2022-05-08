@@ -18,33 +18,31 @@ enum class TApiEndpoint : unsigned char
     Organization
 };
 
-class TGitApplication : public System::TObject
+class TGitApplication
 {
-    typedef System::TObject inherited;
-
 private:
     TGitApplicationType FApplicationType;
-    String FApplicationName;
-    String FApiUrl;
-    String FToken;
-    String FUser;
-    String FUsername;
-    String FPassword;
+    std::wstring FApplicationName;
+    std::wstring FApiUrl;
+    std::wstring FToken;
+    std::wstring FUser;
+    std::wstring FUsername;
+    std::wstring FPassword;
     TApiEndpoint FEndpoint;
 protected:
     void __fastcall SetApplicationType(TGitApplicationType AApplicationType);
-    void __fastcall SetApiUrl(const String AApiUrl);
+    void __fastcall SetApiUrl(const std::wstring AApiUrl);
 public:
     __fastcall TGitApplication();
     inline __fastcall virtual ~TGitApplication() { }
 
     __property TGitApplicationType ApplicationType = {read=FApplicationType, write=SetApplicationType};
-    __property String ApplicationName = {read=FApplicationName};
-    __property String ApiUrl = {read=FApiUrl, write=SetApiUrl};
-    __property String Token = {read=FToken, write=FToken};
-    __property String User = {read=FUser, write=FUser};
-    __property String Username = {read=FUsername, write=FUsername};
-    __property String Password = {read=FPassword, write=FPassword};
+    __property std::wstring ApplicationName = {read=FApplicationName};
+    __property std::wstring ApiUrl = {read=FApiUrl, write=SetApiUrl};
+    __property std::wstring Token = {read=FToken, write=FToken};
+    __property std::wstring User = {read=FUser, write=FUser};
+    __property std::wstring Username = {read=FUsername, write=FUsername};
+    __property std::wstring Password = {read=FPassword, write=FPassword};
     __property TApiEndpoint Endpoint = {read=FEndpoint, write=FEndpoint};
 };
 //---------------------------------------------------------------------------
