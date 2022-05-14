@@ -2,6 +2,7 @@
 #pragma hdrstop
 
 #include "GitApplication.h"
+#include "StringUtils.h"
 #include <exception>
 #include <IdURI.hpp>
 //---------------------------------------------------------------------------
@@ -37,12 +38,12 @@ void __fastcall TGitApplication::SetApplicationType(TGitApplicationType AApplica
 
 void __fastcall TGitApplication::SetApiUrl(const std::wstring AApiUrl)
 {
-    String LApiUrl = AApiUrl.c_str();
+    String LApiUrl = Trim(AApiUrl).c_str();
 
     try
     {
         // URLEncode may throw an exception
-        LApiUrl = TIdURI::URLEncode(LApiUrl.Trim());
+        LApiUrl = TIdURI::URLEncode(LApiUrl);
     }
     catch(...)
     {
