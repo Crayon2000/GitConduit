@@ -432,7 +432,7 @@ void __fastcall TForm2::HideMessage()
 
 void __fastcall TForm2::OnApplicationIdle(System::TObject* Sender, bool &Done)
 {
-    int LTabAction = FTabAction;
+    const int LTabAction = FTabAction;
     FTabAction = -1;
 
     switch(LTabAction)
