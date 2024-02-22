@@ -100,7 +100,7 @@
         <BCC_GenerateLSPLog>true</BCC_GenerateLSPLog>
         <BCC_GenerateInOutFiles>true</BCC_GenerateInOutFiles>
         <BCC_EnableLSPIndexingOnChange>true</BCC_EnableLSPIndexingOnChange>
-        <IncludePath>libs\fmt\src\;libs\fmt\include\;$(IncludePath)</IncludePath>
+        <IncludePath>libs\fmt\src\;libs\fmt\include\;libs\nlohmann;$(IncludePath)</IncludePath>
         <ILINK_LibraryPath>libs\fmt\src\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
@@ -219,6 +219,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>images\app.ico</Icon_MainIcon>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DynamicRTL>false</DynamicRTL>
@@ -305,8 +306,8 @@
                     <Source Name="MainSource">GitConduit.cpp</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k270.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp270.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k280.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp280.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                 </Excluded_Packages>
             </CPlusPlusBuilder.Personality>
             <Deployment Version="4">

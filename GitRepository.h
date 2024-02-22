@@ -82,6 +82,6 @@ void __fastcall JsonToIssue(TJSONObject* AJsonObject, TIssue* AIssue);
 void __fastcall JsonToOrganization(const std::wstring AJson, TOrganization* AOrganization);
 void __fastcall JsonToOrganization(TJSONObject* AJsonObject, TOrganization* AOrganization);
 
-void __fastcall RepoToJson(const TRepository& ARepository, std::wstring& AJson);
+[[nodiscard]] std::string __fastcall RepoToJson(const TRepository& ARepository);
 //---------------------------------------------------------------------------
 #endif

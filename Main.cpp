@@ -102,15 +102,14 @@ bool __fastcall TForm2::CreateRepo(const TRepository* ASourceRepository, TReposi
         LUrl += L"/user/repos";
     }
 
-    std::wstring LJson;
-    RepoToJson(*ASourceRepository, LJson);
+    const std::string LJson = RepoToJson(*ASourceRepository);
 
     std::wstring LAnswer;
     try
     {
         PrepareRequest(*DestinationApplication);
-        auto SourceFile = std::make_unique<System::Classes::TMemoryStream>();
-        Idglobal::WriteStringToStream(SourceFile.get(), LJson.c_str(), IndyTextEncoding_UTF8());
+        auto SourceFile = std::make_unique<System::Classes::TStream>();
+        SourceFile->Write(LJson.data(), LJson.size());
         SourceFile->Position = 0;
         FHTTPClient->Request->ContentType = "application/json";
         LAnswer = FHTTPClient->Post(LUrl.c_str(), SourceFile.get()).c_str();
