@@ -142,9 +142,9 @@ protected:
     void __fastcall PrepareRequest(const TGitApplication& AGitApplication);
     HANDLE __fastcall ExecuteProgramEx(const String ACmd, const String ADirectory = ".");
     DWORD __fastcall Wait(HANDLE AHandle);
-    void __fastcall Clone(const String ADirectory, const String AGitRepo, bool AIsBare = false);
+    void __fastcall Clone(const String ADirectory, const String AGitRepo, const String AUser, const String APassword);
     void __fastcall AddRemote(const String AGitRepo, const String ADirectory);
-    void __fastcall Push(const String ADirectory);
+    void __fastcall Push(const String ADirectory, const String AUser, const String APassword);
     bool __fastcall CheckGitExe();
     void __fastcall ShowMessage(const String AMessage);
     void __fastcall HideMessage();

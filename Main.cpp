@@ -239,7 +239,6 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
 {
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
-    SECURITY_ATTRIBUTES sa;
 
     si.cb = sizeof(si);
     si.lpReserved = nullptr;
@@ -253,9 +252,7 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     si.hStdOutput = nullptr;
     si.hStdError = nullptr;
 
-    sa.nLength = sizeof(sa);
-    sa.lpSecurityDescriptor = nullptr;
-    sa.bInheritHandle = true;
+    ZeroMemory(&pi, sizeof(pi));
 
     bool ProcResult = CreateProcess(nullptr, ACmd.c_str(), nullptr, nullptr, true, 0,
         nullptr, ADirectory.c_str(), &si, &pi);
@@ -264,9 +261,18 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
         return pi.hProcess;
     }
 
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
-    CloseHandle(si.hStdOutput);
+    if(pi.hProcess != nullptr)
+    {
+        CloseHandle(pi.hProcess);
+    }
+    if(pi.hThread != nullptr)
+    {
+        CloseHandle(pi.hThread);
+    }
+    if(si.hStdOutput != nullptr)
+    {
+        CloseHandle(si.hStdOutput);
+    }
     return nullptr;
 }
 //---------------------------------------------------------------------------
@@ -303,13 +309,11 @@ DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, bool AIsBare)
+void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, const String AUser, const String APassword)
 {
-    String LCmd = String().sprintf(L"git clone %s %s", AGitRepo.c_str(), ADirectory.c_str());
-    if(AIsBare == true)
-    {
-        LCmd += " --bare";
-    }
+    const String LCmd = String().sprintf(
+        L"gitconduit-cli clone --isbare=true --repo=%s --directory%s --username=%s --password=%s",
+        AGitRepo.c_str(), ADirectory.c_str(), AUser.c_str(), APassword.c_str());
     HANDLE LHandle = ExecuteProgramEx(LCmd);
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
@@ -321,7 +325,9 @@ void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, bo
 
 void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory)
 {
-    const String LCmd = String().sprintf(L"git remote add origin2 %s", AGitRepo.c_str());
+    const String LCmd = String().sprintf(
+        L"gitconduit-cli addremote --repo=%s --directory%s",
+        AGitRepo.c_str(), ADirectory.c_str());
     HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
@@ -331,9 +337,11 @@ void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::Push(const String ADirectory)
+void __fastcall TForm2::Push(const String ADirectory, const String AUser, const String APassword)
 {
-    const String LCmd = "git push origin2 --mirror";
+    const String LCmd = String().sprintf(
+        L"gitconduit-cli push --directory%s --username=%s --password=%s",
+        ADirectory.c_str(), AUser.c_str(), APassword.c_str());
     HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
@@ -345,12 +353,8 @@ void __fastcall TForm2::Push(const String ADirectory)
 
 bool __fastcall TForm2::CheckGitExe()
 {
-    const String LCmd = "git --version";
-    if(ExecuteProgramEx(LCmd) == nullptr)
-    {
-        return false;
-    }
-    return true;
+    const String LCmd = "gitconduit-cli";
+    return (ExecuteProgramEx(LCmd) != nullptr);
 }
 //---------------------------------------------------------------------------
 
@@ -464,7 +468,7 @@ void __fastcall TForm2::ActionSource()
 {
     if(CheckGitExe() == false)
     {
-        ShowMessage("git.exe not found in path!\n\nCorrect the problem and try again.");
+        ShowMessage("gitconduit-cli.exe not found in path!\n\nCorrect the problem and try again.");
         return;
     }
 
@@ -777,44 +781,9 @@ void __fastcall TForm2::ActionCreateRepo()
 
             try
             {
-                String LSourceUrl = LSourceRepository->CloneUrl;
-                if(SourceApplication->Username.IsEmpty() == false &&
-                    SourceApplication->Password.IsEmpty() == false)
-                {
-                    const String LSourceCredential =
-                        SourceApplication->Username + ":" +
-                        SourceApplication->Password + "@";
-                    LSourceUrl = StringReplace(
-                        LSourceUrl, "https://",
-                        "https://" + LSourceCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                    LSourceUrl = StringReplace(
-                        LSourceUrl, "http://",
-                        "http://" + LSourceCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                }
-
-                Clone("temp.git", LSourceUrl, true);
-
-                String LDestinationUrl = LDestinationRepository->CloneUrl;
-                if(DestinationApplication->Username.IsEmpty() == false &&
-                    DestinationApplication->Password.IsEmpty() == false)
-                {
-                    const String LDestinationCredential =
-                        DestinationApplication->Username + ":" +
-                        DestinationApplication->Password + "@";
-                    LDestinationUrl = StringReplace(
-                        LDestinationUrl, "https://",
-                        "https://" + LDestinationCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                    LDestinationUrl = StringReplace(
-                        LDestinationUrl, "http://",
-                        "http://" + LDestinationCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                }
-
-                AddRemote(LDestinationUrl, "temp.git");
-                Push("temp.git");
+                Clone("temp.git", LSourceRepository->CloneUrl, SourceApplication->Username, SourceApplication->Password);
+                AddRemote(LDestinationRepository->CloneUrl, "temp.git");
+                Push("temp.git", DestinationApplication->Username, DestinationApplication->Password);
 
                 memoLog->Lines->Add("Pushed repository");
 
@@ -823,15 +792,15 @@ void __fastcall TForm2::ActionCreateRepo()
                     try
                     {
                         const String LSourceWikiUrl = StringReplace(
-                            LSourceUrl, ".git", ".wiki.git", TReplaceFlags());
+                            LSourceRepository->CloneUrl, ".git", ".wiki.git", TReplaceFlags());
                         const String LCDestinationWikiUrl = StringReplace(
-                            LDestinationUrl, ".git", ".wiki.git", TReplaceFlags());
+                            LDestinationRepository->CloneUrl, ".git", ".wiki.git", TReplaceFlags());
 
                         Ioutils::TDirectory::Delete("temp.git", true);
 
-                        Clone("temp.git", LSourceWikiUrl, true);
+                        Clone("temp.git", LSourceWikiUrl, SourceApplication->Username, SourceApplication->Password);
                         AddRemote(LCDestinationWikiUrl, "temp.git");
-                        Push("temp.git");
+                        Push("temp.git", DestinationApplication->Username, DestinationApplication->Password);
                         memoLog->Lines->Add("Pushed Wiki repository");
                     }
                     catch(...)

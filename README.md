@@ -10,7 +10,6 @@ It supports the following services:
 
 ## Requirements
 
-* Make sure *git.exe* is in your path
 * If you are exporting to an organization, make sure it exist in the destination application
 
 ## How To Use
