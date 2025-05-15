@@ -15,6 +15,7 @@ func main() {
 	cloneCmd := flag.NewFlagSet("clone", flag.ExitOnError)
 	addRemoteCmd := flag.NewFlagSet("addremote", flag.ExitOnError)
 	pushCmd := flag.NewFlagSet("push", flag.ExitOnError)
+	cloneAndPushCmd := flag.NewFlagSet("cloneandpush", flag.ExitOnError)
 
 	// Define flags for the clone command
 	directory := cloneCmd.String("directory", "", "Target directory for the clone")
@@ -32,8 +33,17 @@ func main() {
 	pushUsername := pushCmd.String("username", "", "Username for authentication")
 	pushPassword := pushCmd.String("password", "", "Password for authentication")
 
+	// Define flags for the cloneandpush command
+	cnpdirectory := cloneAndPushCmd.String("directory", "", "Target directory for the clone")
+	sourcerepo := cloneAndPushCmd.String("sourcerepo", "", "Source repository URL to clone")
+	sourceusername := cloneAndPushCmd.String("sourceusername", "", "Source username for authentication")
+	sourcepassword := cloneAndPushCmd.String("sourcepassword", "", "Source password for authentication")
+	destrepo := cloneAndPushCmd.String("destrepo", "", "Destination repository URL to clone")
+	destusername := cloneAndPushCmd.String("destusername", "", "Destination username for authentication")
+	destpassword := cloneAndPushCmd.String("destpassword", "", "Destination password for authentication")
+
 	if len(os.Args) < 2 {
-		fmt.Println("Expected 'clone', 'addremote', or 'push' subcommands")
+		fmt.Println("Expected 'cloneandpush', 'clone', 'addremote', or 'push' subcommands")
 		os.Exit(1)
 	}
 
@@ -61,6 +71,14 @@ func main() {
 			os.Exit(1)
 		}
 		pushToRemote(*pushDirectory, *pushUsername, *pushPassword)
+
+	case "cloneandpush":
+		cloneAndPushCmd.Parse(os.Args[2:])
+		if *cnpdirectory == "" || *sourcerepo == "" || *sourceusername == "" || *sourcepassword == "" || *destrepo == "" || *destusername == "" || *destpassword == "" {
+			fmt.Println("Some arguments are missing for the cloneandpush command")
+			os.Exit(1)
+		}
+		cloneAndPush(*cnpdirectory, *sourcerepo, *sourceusername, *sourcepassword, *destrepo, *destusername, *destpassword)
 
 	default:
 		fmt.Println("Unknown command. Expected 'clone', 'addremote', or 'push'")
@@ -142,4 +160,10 @@ func pushToRemote(directory, username, password string) {
 		os.Exit(1)
 	}
 	fmt.Println("Pushed to remote successfully.")
+}
+
+func cloneAndPush(cnpdirectory, sourcerepo, sourceusername, sourcepassword, destrepo, destusername, destpassword string) {
+	cloneRepository(sourcerepo, cnpdirectory, true, sourceusername, sourcepassword)
+	addRemote(cnpdirectory, destrepo)
+	pushToRemote(cnpdirectory, destusername, destpassword)
 }

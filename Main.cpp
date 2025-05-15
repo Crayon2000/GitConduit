@@ -309,39 +309,13 @@ DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, const String AUser, const String APassword)
+void __fastcall TForm2::CloneAndPush(const String ADirectory, const String ASourceGitRepo, const String ASourceUser, const String ASourcePassword,
+        const String ADestGitRepo, const String ADestUser, const String ADestPassword)
 {
     const String LCmd = String().sprintf(
-        L"gitconduit-cli clone --isbare=true --repo=%s --directory%s --username=%s --password=%s",
-        AGitRepo.c_str(), ADirectory.c_str(), AUser.c_str(), APassword.c_str());
-    HANDLE LHandle = ExecuteProgramEx(LCmd);
-    DWORD LExitCode = Wait(LHandle);
-    if(LExitCode != 0)
-    {
-        throw Exception("Clone command failed");
-    }
-}
-//---------------------------------------------------------------------------
+        L"gitconduit-cli cloneandpush --directory%s --sourcerepo=%s --sourceusername=%s --sourcepassword=%s --destrepo=%s --destusername=%s --destpassword=%s",
+        ADirectory.c_str(), ASourceGitRepo.c_str(), ASourceUser.c_str(), ASourcePassword.c_str(), ADestGitRepo.c_str(), ADestUser.c_str(), ADestPassword.c_str());
 
-void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory)
-{
-    const String LCmd = String().sprintf(
-        L"gitconduit-cli addremote --repo=%s --directory%s",
-        AGitRepo.c_str(), ADirectory.c_str());
-    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
-    DWORD LExitCode = Wait(LHandle);
-    if(LExitCode != 0)
-    {
-        throw Exception("Add remote command failed");
-    }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm2::Push(const String ADirectory, const String AUser, const String APassword)
-{
-    const String LCmd = String().sprintf(
-        L"gitconduit-cli push --directory%s --username=%s --password=%s",
-        ADirectory.c_str(), AUser.c_str(), APassword.c_str());
     HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
     DWORD LExitCode = Wait(LHandle);
     if(LExitCode != 0)
@@ -781,10 +755,8 @@ void __fastcall TForm2::ActionCreateRepo()
 
             try
             {
-                Clone("temp.git", LSourceRepository->CloneUrl, SourceApplication->Username, SourceApplication->Password);
-                AddRemote(LDestinationRepository->CloneUrl, "temp.git");
-                Push("temp.git", DestinationApplication->Username, DestinationApplication->Password);
-
+                CloneAndPush("temp.git", LSourceRepository->CloneUrl, SourceApplication->Username, SourceApplication->Password,
+                    LDestinationRepository->CloneUrl, DestinationApplication->Username, DestinationApplication->Password);
                 memoLog->Lines->Add("Pushed repository");
 
                 if(LSourceRepository->HasWiki == true)
@@ -798,9 +770,8 @@ void __fastcall TForm2::ActionCreateRepo()
 
                         Ioutils::TDirectory::Delete("temp.git", true);
 
-                        Clone("temp.git", LSourceWikiUrl, SourceApplication->Username, SourceApplication->Password);
-                        AddRemote(LCDestinationWikiUrl, "temp.git");
-                        Push("temp.git", DestinationApplication->Username, DestinationApplication->Password);
+                        CloneAndPush("temp.git", LSourceWikiUrl, SourceApplication->Username, SourceApplication->Password,
+                            LCDestinationWikiUrl, DestinationApplication->Username, DestinationApplication->Password);
                         memoLog->Lines->Add("Pushed Wiki repository");
                     }
                     catch(...)
