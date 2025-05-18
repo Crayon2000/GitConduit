@@ -309,22 +309,6 @@ DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::CloneAndPush(const String ADirectory, const String ASourceGitRepo, const String ASourceUser, const String ASourcePassword,
-        const String ADestGitRepo, const String ADestUser, const String ADestPassword)
-{
-    const String LCmd = String().sprintf(
-        L"gitconduit-cli cloneandpush --directory%s --sourcerepo=%s --sourceusername=%s --sourcepassword=%s --destrepo=%s --destusername=%s --destpassword=%s",
-        ADirectory.c_str(), ASourceGitRepo.c_str(), ASourceUser.c_str(), ASourcePassword.c_str(), ADestGitRepo.c_str(), ADestUser.c_str(), ADestPassword.c_str());
-
-    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
-    DWORD LExitCode = Wait(LHandle);
-    if(LExitCode != 0)
-    {
-        throw Exception("Push command failed");
-    }
-}
-//---------------------------------------------------------------------------
-
 bool __fastcall TForm2::CheckGitExe()
 {
     const String LCmd = "gitconduit-cli";
@@ -753,42 +737,16 @@ void __fastcall TForm2::ActionCreateRepo()
                 PrintIssues(*SourceApplication, *LSourceRepository);
             }
 
-            try
+            const String LCmd = String().sprintf(
+                L"gitconduit-cli cloneandpush --sourcerepo=%s --sourceusername=%s --sourcepassword=%s --destrepo=%s --destusername=%s --destpassword=%s --haswiki=%s",
+                LSourceRepository->CloneUrl.c_str(), SourceApplication->Username.c_str(), SourceApplication->Password.c_str(),
+                LDestinationRepository->CloneUrl.c_str(), DestinationApplication->Username.c_str(), DestinationApplication->Password.c_str(),
+                LSourceRepository->HasWiki ? L"true" : L"false");
+            HANDLE LHandle = ExecuteProgramEx(LCmd);
+            DWORD LExitCode = Wait(LHandle);
+            if(LExitCode == 0)
             {
-                CloneAndPush("temp.git", LSourceRepository->CloneUrl, SourceApplication->Username, SourceApplication->Password,
-                    LDestinationRepository->CloneUrl, DestinationApplication->Username, DestinationApplication->Password);
                 memoLog->Lines->Add("Pushed repository");
-
-                if(LSourceRepository->HasWiki == true)
-                {
-                    try
-                    {
-                        const String LSourceWikiUrl = StringReplace(
-                            LSourceRepository->CloneUrl, ".git", ".wiki.git", TReplaceFlags());
-                        const String LCDestinationWikiUrl = StringReplace(
-                            LDestinationRepository->CloneUrl, ".git", ".wiki.git", TReplaceFlags());
-
-                        Ioutils::TDirectory::Delete("temp.git", true);
-
-                        CloneAndPush("temp.git", LSourceWikiUrl, SourceApplication->Username, SourceApplication->Password,
-                            LCDestinationWikiUrl, DestinationApplication->Username, DestinationApplication->Password);
-                        memoLog->Lines->Add("Pushed Wiki repository");
-                    }
-                    catch(...)
-                    {
-                        memoLog->Lines->Add("Wiki could not be exported");
-                    }
-                }
-            }
-            __finally
-            {
-                try
-                {
-                    Ioutils::TDirectory::Delete("temp.git", true);
-                }
-                catch(...)
-                {
-                }
             }
 
             Application->ProcessMessages();

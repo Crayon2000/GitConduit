@@ -142,8 +142,6 @@ protected:
     void __fastcall PrepareRequest(const TGitApplication& AGitApplication);
     HANDLE __fastcall ExecuteProgramEx(const String ACmd, const String ADirectory = ".");
     DWORD __fastcall Wait(HANDLE AHandle);
-    void __fastcall CloneAndPush(const String ADirectory, const String ASourceGitRepo, const String ASourceUser, const String ASourcePassword,
-        const String ADestGitRepo, const String ADestUser, const String ADestPassword);
     bool __fastcall CheckGitExe();
     void __fastcall ShowMessage(const String AMessage);
     void __fastcall HideMessage();
