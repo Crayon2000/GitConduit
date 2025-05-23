@@ -13,26 +13,7 @@ import (
 
 func main() {
 	// Define the main arguments
-	cloneCmd := flag.NewFlagSet("clone", flag.ExitOnError)
-	addRemoteCmd := flag.NewFlagSet("addremote", flag.ExitOnError)
-	pushCmd := flag.NewFlagSet("push", flag.ExitOnError)
 	cloneAndPushCmd := flag.NewFlagSet("cloneandpush", flag.ExitOnError)
-
-	// Define flags for the clone command
-	directory := cloneCmd.String("directory", "", "Target directory for the clone")
-	repo := cloneCmd.String("repo", "", "Repository URL to clone")
-	isBare := cloneCmd.Bool("isbare", true, "Clone as a bare repository")
-	username := cloneCmd.String("username", "", "Username for authentication")
-	password := cloneCmd.String("password", "", "Password for authentication")
-
-	// Define flags for the addremote command
-	addRemoteRepo := addRemoteCmd.String("repo", "", "Repository URL to add as a remote")
-	addRemoteDirectory := addRemoteCmd.String("directory", "", "Target directory for the repository")
-
-	// Define flags for the push command
-	pushDirectory := pushCmd.String("directory", "", "Target directory for the push")
-	pushUsername := pushCmd.String("username", "", "Username for authentication")
-	pushPassword := pushCmd.String("password", "", "Password for authentication")
 
 	// Define flags for the cloneandpush command
 	sourcerepo := cloneAndPushCmd.String("sourcerepo", "", "Source repository URL to clone")
@@ -44,50 +25,26 @@ func main() {
 	hasWiki := cloneAndPushCmd.Bool("haswiki", false, "Set to true if the repository has a wiki (default: false)")
 
 	if len(os.Args) < 2 {
-		fmt.Println("Expected 'cloneandpush', 'clone', 'addremote', or 'push' subcommands")
+		fmt.Println("Expected 'cloneandpush' subcommands")
 		os.Exit(1)
 	}
 
 	switch os.Args[1] {
-	case "clone":
-		cloneCmd.Parse(os.Args[2:])
-		if *repo == "" || *directory == "" {
-			fmt.Println("Both --repo and --directory are required for the clone command")
-			os.Exit(1)
-		}
-		cloneRepository(*repo, *directory, *isBare, *username, *password)
-
-	case "addremote":
-		addRemoteCmd.Parse(os.Args[2:])
-		if *addRemoteRepo == "" || *addRemoteDirectory == "" {
-			fmt.Println("Both --repo and --directory are required for the addremote command")
-			os.Exit(1)
-		}
-		addRemote(*addRemoteDirectory, *addRemoteRepo)
-
-	case "push":
-		pushCmd.Parse(os.Args[2:])
-		if *pushDirectory == "" {
-			fmt.Println("--directory is required for the push command")
-			os.Exit(1)
-		}
-		pushToRemote(*pushDirectory, *pushUsername, *pushPassword)
-
 	case "cloneandpush":
 		cloneAndPushCmd.Parse(os.Args[2:])
-		if *sourcerepo == "" || *sourceusername == "" || *sourcepassword == "" || *destrepo == "" || *destusername == "" || *destpassword == "" {
+		if *sourcerepo == "" || *sourcepassword == "" || *destrepo == "" || *destpassword == "" {
 			fmt.Println("Some arguments are missing for the cloneandpush command")
 			os.Exit(1)
 		}
 		cloneAndPush(*sourcerepo, *sourceusername, *sourcepassword, *destrepo, *destusername, *destpassword, *hasWiki)
 
 	default:
-		fmt.Println("Unknown command. Expected 'clone', 'addremote', or 'push'")
+		fmt.Fprintln(os.Stderr, "Unknown command")
 		os.Exit(1)
 	}
 }
 
-func cloneRepository(repo, directory string, isBare bool, username, password string) {
+func cloneRepository(repo, directory, username, password string) {
 	var err error
 	cloneOptions := &git.CloneOptions{
 		URL: repo,
@@ -101,11 +58,7 @@ func cloneRepository(repo, directory string, isBare bool, username, password str
 			Password: password,
 		}
 	}
-	if isBare {
-		_, err = git.PlainClone(directory, true, cloneOptions)
-	} else {
-		_, err = git.PlainClone(directory, false, cloneOptions)
-	}
+	_, err = git.PlainClone(directory, true, cloneOptions)
 	if err != nil {
 		fmt.Printf("Error cloning repository: %v\n", err)
 		os.Exit(1)
@@ -173,7 +126,7 @@ func cloneAndPush(sourcerepo, sourceusername, sourcepassword, destrepo, destuser
 		}
 	}()
 
-	cloneRepository(sourcerepo, cnpdirectory, true, sourceusername, sourcepassword)
+	cloneRepository(sourcerepo, cnpdirectory, sourceusername, sourcepassword)
 	addRemote(cnpdirectory, destrepo)
 	pushToRemote(cnpdirectory, destusername, destpassword)
 
@@ -185,7 +138,7 @@ func cloneAndPush(sourcerepo, sourceusername, sourcepassword, destrepo, destuser
 
 		sourceWikiUrl := strings.Replace(sourcerepo, ".git", ".wiki.git", 1)
 		destWikiUrl := strings.Replace(destrepo, ".git", ".wiki.git", 1)
-		cloneRepository(sourceWikiUrl, cnpdirectory, true, sourceusername, sourcepassword)
+		cloneRepository(sourceWikiUrl, cnpdirectory, sourceusername, sourcepassword)
 		addRemote(cnpdirectory, destWikiUrl)
 		pushToRemote(cnpdirectory, destusername, destpassword)
 	}

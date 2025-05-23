@@ -235,11 +235,28 @@ void __fastcall TForm2::PrepareRequest(const TGitApplication& AGitApplication)
 }
 //---------------------------------------------------------------------------
 
-HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADirectory)
+HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, String& AOut, String& AErr, const String ADirectory)
 {
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
+    SECURITY_ATTRIBUTES saAttr;
+    HANDLE hStdOutRead, hStdOutWrite;
+    HANDLE hStdErrRead, hStdErrWrite;
 
+    // Set up security attributes to allow handle inheritance
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = nullptr;
+
+    // Create pipes for stdout and stderr
+    CreatePipe(&hStdOutRead, &hStdOutWrite, &saAttr, 0);
+    CreatePipe(&hStdErrRead, &hStdErrWrite, &saAttr, 0);
+
+    // Ensure the read handles to the pipes are not inherited
+    SetHandleInformation(hStdOutRead, HANDLE_FLAG_INHERIT, 0);
+    SetHandleInformation(hStdErrRead, HANDLE_FLAG_INHERIT, 0);
+
+    ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     si.lpReserved = nullptr;
     si.lpDesktop = nullptr;
@@ -249,8 +266,8 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     si.cbReserved2 = 0;
     si.lpReserved2 = nullptr;
     si.hStdInput = nullptr;
-    si.hStdOutput = nullptr;
-    si.hStdError = nullptr;
+    si.hStdOutput = hStdOutWrite;
+    si.hStdError = hStdErrWrite;
 
     ZeroMemory(&pi, sizeof(pi));
 
@@ -258,6 +275,31 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
         nullptr, ADirectory.c_str(), &si, &pi);
     if(ProcResult == true)
     {
+        // Close the write ends of the pipes so the child process can exit
+        CloseHandle(hStdOutWrite);
+        CloseHandle(hStdErrWrite);
+
+        // Read from stdout and stderr pipes
+        char buffer[4096];
+        DWORD bytesRead;
+
+        while(ReadFile(hStdOutRead, buffer, sizeof(buffer) - 1, &bytesRead, nullptr) && bytesRead > 0)
+        {
+            buffer[bytesRead] = '\0';
+            AOut += String(buffer);
+        }
+        AOut = AOut.Trim();
+
+        while(ReadFile(hStdErrRead, buffer, sizeof(buffer) - 1, &bytesRead, nullptr) && bytesRead > 0)
+        {
+            buffer[bytesRead] = '\0';
+            AErr += String(buffer);
+        }
+        AErr = AErr.Trim();
+
+        CloseHandle(hStdOutRead);
+        CloseHandle(hStdErrRead);
+
         return pi.hProcess;
     }
 
@@ -272,6 +314,10 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     if(si.hStdOutput != nullptr)
     {
         CloseHandle(si.hStdOutput);
+    }
+    if(si.hStdError != nullptr)
+    {
+        CloseHandle(si.hStdError);
     }
     return nullptr;
 }
@@ -312,7 +358,8 @@ DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 bool __fastcall TForm2::CheckGitExe()
 {
     const String LCmd = "gitconduit-cli";
-    return (ExecuteProgramEx(LCmd) != nullptr);
+    String LOut;
+    return (ExecuteProgramEx(LCmd, LOut, LOut) != nullptr);
 }
 //---------------------------------------------------------------------------
 
@@ -742,11 +789,20 @@ void __fastcall TForm2::ActionCreateRepo()
                 LSourceRepository->CloneUrl.c_str(), SourceApplication->Username.c_str(), SourceApplication->Password.c_str(),
                 LDestinationRepository->CloneUrl.c_str(), DestinationApplication->Username.c_str(), DestinationApplication->Password.c_str(),
                 LSourceRepository->HasWiki ? L"true" : L"false");
-            HANDLE LHandle = ExecuteProgramEx(LCmd);
+            String LOut;
+            String LErr;
+            HANDLE LHandle = ExecuteProgramEx(LCmd, LOut, LErr);
             DWORD LExitCode = Wait(LHandle);
             if(LExitCode == 0)
             {
                 memoLog->Lines->Add("Pushed repository");
+            }
+            else
+            {
+                if(LOut.IsEmpty() == false)
+                {
+                    memoLog->Lines->Add(LOut);
+                }
             }
 
             Application->ProcessMessages();

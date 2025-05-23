@@ -140,7 +140,7 @@ protected:
     String __fastcall GetAuthenticatedUser(const TGitApplication& AGitApplication);
     void __fastcall GetOrganizations(TGitApplication* AGitApplication, System::Classes::TStrings* AItems);
     void __fastcall PrepareRequest(const TGitApplication& AGitApplication);
-    HANDLE __fastcall ExecuteProgramEx(const String ACmd, const String ADirectory = ".");
+    HANDLE __fastcall ExecuteProgramEx(const String ACmd, String& AOut, String& AErr, const String ADirectory = ".");
     DWORD __fastcall Wait(HANDLE AHandle);
     bool __fastcall CheckGitExe();
     void __fastcall ShowMessage(const String AMessage);

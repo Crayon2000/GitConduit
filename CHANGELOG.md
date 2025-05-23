@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- TODO
+- Replace external Git executable requirement with a custom-built application.
 
 ## [0.3.0] - 2021-07-25
 
