@@ -235,12 +235,28 @@ void __fastcall TForm2::PrepareRequest(const TGitApplication& AGitApplication)
 }
 //---------------------------------------------------------------------------
 
-HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADirectory)
+HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, String& AOut, String& AErr, const String ADirectory)
 {
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
-    SECURITY_ATTRIBUTES sa;
+    SECURITY_ATTRIBUTES saAttr;
+    HANDLE hStdOutRead, hStdOutWrite;
+    HANDLE hStdErrRead, hStdErrWrite;
 
+    // Set up security attributes to allow handle inheritance
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = nullptr;
+
+    // Create pipes for stdout and stderr
+    CreatePipe(&hStdOutRead, &hStdOutWrite, &saAttr, 0);
+    CreatePipe(&hStdErrRead, &hStdErrWrite, &saAttr, 0);
+
+    // Ensure the read handles to the pipes are not inherited
+    SetHandleInformation(hStdOutRead, HANDLE_FLAG_INHERIT, 0);
+    SetHandleInformation(hStdErrRead, HANDLE_FLAG_INHERIT, 0);
+
+    ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     si.lpReserved = nullptr;
     si.lpDesktop = nullptr;
@@ -250,23 +266,59 @@ HANDLE __fastcall TForm2::ExecuteProgramEx(const String ACmd, const String ADire
     si.cbReserved2 = 0;
     si.lpReserved2 = nullptr;
     si.hStdInput = nullptr;
-    si.hStdOutput = nullptr;
-    si.hStdError = nullptr;
+    si.hStdOutput = hStdOutWrite;
+    si.hStdError = hStdErrWrite;
 
-    sa.nLength = sizeof(sa);
-    sa.lpSecurityDescriptor = nullptr;
-    sa.bInheritHandle = true;
+    ZeroMemory(&pi, sizeof(pi));
 
     bool ProcResult = CreateProcess(nullptr, ACmd.c_str(), nullptr, nullptr, true, 0,
         nullptr, ADirectory.c_str(), &si, &pi);
     if(ProcResult == true)
     {
+        // Close the write ends of the pipes so the child process can exit
+        CloseHandle(hStdOutWrite);
+        CloseHandle(hStdErrWrite);
+
+        // Read from stdout and stderr pipes
+        char buffer[4096];
+        DWORD bytesRead;
+
+        while(ReadFile(hStdOutRead, buffer, sizeof(buffer) - 1, &bytesRead, nullptr) && bytesRead > 0)
+        {
+            buffer[bytesRead] = '\0';
+            AOut += String(buffer);
+        }
+        AOut = AOut.Trim();
+
+        while(ReadFile(hStdErrRead, buffer, sizeof(buffer) - 1, &bytesRead, nullptr) && bytesRead > 0)
+        {
+            buffer[bytesRead] = '\0';
+            AErr += String(buffer);
+        }
+        AErr = AErr.Trim();
+
+        CloseHandle(hStdOutRead);
+        CloseHandle(hStdErrRead);
+
         return pi.hProcess;
     }
 
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
-    CloseHandle(si.hStdOutput);
+    if(pi.hProcess != nullptr)
+    {
+        CloseHandle(pi.hProcess);
+    }
+    if(pi.hThread != nullptr)
+    {
+        CloseHandle(pi.hThread);
+    }
+    if(si.hStdOutput != nullptr)
+    {
+        CloseHandle(si.hStdOutput);
+    }
+    if(si.hStdError != nullptr)
+    {
+        CloseHandle(si.hStdError);
+    }
     return nullptr;
 }
 //---------------------------------------------------------------------------
@@ -303,54 +355,11 @@ DWORD __fastcall TForm2::Wait(HANDLE AHandle)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm2::Clone(const String ADirectory, const String AGitRepo, bool AIsBare)
-{
-    String LCmd = String().sprintf(L"git clone %s %s", AGitRepo.c_str(), ADirectory.c_str());
-    if(AIsBare == true)
-    {
-        LCmd += " --bare";
-    }
-    HANDLE LHandle = ExecuteProgramEx(LCmd);
-    DWORD LExitCode = Wait(LHandle);
-    if(LExitCode != 0)
-    {
-        throw Exception("Clone command failed");
-    }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm2::AddRemote(const String AGitRepo, const String ADirectory)
-{
-    const String LCmd = String().sprintf(L"git remote add origin2 %s", AGitRepo.c_str());
-    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
-    DWORD LExitCode = Wait(LHandle);
-    if(LExitCode != 0)
-    {
-        throw Exception("Add remote command failed");
-    }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm2::Push(const String ADirectory)
-{
-    const String LCmd = "git push origin2 --mirror";
-    HANDLE LHandle = ExecuteProgramEx(LCmd, ADirectory);
-    DWORD LExitCode = Wait(LHandle);
-    if(LExitCode != 0)
-    {
-        throw Exception("Push command failed");
-    }
-}
-//---------------------------------------------------------------------------
-
 bool __fastcall TForm2::CheckGitExe()
 {
-    const String LCmd = "git --version";
-    if(ExecuteProgramEx(LCmd) == nullptr)
-    {
-        return false;
-    }
-    return true;
+    const String LCmd = "gitconduit-cli";
+    String LOut;
+    return (ExecuteProgramEx(LCmd, LOut, LOut) != nullptr);
 }
 //---------------------------------------------------------------------------
 
@@ -464,7 +473,7 @@ void __fastcall TForm2::ActionSource()
 {
     if(CheckGitExe() == false)
     {
-        ShowMessage("git.exe not found in path!\n\nCorrect the problem and try again.");
+        ShowMessage("gitconduit-cli.exe not found in path!\n\nCorrect the problem and try again.");
         return;
     }
 
@@ -775,79 +784,24 @@ void __fastcall TForm2::ActionCreateRepo()
                 PrintIssues(*SourceApplication, *LSourceRepository);
             }
 
-            try
+            const String LCmd = String().sprintf(
+                L"gitconduit-cli cloneandpush --sourcerepo=%s --sourceusername=%s --sourcepassword=%s --destrepo=%s --destusername=%s --destpassword=%s --haswiki=%s",
+                LSourceRepository->CloneUrl.c_str(), SourceApplication->Username.c_str(), SourceApplication->Password.c_str(),
+                LDestinationRepository->CloneUrl.c_str(), DestinationApplication->Username.c_str(), DestinationApplication->Password.c_str(),
+                LSourceRepository->HasWiki ? L"true" : L"false");
+            String LOut;
+            String LErr;
+            HANDLE LHandle = ExecuteProgramEx(LCmd, LOut, LErr);
+            DWORD LExitCode = Wait(LHandle);
+            if(LExitCode == 0)
             {
-                String LSourceUrl = LSourceRepository->CloneUrl;
-                if(SourceApplication->Username.IsEmpty() == false &&
-                    SourceApplication->Password.IsEmpty() == false)
-                {
-                    const String LSourceCredential =
-                        SourceApplication->Username + ":" +
-                        SourceApplication->Password + "@";
-                    LSourceUrl = StringReplace(
-                        LSourceUrl, "https://",
-                        "https://" + LSourceCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                    LSourceUrl = StringReplace(
-                        LSourceUrl, "http://",
-                        "http://" + LSourceCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                }
-
-                Clone("temp.git", LSourceUrl, true);
-
-                String LDestinationUrl = LDestinationRepository->CloneUrl;
-                if(DestinationApplication->Username.IsEmpty() == false &&
-                    DestinationApplication->Password.IsEmpty() == false)
-                {
-                    const String LDestinationCredential =
-                        DestinationApplication->Username + ":" +
-                        DestinationApplication->Password + "@";
-                    LDestinationUrl = StringReplace(
-                        LDestinationUrl, "https://",
-                        "https://" + LDestinationCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                    LDestinationUrl = StringReplace(
-                        LDestinationUrl, "http://",
-                        "http://" + LDestinationCredential,
-                        TReplaceFlags() << rfIgnoreCase);
-                }
-
-                AddRemote(LDestinationUrl, "temp.git");
-                Push("temp.git");
-
                 memoLog->Lines->Add("Pushed repository");
-
-                if(LSourceRepository->HasWiki == true)
-                {
-                    try
-                    {
-                        const String LSourceWikiUrl = StringReplace(
-                            LSourceUrl, ".git", ".wiki.git", TReplaceFlags());
-                        const String LCDestinationWikiUrl = StringReplace(
-                            LDestinationUrl, ".git", ".wiki.git", TReplaceFlags());
-
-                        Ioutils::TDirectory::Delete("temp.git", true);
-
-                        Clone("temp.git", LSourceWikiUrl, true);
-                        AddRemote(LCDestinationWikiUrl, "temp.git");
-                        Push("temp.git");
-                        memoLog->Lines->Add("Pushed Wiki repository");
-                    }
-                    catch(...)
-                    {
-                        memoLog->Lines->Add("Wiki could not be exported");
-                    }
-                }
             }
-            __finally
+            else
             {
-                try
+                if(LOut.IsEmpty() == false)
                 {
-                    Ioutils::TDirectory::Delete("temp.git", true);
-                }
-                catch(...)
-                {
+                    memoLog->Lines->Add(LOut);
                 }
             }
 
