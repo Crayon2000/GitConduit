@@ -1,6 +1,6 @@
 module gitconduit-cli
 
-go 1.24
+go 1.25
 
 require github.com/go-git/go-git/v5 v5.16.0
 
