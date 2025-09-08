@@ -7,6 +7,7 @@ It supports the following services:
 * Gogs
 * GitBucket
 * GitHub
+* Bitbucket
 
 ## Requirements
 
