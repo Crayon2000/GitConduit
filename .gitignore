@@ -2,6 +2,9 @@
 [Dd]ebug/
 [Rr]elease/
 
+# This project
+temp.git/
+
 # Compiled resource file
 *.res
 

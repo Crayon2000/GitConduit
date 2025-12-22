@@ -31,7 +31,11 @@ func main() {
 			fmt.Println("Some arguments are missing for the cloneandpush command")
 			os.Exit(1)
 		}
-		CloneAndPush(*sourcerepo, *sourceusername, *sourcepassword, *destrepo, *destusername, *destpassword, *hasWiki)
+		err := CloneAndPush(*sourcerepo, *sourceusername, *sourcepassword, *destrepo, *destusername, *destpassword, *hasWiki)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "CloneAndPush failed: %v\n", err)
+			os.Exit(1)
+		}
 
 	default:
 		fmt.Fprintln(os.Stderr, "Unknown command")

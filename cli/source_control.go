@@ -10,8 +10,8 @@ import (
 	gitHttp "github.com/go-git/go-git/v5/plumbing/transport/http"
 )
 
-func cloneRepository(repo, directory, username, password string) {
-	var err error
+// cloneRepository clones a repository to a local directory.
+func cloneRepository(repo, directory, username, password string) error {
 	cloneOptions := &git.CloneOptions{
 		URL: repo,
 	}
@@ -24,19 +24,18 @@ func cloneRepository(repo, directory, username, password string) {
 			Password: password,
 		}
 	}
-	_, err = git.PlainClone(directory, true, cloneOptions)
+	_, err := git.PlainClone(directory, true, cloneOptions)
 	if err != nil {
-		fmt.Printf("Error cloning repository: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("error cloning repository: %w", err)
 	}
-	fmt.Println("Repository cloned successfully.")
+	return nil
 }
 
-func addRemote(directory, repo string) {
+// addRemote adds a new remote to the local repository.
+func addRemote(directory, repo string) error {
 	r, err := git.PlainOpen(directory)
 	if err != nil {
-		fmt.Printf("Error opening repository: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("error opening repository: %w", err)
 	}
 
 	_, err = r.CreateRemote(&config.RemoteConfig{
@@ -44,17 +43,16 @@ func addRemote(directory, repo string) {
 		URLs: []string{repo},
 	})
 	if err != nil {
-		fmt.Printf("Error adding remote: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("error adding remote: %w", err)
 	}
-	fmt.Println("Remote added successfully.")
+	return nil
 }
 
-func pushToRemote(directory, username, password string) {
+// pushToRemote pushes the local repository to the specified remote.
+func pushToRemote(directory, username, password string) error {
 	r, err := git.PlainOpen(directory)
 	if err != nil {
-		fmt.Printf("Error opening repository: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("error opening repository: %w", err)
 	}
 
 	pushOptions := &git.PushOptions{
@@ -76,13 +74,13 @@ func pushToRemote(directory, username, password string) {
 
 	err = r.Push(pushOptions)
 	if err != nil {
-		fmt.Printf("Error pushing to remote: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("error pushing to remote: %w", err)
 	}
-	fmt.Println("Pushed to remote successfully.")
+	return nil
 }
 
-func CloneAndPush(sourcerepo, sourceusername, sourcepassword, destrepo, destusername, destpassword string, hasWiki bool) {
+// CloneAndPush clones a repository from the source URL and pushes it to the destination URL.
+func CloneAndPush(sourcerepo, sourceusername, sourcepassword, destrepo, destusername, destpassword string, hasWiki bool) error {
 	cnpdirectory := "temp.git"
 
 	defer func() {
@@ -92,9 +90,18 @@ func CloneAndPush(sourcerepo, sourceusername, sourcepassword, destrepo, destuser
 		}
 	}()
 
-	cloneRepository(sourcerepo, cnpdirectory, sourceusername, sourcepassword)
-	addRemote(cnpdirectory, destrepo)
-	pushToRemote(cnpdirectory, destusername, destpassword)
+	if err := cloneRepository(sourcerepo, cnpdirectory, sourceusername, sourcepassword); err != nil {
+		return fmt.Errorf("clone source repo: %w", err)
+	}
+	fmt.Println("Repository cloned successfully.")
+	if err := addRemote(cnpdirectory, destrepo); err != nil {
+		return fmt.Errorf("add destination remote: %w", err)
+	}
+	fmt.Println("Remote added successfully.")
+	if err := pushToRemote(cnpdirectory, destusername, destpassword); err != nil {
+		return fmt.Errorf("push to destination remote: %w", err)
+	}
+	fmt.Println("Pushed to remote successfully.")
 
 	if hasWiki {
 		err := os.RemoveAll(cnpdirectory)
@@ -104,8 +111,19 @@ func CloneAndPush(sourcerepo, sourceusername, sourcepassword, destrepo, destuser
 
 		sourceWikiUrl := strings.Replace(sourcerepo, ".git", ".wiki.git", 1)
 		destWikiUrl := strings.Replace(destrepo, ".git", ".wiki.git", 1)
-		cloneRepository(sourceWikiUrl, cnpdirectory, sourceusername, sourcepassword)
-		addRemote(cnpdirectory, destWikiUrl)
-		pushToRemote(cnpdirectory, destusername, destpassword)
+		if err := cloneRepository(sourceWikiUrl, cnpdirectory, sourceusername, sourcepassword); err != nil {
+			return fmt.Errorf("clone source wiki: %w", err)
+		}
+		fmt.Println("Repository wiki cloned successfully.")
+		if err := addRemote(cnpdirectory, destWikiUrl); err != nil {
+			return fmt.Errorf("add wiki destination remote: %w", err)
+		}
+		fmt.Println("Remote wiki added successfully.")
+		if err := pushToRemote(cnpdirectory, destusername, destpassword); err != nil {
+			return fmt.Errorf("push wiki to destination remote: %w", err)
+		}
+		fmt.Println("Pushed wiki to remote successfully.")
 	}
+
+	return nil
 }
