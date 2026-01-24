@@ -74,6 +74,16 @@ To get an authorization token:
 6. Choose a **Token description** and select scopes
 7. Click on the **Generate token** button
 
+### Bibucket
+
+#### API URL
+
+TODO
+
+#### Authorization Token
+
+TODO
+
 ## Licence
 
 See the [LICENCE](LICENCE.md) file for licence rights and limitations (MIT).
