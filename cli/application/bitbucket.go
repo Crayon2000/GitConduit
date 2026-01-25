@@ -73,7 +73,10 @@ func slugify(s string) string {
 }
 
 func (g *BitbucketApp) GetOrganizations() ([]Organization, error) {
-	req, _ := http.NewRequest("GET", g.config.ApiUrl+"/2.0/workspaces", nil)
+	req, err := http.NewRequest("GET", g.config.ApiUrl+"/2.0/workspaces", nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
 	setBasicAuth(req, g.config.Token)
 	req.Header.Set("Accept", "application/json")
 	resp, err := http.DefaultClient.Do(req)
@@ -116,7 +119,10 @@ func (g *BitbucketApp) GetOrganizations() ([]Organization, error) {
 }
 
 func (g *BitbucketApp) GetAuthenticatedUser() (string, error) {
-	req, _ := http.NewRequest("GET", g.config.ApiUrl+"/2.0/user", nil)
+	req, err := http.NewRequest("GET", g.config.ApiUrl+"/2.0/user", nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %w", err)
+	}
 	setBasicAuth(req, g.config.Token)
 	req.Header.Set("Accept", "application/json")
 	resp, err := http.DefaultClient.Do(req)
@@ -159,7 +165,10 @@ func (g *BitbucketApp) GetRepositories(endpoint ApiEndpoint, owner string, authU
 	var repos []Repository
 
 	for url != "" {
-		req, _ := http.NewRequest("GET", url, nil)
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create request: %w", err)
+		}
 		setBasicAuth(req, g.config.Token)
 		req.Header.Set("Accept", "application/json")
 		resp, err := http.DefaultClient.Do(req)
@@ -215,7 +224,10 @@ func (g *BitbucketApp) GetIssues(repo Repository) ([]Issue, error) {
 	url := g.config.ApiUrl + "/2.0/repositories/" + repo.Owner.Login + "/" + repo.Name + "/issues"
 	var issues []Issue
 
-	req, _ := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
 	setBasicAuth(req, g.config.Token)
 	req.Header.Set("Accept", "application/json")
 	resp, err := http.DefaultClient.Do(req)
@@ -277,7 +289,10 @@ func (g *BitbucketApp) CreateRepo(endpoint ApiEndpoint, owner string, source Rep
 		return Repository{}, err
 	}
 
-	req, _ := http.NewRequest("POST", url, strings.NewReader(string(jsonData)))
+	req, err := http.NewRequest("POST", url, strings.NewReader(string(jsonData)))
+	if err != nil {
+		return Repository{}, fmt.Errorf("failed to create request: %w", err)
+	}
 	setBasicAuth(req, g.config.Token)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")

@@ -12,7 +12,10 @@ import (
 
 // GetOrganizations retrieves the list of organizations for the authenticated user.
 func GetOrganizations(config AppConfig) ([]Organization, error) {
-	req, _ := http.NewRequest("GET", config.ApiUrl+"/user/orgs", nil)
+	req, err := http.NewRequest("GET", config.ApiUrl+"/user/orgs", nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
 	req.Header.Set("Authorization", "token "+config.Token)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -57,7 +60,10 @@ func GetOrganizations(config AppConfig) ([]Organization, error) {
 
 // GetAuthenticatedUser retrieves the username of the authenticated user.
 func GetAuthenticatedUser(config AppConfig) (string, error) {
-	req, _ := http.NewRequest("GET", config.ApiUrl+"/user", nil)
+	req, err := http.NewRequest("GET", config.ApiUrl+"/user", nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %w", err)
+	}
 	req.Header.Set("Authorization", "token "+config.Token)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -226,7 +232,10 @@ func GetRepositories(config AppConfig, endpoint ApiEndpoint, owner string, authU
 	var repos []Repository
 
 	for url != "" {
-		req, _ := http.NewRequest("GET", url, nil)
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create request: %w", err)
+		}
 		req.Header.Set("Authorization", "token "+config.Token)
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
@@ -293,7 +302,10 @@ func GetIssues(config AppConfig, repo Repository) ([]Issue, error) {
 	url := config.ApiUrl + "/repos/" + repo.Owner.Login + "/" + repo.Name + "/issues"
 	var issues []Issue
 
-	req, _ := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
 	req.Header.Set("Authorization", "token "+config.Token)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -353,7 +365,10 @@ func CreateRepo(config AppConfig, endpoint ApiEndpoint, owner string, source Rep
 		return Repository{}, err
 	}
 
-	req, _ := http.NewRequest("POST", url, strings.NewReader(jsonData))
+	req, err := http.NewRequest("POST", url, strings.NewReader(jsonData))
+	if err != nil {
+		return Repository{}, fmt.Errorf("failed to create request: %w", err)
+	}
 	req.Header.Set("Authorization", "token "+config.Token)
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := http.DefaultClient.Do(req)

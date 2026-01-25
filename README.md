@@ -78,7 +78,7 @@ To get an authorization token:
 
 #### API URL
 
-TODO
+The CLOUD API is used and the URL is https://api.bitbucket.org
 
 #### Authorization Token
 
