@@ -1,6 +1,6 @@
 {
     "name": "golang",
-    "image": "golang:1.25.6",
+    "image": "golang:1.26.0",
     "customizations": {
         "vscode": {
             "extensions": ["golang.go"]
