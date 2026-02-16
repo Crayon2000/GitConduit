@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Replace external Git executable requirement with a custom-built application.
+- Change application to a TUI.
 
 ## [0.3.0] - 2021-07-25
 

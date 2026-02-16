@@ -7,6 +7,7 @@ It supports the following services:
 * Gogs
 * GitBucket
 * GitHub
+* Bitbucket
 
 ## Requirements
 
@@ -72,6 +73,16 @@ To get an authorization token:
 5. Enter your password if required
 6. Choose a **Token description** and select scopes
 7. Click on the **Generate token** button
+
+### Bibucket
+
+#### API URL
+
+The CLOUD API is used and the URL is https://api.bitbucket.org
+
+#### Authorization Token
+
+TODO
 
 ## Licence
 
