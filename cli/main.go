@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gitconduit-cli/application"
+	"gitconduit-cli/cli/application"
 	"strings"
 	"time"
 
