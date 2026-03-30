@@ -3,7 +3,7 @@ module gitconduit-cli
 go 1.26
 
 require (
-	github.com/go-git/go-git/v5 v5.17.0
+	github.com/go-git/go-git/v5 v5.17.1
 	github.com/rivo/tview v0.42.0
 )
 
