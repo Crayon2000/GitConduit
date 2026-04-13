@@ -72,11 +72,3 @@ func (g *GitLabApp) GetPassword() string {
 func (g *GitLabApp) SetPassword(password string) {
 	g.config.Password = password
 }
-
-func (g *GitLabApp) GetEndpoint() ApiEndpoint {
-	return g.config.Endpoint
-}
-
-func (g *GitLabApp) SetEndpoint(endpoint ApiEndpoint) {
-	g.config.Endpoint = endpoint
-}

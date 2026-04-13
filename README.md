@@ -1,6 +1,6 @@
 # GitConduit
 
-GitConduit is a Windows application use to export git repositories from one Git web platform to another.
+GitConduit is a text-based user interface (TUI) used to export git repositories from one Git web platform to another.
 
 It supports the following services:
 
@@ -74,7 +74,7 @@ To get an authorization token:
 6. Choose a **Token description** and select scopes
 7. Click on the **Generate token** button
 
-### Bibucket
+### Bitbucket
 
 #### API URL
 

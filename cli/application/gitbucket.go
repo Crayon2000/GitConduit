@@ -67,11 +67,3 @@ func (g *GitBucketApp) GetPassword() string {
 func (g *GitBucketApp) SetPassword(password string) {
 	g.config.Password = password
 }
-
-func (g *GitBucketApp) GetEndpoint() ApiEndpoint {
-	return g.config.Endpoint
-}
-
-func (g *GitBucketApp) SetEndpoint(endpoint ApiEndpoint) {
-	g.config.Endpoint = endpoint
-}

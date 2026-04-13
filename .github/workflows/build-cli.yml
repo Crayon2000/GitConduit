@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goos: [windows, linux]
-        goarch: [amd64]
+        goos: [windows, linux, darwin]
+        goarch: [amd64, arm64]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -29,11 +29,13 @@ jobs:
 
       - name: Build CLI (${{ matrix.goos }})
         run: |
+          EXT=""
+          if [ "${{ matrix.goos }}" = "windows" ]; then EXT=".exe"; fi
           cd cli
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -v -o build/cli-${{ matrix.goos }}-${{ matrix.goarch }}
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -v -o build/gitconduit-${{ matrix.goos }}-${{ matrix.goarch }}${EXT}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v6
         with:
-          name: cli-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: cli/build/cli-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: gitconduit-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: cli/build/gitconduit-${{ matrix.goos }}-${{ matrix.goarch }}*

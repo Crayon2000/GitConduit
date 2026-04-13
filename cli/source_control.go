@@ -10,12 +10,12 @@ import (
 )
 
 // cloneRepository clones a repository to a local directory.
-func cloneRepository(repo, directory, username, password string) error {
+func cloneRepository(repo, path, username, password string) error {
 	if username == "" {
 		username = "git" // GitHub requires "git" as the username for PATs
 	}
 
-	r, err := git.PlainInit(directory, true)
+	r, err := git.PlainInit(path, true)
 	if err != nil {
 		return fmt.Errorf("error initializing repository: %w", err)
 	}
@@ -56,8 +56,8 @@ func cloneRepository(repo, directory, username, password string) error {
 }
 
 // addRemote adds a new remote to the local repository.
-func addRemote(directory, repo string) error {
-	r, err := git.PlainOpen(directory)
+func addRemote(path, repo string) error {
+	r, err := git.PlainOpen(path)
 	if err != nil {
 		return fmt.Errorf("error opening repository: %w", err)
 	}
@@ -73,8 +73,8 @@ func addRemote(directory, repo string) error {
 }
 
 // pushToRemote pushes the local repository to the specified remote.
-func pushToRemote(directory, username, password string) error {
-	r, err := git.PlainOpen(directory)
+func pushToRemote(path, username, password string) error {
+	r, err := git.PlainOpen(path)
 	if err != nil {
 		return fmt.Errorf("error opening repository: %w", err)
 	}
@@ -104,23 +104,23 @@ func pushToRemote(directory, username, password string) error {
 }
 
 // CloneAndPush clones a repository from the source URL and pushes it to the destination URL.
-func CloneAndPush(sourcerepo, sourceusername, sourcepassword, destrepo, destusername, destpassword string) error {
-	cnpdirectory := "temp.git"
+func CloneAndPush(sourceRepo, sourceUsername, sourcePassword, destRepo, destUsername, destPassword string) error {
+	tempPath := "temp.git"
 
 	defer func() {
-		err := os.RemoveAll(cnpdirectory)
+		err := os.RemoveAll(tempPath)
 		if err != nil {
-			fmt.Printf("Warning: failed to remove temp directory %s: %v\n", cnpdirectory, err)
+			fmt.Printf("Warning: failed to remove temp directory %s: %v\n", tempPath, err)
 		}
 	}()
 
-	if err := cloneRepository(sourcerepo, cnpdirectory, sourceusername, sourcepassword); err != nil {
+	if err := cloneRepository(sourceRepo, tempPath, sourceUsername, sourcePassword); err != nil {
 		return fmt.Errorf("clone source repo: %w", err)
 	}
-	if err := addRemote(cnpdirectory, destrepo); err != nil {
+	if err := addRemote(tempPath, destRepo); err != nil {
 		return fmt.Errorf("add destination remote: %w", err)
 	}
-	if err := pushToRemote(cnpdirectory, destusername, destpassword); err != nil {
+	if err := pushToRemote(tempPath, destUsername, destPassword); err != nil {
 		return fmt.Errorf("push to destination remote: %w", err)
 	}
 

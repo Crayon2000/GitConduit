@@ -57,10 +57,13 @@ type Application interface {
 	SetPassword(password string)
 }
 
+// ApiEndpoint represents the type of endpoint for API operations.
 type ApiEndpoint int
 
 const (
+	// EndpointUser represents operations on user repositories.
 	EndpointUser ApiEndpoint = iota
+	// EndpointOrganization represents operations on organization repositories.
 	EndpointOrganization
 )
 
@@ -71,7 +74,6 @@ type AppConfig struct {
 	User     string
 	Username string
 	Password string
-	Endpoint ApiEndpoint
 }
 
 type ApplicationType string

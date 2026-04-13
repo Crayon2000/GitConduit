@@ -381,11 +381,3 @@ func (g *BitbucketApp) GetPassword() string {
 func (g *BitbucketApp) SetPassword(password string) {
 	g.config.Password = password
 }
-
-func (g *BitbucketApp) GetEndpoint() ApiEndpoint {
-	return g.config.Endpoint
-}
-
-func (g *BitbucketApp) SetEndpoint(endpoint ApiEndpoint) {
-	g.config.Endpoint = endpoint
-}

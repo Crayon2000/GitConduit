@@ -67,11 +67,3 @@ func (g *GogsApp) GetPassword() string {
 func (g *GogsApp) SetPassword(password string) {
 	g.config.Password = password
 }
-
-func (g *GogsApp) GetEndpoint() ApiEndpoint {
-	return g.config.Endpoint
-}
-
-func (g *GogsApp) SetEndpoint(endpoint ApiEndpoint) {
-	g.config.Endpoint = endpoint
-}
